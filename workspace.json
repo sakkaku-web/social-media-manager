@@ -1,6 +1,50 @@
 {
   "version": 2,
   "projects": {
+    "core": {
+      "root": "libs/core",
+      "sourceRoot": "libs/core/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/core/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/core"],
+          "options": {
+            "jestConfig": "libs/core/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "sns-twitter": {
+      "root": "libs/sns/twitter",
+      "sourceRoot": "libs/sns/twitter/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/sns/twitter/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/sns/twitter"],
+          "options": {
+            "jestConfig": "libs/sns/twitter/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "social-media-manager": {
       "root": "apps/social-media-manager",
       "sourceRoot": "apps/social-media-manager/src",

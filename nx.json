@@ -27,6 +27,12 @@
     ]
   },
   "projects": {
+    "core": {
+      "tags": []
+    },
+    "sns-twitter": {
+      "tags": []
+    },
     "social-media-manager": {
       "tags": []
     },
