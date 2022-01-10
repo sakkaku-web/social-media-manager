@@ -1,0 +1,132 @@
+{
+  "version": 2,
+  "projects": {
+    "social-media-manager": {
+      "root": "apps/social-media-manager",
+      "sourceRoot": "apps/social-media-manager/src",
+      "projectType": "application",
+      "targets": {
+        "build": {
+          "executor": "@nrwl/web:build",
+          "outputs": ["{options.outputPath}"],
+          "options": {
+            "outputPath": "dist/apps/social-media-manager",
+            "index": "apps/social-media-manager/src/index.html",
+            "baseHref": "/",
+            "main": "apps/social-media-manager/src/main.tsx",
+            "polyfills": "apps/social-media-manager/src/polyfills.ts",
+            "tsConfig": "apps/social-media-manager/tsconfig.app.json",
+            "assets": [
+              "apps/social-media-manager/src/favicon.ico",
+              "apps/social-media-manager/src/assets"
+            ],
+            "styles": ["apps/social-media-manager/src/styles.scss"],
+            "scripts": [],
+            "webpackConfig": "@nrwl/react/plugins/webpack"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/social-media-manager/src/environments/environment.ts",
+                  "with": "apps/social-media-manager/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nrwl/web:dev-server",
+          "options": {
+            "buildTarget": "social-media-manager:build",
+            "hmr": true
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "social-media-manager:build:production",
+              "hmr": false
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/social-media-manager/**/*.{ts,tsx,js,jsx}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/social-media-manager"],
+          "options": {
+            "jestConfig": "apps/social-media-manager/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "social-media-manager-e2e": {
+      "root": "apps/social-media-manager-e2e",
+      "sourceRoot": "apps/social-media-manager-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/social-media-manager-e2e/cypress.json",
+            "devServerTarget": "social-media-manager:serve",
+            "tsConfig": "apps/social-media-manager-e2e/tsconfig.json"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "social-media-manager:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/social-media-manager-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/react"
+  },
+  "generators": {
+    "@nrwl/react": {
+      "application": {
+        "style": "scss",
+        "linter": "eslint",
+        "babel": true
+      },
+      "component": {
+        "style": "scss"
+      },
+      "library": {
+        "style": "scss",
+        "linter": "eslint"
+      }
+    }
+  },
+  "defaultProject": "social-media-manager"
+}
