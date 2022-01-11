@@ -3,12 +3,13 @@ import {
   Get,
   HttpException,
   Query,
+  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { environment } from '../environments/environment';
 
 interface TwitterAuthCallback {
@@ -32,15 +33,30 @@ export class TwitterController {
     return `${environment.baseUrl}/twitter/callback`;
   }
 
+  @Get('user')
+  async user(@Req() req: Request) {
+    const auth = req.headers.authorization;
+    const client = new TwitterApi(auth.substring('Bearer '.length));
+
+    try {
+      return await client.currentUserV2();
+    } catch (e) {
+      throw new HttpException(JSON.parse(e.data), 401);
+    }
+  }
+
   @Get('login')
-  async login(@Res() res: Response, @Session() session: Record<string, any>) {
+  async login(
+    @Res() res: Response,
+    @Session() session: Record<string, string>
+  ) {
     const client = new TwitterApi({
       clientId: this.clientId,
       clientSecret: this.clientSecret,
     });
 
     const authLink = await client.generateOAuth2AuthLink(this.redirectUrl, {
-      scope: ['tweet.write'],
+      scope: ['tweet.write', 'tweet.read', 'users.read'],
     });
 
     session.TWITTER_STATE = authLink.state;
