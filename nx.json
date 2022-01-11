@@ -27,6 +27,9 @@
     ]
   },
   "projects": {
+    "auth-client": {
+      "tags": []
+    },
     "core": {
       "tags": []
     },

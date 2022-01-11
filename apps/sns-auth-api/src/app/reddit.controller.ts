@@ -12,7 +12,7 @@ import { Response } from 'express';
 import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
-import { AuthToken } from './auth.model';
+import { AuthToken } from '@kumi-arts/auth-client';
 
 interface RedditAuthCallback {
   error?: string;

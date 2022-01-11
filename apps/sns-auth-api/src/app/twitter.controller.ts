@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
 import { Response } from 'express';
 import { environment } from '../environments/environment';
-import { AuthToken } from './auth.model';
+import { AuthToken } from '@kumi-arts/auth-client';
 
 interface TwitterAuthCallback {
   state: string;
