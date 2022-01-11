@@ -19,7 +19,8 @@
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
     "rxjs": "^7.0.0",
-    "tslib": "^2.0.0"
+    "tslib": "^2.0.0",
+    "twitter-api-v2": "^1.9.1"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",
@@ -29,8 +30,8 @@
     "@nrwl/eslint-plugin-nx": "12.10.1",
     "@nrwl/jest": "12.10.1",
     "@nrwl/linter": "12.10.1",
-    "@nrwl/nest": "^13.4.4",
-    "@nrwl/node": "13.4.4",
+    "@nrwl/nest": "^12.10.1",
+    "@nrwl/node": "^12.10.1",
     "@nrwl/react": "12.10.1",
     "@nrwl/tao": "12.10.1",
     "@nrwl/web": "12.10.1",
