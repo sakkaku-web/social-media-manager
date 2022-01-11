@@ -46,7 +46,7 @@ export class RedditController {
     const clientId = this.clientId;
     const callback = this.redirectUrl;
     const state = nanoid();
-    const url = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${callback}&duration=permanent&scope=identity+submit`;
+    const url = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${callback}&duration=temporary&scope=identity+submit`;
 
     session.STATE = state;
     return res.redirect(url);

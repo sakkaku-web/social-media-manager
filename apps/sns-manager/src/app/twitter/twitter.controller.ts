@@ -3,94 +3,80 @@ import {
   Get,
   HttpException,
   Query,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { environment } from '../../environments/environment';
 
 interface TwitterAuthCallback {
-  oauth_token: string;
-  oauth_verifier: string;
+  state: string;
+  code: string;
 }
 
 @Controller('twitter')
 export class TwitterController {
   constructor(private readonly config: ConfigService) {}
 
-  @Get('user')
-  async user(@Req() req: Request) {
-    const token: string = req.cookies.TWITTER_TOKEN;
-    if (!token) {
-      return {
-        code: 401,
-        message: 'User not logged in',
-      };
-    }
+  private get clientId() {
+    return this.config.get('TWITTER_CLIENT_ID');
+  }
 
-    const split = token.split(';');
-    const client = new TwitterApi({
-      appKey: this.config.get('TWITTER_API_KEY'),
-      appSecret: this.config.get('TWITTER_SECRET'),
-      accessToken: split[0],
-      accessSecret: split[1],
-    });
+  private get clientSecret() {
+    return this.config.get('TWITTER_CLIENT_SECRET');
+  }
 
-    return client.currentUserV2();
+  private get redirectUrl() {
+    return `${environment.baseUrl}/twitter/callback`;
   }
 
   @Get('login')
-  async login(
-    @Req() req: Request,
-    @Res() res: Response,
-    @Session() session: Record<string, any>
-  ) {
-    if (req.cookies.TWITTER_TOKEN) {
-      throw new HttpException('Already logged in', 400);
-    }
-
+  async login(@Res() res: Response, @Session() session: Record<string, any>) {
     const client = new TwitterApi({
-      appKey: this.config.get('TWITTER_API_KEY'),
-      appSecret: this.config.get('TWITTER_SECRET'),
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
     });
 
-    const authLink = await client.generateAuthLink(
-      `${environment.baseUrl}/twitter/callback`
-    );
+    const authLink = await client.generateOAuth2AuthLink(this.redirectUrl, {
+      scope: ['tweet.write'],
+    });
 
-    session.OAUTH_SECRET = authLink.oauth_token_secret;
+    session.TWITTER_STATE = authLink.state;
+    session.TWITTER_CODE_VERIFIER = authLink.codeVerifier;
+
     return res.redirect(authLink.url);
   }
 
   @Get('callback')
   async callback(
-    @Res({ passthrough: true }) res: Response,
     @Query() query: TwitterAuthCallback,
     @Session() session: Record<string, string>
   ) {
-    const secret = session.OAUTH_SECRET;
-    if (!query.oauth_token || !query.oauth_verifier || !secret) {
-      throw new HttpException('Missing auth data', 400);
+    const state = session.TWITTER_STATE;
+    const codeVerifier = session.TWITTER_CODE_VERIFIER;
+
+    if (!codeVerifier || !state || !query.state || !query.code) {
+      throw new HttpException('Denied app or session expired', 400);
+    }
+
+    if (state != query.state) {
+      throw new HttpException('State mismatch', 400);
     }
 
     const client = new TwitterApi({
-      appKey: this.config.get('TWITTER_API_KEY'),
-      appSecret: this.config.get('TWITTER_SECRET'),
-      accessToken: query.oauth_token,
-      accessSecret: secret,
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
     });
 
-    const {
-      client: loggedClient,
-      accessToken,
-      accessSecret,
-    } = await client.login(query.oauth_verifier);
+    const resposne = await client.loginWithOAuth2({
+      code: query.code,
+      codeVerifier,
+      redirectUri: this.redirectUrl,
+    });
 
-    res.cookie('TWITTER_TOKEN', `${accessToken};${accessSecret}`);
-    console.log(await loggedClient.currentUserV2());
-    return res.redirect(environment.homepage);
+    delete resposne['client'];
+    return resposne;
   }
 }
