@@ -38,10 +38,6 @@
     },
     "social-media-manager": {
       "tags": []
-    },
-    "social-media-manager-e2e": {
-      "tags": [],
-      "implicitDependencies": ["social-media-manager"]
     }
   },
   "cli": {

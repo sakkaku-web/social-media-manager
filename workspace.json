@@ -175,33 +175,6 @@
           }
         }
       }
-    },
-    "social-media-manager-e2e": {
-      "root": "apps/social-media-manager-e2e",
-      "sourceRoot": "apps/social-media-manager-e2e/src",
-      "projectType": "application",
-      "targets": {
-        "e2e": {
-          "executor": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/social-media-manager-e2e/cypress.json",
-            "devServerTarget": "social-media-manager:serve",
-            "tsConfig": "apps/social-media-manager-e2e/tsconfig.json"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "social-media-manager:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["apps/social-media-manager-e2e/**/*.{js,ts}"]
-          }
-        }
-      }
     }
   }
 }
