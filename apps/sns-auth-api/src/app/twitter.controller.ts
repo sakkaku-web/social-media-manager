@@ -33,18 +33,6 @@ export class TwitterController {
     return `${environment.baseUrl}/twitter/callback`;
   }
 
-  @Get('user')
-  async user(@Req() req: Request) {
-    const auth = req.headers.authorization;
-    const client = new TwitterApi(auth.substring('Bearer '.length));
-
-    try {
-      return await client.currentUserV2();
-    } catch (e) {
-      throw new HttpException(JSON.parse(e.data), 401);
-    }
-  }
-
   @Get('login')
   async login(
     @Res() res: Response,

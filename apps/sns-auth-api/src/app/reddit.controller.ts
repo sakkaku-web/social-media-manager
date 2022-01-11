@@ -3,12 +3,13 @@ import {
   Get,
   HttpException,
   Query,
+  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
@@ -36,6 +37,16 @@ export class RedditController {
 
   private get clientSecret() {
     return this.config.get('REDDIT_SECRET');
+  }
+
+  @Get('user')
+  async user(@Req() req: Request) {
+    return this.httpService.get('https://oauth.reddit.com/api/v1/me', {
+      headers: {
+        Authorization: req.headers.authorization,
+        'User-Agent': ''
+      },
+    });
   }
 
   @Get('login')
