@@ -30,6 +30,9 @@
     "core": {
       "tags": []
     },
+    "sns-auth-api": {
+      "tags": []
+    },
     "sns-twitter": {
       "tags": []
     },

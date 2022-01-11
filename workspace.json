@@ -23,19 +23,19 @@
         }
       }
     },
-    "sns-manager": {
-      "root": "apps/sns-manager",
-      "sourceRoot": "apps/sns-manager/src",
+    "sns-auth-api": {
+      "root": "apps/sns-auth-api",
+      "sourceRoot": "apps/sns-auth-api/src",
       "projectType": "application",
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/sns-manager",
-            "main": "apps/sns-manager/src/main.ts",
-            "tsConfig": "apps/sns-manager/tsconfig.app.json",
-            "assets": ["apps/sns-manager/src/assets"]
+            "outputPath": "dist/apps/sns-auth-api",
+            "main": "apps/sns-auth-api/src/main.ts",
+            "tsConfig": "apps/sns-auth-api/tsconfig.app.json",
+            "assets": ["apps/sns-auth-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -44,8 +44,8 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/sns-manager/src/environments/environment.ts",
-                  "with": "apps/sns-manager/src/environments/environment.prod.ts"
+                  "replace": "apps/sns-auth-api/src/environments/environment.ts",
+                  "with": "apps/sns-auth-api/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -54,26 +54,25 @@
         "serve": {
           "executor": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "sns-manager:build"
+            "buildTarget": "sns-auth-api:build"
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["apps/sns-manager/**/*.ts"]
+            "lintFilePatterns": ["apps/sns-auth-api/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/sns-manager"],
+          "outputs": ["coverage/apps/sns-auth-api"],
           "options": {
-            "jestConfig": "apps/sns-manager/jest.config.js",
+            "jestConfig": "apps/sns-auth-api/jest.config.js",
             "passWithNoTests": true
           }
         }
-      },
-      "tags": []
+      }
     },
     "sns-twitter": {
       "root": "libs/sns/twitter",
