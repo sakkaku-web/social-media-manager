@@ -1,1 +1,1 @@
-export * from './lib/sns-twitter';
+export * from './lib/twitter-service';
