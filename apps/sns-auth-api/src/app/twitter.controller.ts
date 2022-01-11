@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
 import { Response } from 'express';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment';
 
 interface TwitterAuthCallback {
   state: string;

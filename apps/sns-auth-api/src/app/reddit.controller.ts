@@ -9,7 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { Response } from 'express';
-import { environment } from '../../environments/environment';
+import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
 
