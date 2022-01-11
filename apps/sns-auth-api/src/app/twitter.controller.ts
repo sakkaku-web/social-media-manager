@@ -3,14 +3,14 @@ import {
   Get,
   HttpException,
   Query,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { environment } from '../environments/environment';
+import { AuthToken } from './auth.model';
 
 interface TwitterAuthCallback {
   state: string;
@@ -31,6 +31,11 @@ export class TwitterController {
 
   private get redirectUrl() {
     return `${environment.baseUrl}/twitter/callback`;
+  }
+
+  @Get('auth')
+  async auth(@Session() session: Record<string, string>): Promise<AuthToken> {
+    return { token: session.TWITTER_TOKEN };
   }
 
   @Get('login')
@@ -55,6 +60,7 @@ export class TwitterController {
 
   @Get('callback')
   async callback(
+    @Res() res: Response,
     @Query() query: TwitterAuthCallback,
     @Session() session: Record<string, string>
   ) {
@@ -74,13 +80,13 @@ export class TwitterController {
       clientSecret: this.clientSecret,
     });
 
-    const resposne = await client.loginWithOAuth2({
+    const response = await client.loginWithOAuth2({
       code: query.code,
       codeVerifier,
       redirectUri: this.redirectUrl,
     });
 
-    delete resposne['client'];
-    return resposne;
+    session.TWITTER_TOKEN = response.accessToken;
+    return res.redirect(environment.homepage);
   }
 }

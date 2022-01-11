@@ -3,17 +3,16 @@ import {
   Get,
   HttpException,
   Query,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
-import { RedditService } from '@kumi-arts/sns/reddit';
+import { AuthToken } from './auth.model';
 
 interface RedditAuthCallback {
   error?: string;
@@ -40,6 +39,11 @@ export class RedditController {
     return this.config.get('REDDIT_SECRET');
   }
 
+  @Get('auth')
+  async auth(@Session() session: Record<string, string>): Promise<AuthToken> {
+    return { token: session.REDDIT_TOKEN };
+  }
+
   @Get('login')
   async login(
     @Res() res: Response,
@@ -50,16 +54,17 @@ export class RedditController {
     const state = nanoid();
     const url = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${callback}&duration=temporary&scope=identity+submit`;
 
-    session.STATE = state;
+    session.REDDIT_STATE = state;
     return res.redirect(url);
   }
 
   @Get('callback')
   async callback(
     @Query() query: RedditAuthCallback,
-    @Session() session: Record<string, string>
+    @Session() session: Record<string, string>,
+    @Res() res: Response
   ) {
-    const state = session.STATE;
+    const state = session.REDDIT_STATE;
 
     if (!state) {
       throw new HttpException(
@@ -91,7 +96,8 @@ export class RedditController {
             throw new HttpException(`${data.status} - ${data.data}`, 400);
           }
 
-          return data.data;
+          session.REDDIT_TOKEN = data.data.access_token;
+          return res.redirect(environment.homepage);
         })
       );
   }
