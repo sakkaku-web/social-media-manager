@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@kumi-arts/core": ["libs/core/src/index.ts"],
+      "@kumi-arts/sns/reddit": ["libs/sns/reddit/src/index.ts"],
       "@kumi-arts/sns/twitter": ["libs/sns/twitter/src/index.ts"]
     }
   },

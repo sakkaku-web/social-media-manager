@@ -36,6 +36,9 @@
     "sns-manager": {
       "tags": []
     },
+    "sns-reddit": {
+      "tags": []
+    },
     "sns-twitter": {
       "tags": []
     }

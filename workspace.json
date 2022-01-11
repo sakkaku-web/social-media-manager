@@ -152,6 +152,28 @@
         }
       }
     },
+    "sns-reddit": {
+      "root": "libs/sns/reddit",
+      "sourceRoot": "libs/sns/reddit/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/sns/reddit/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/sns/reddit"],
+          "options": {
+            "jestConfig": "libs/sns/reddit/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "sns-twitter": {
       "root": "libs/sns/twitter",
       "sourceRoot": "libs/sns/twitter/src",
