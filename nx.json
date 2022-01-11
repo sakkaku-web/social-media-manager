@@ -33,10 +33,10 @@
     "sns-auth-api": {
       "tags": []
     },
-    "sns-twitter": {
+    "sns-manager": {
       "tags": []
     },
-    "social-media-manager": {
+    "sns-twitter": {
       "tags": []
     }
   },
