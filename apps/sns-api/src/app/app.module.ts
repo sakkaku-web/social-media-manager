@@ -9,7 +9,7 @@ import { join } from 'path';
 
 @Module({
   imports: [ConfigModule.forRoot(), HttpModule, ServeStaticModule.forRoot({
-    rootPath: join(__dirname, '../../../dist/apps/sns-manager'),
+    rootPath: join(__dirname, 'sns-manager'),
   })],
   controllers: [TwitterController, RedditController],
   providers: [],
