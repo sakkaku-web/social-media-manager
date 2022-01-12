@@ -3,5 +3,5 @@
 
 export const environment = {
   production: false,
-  authApi: 'http://localhost:3333/api',
+  authApi: '/api',
 };
