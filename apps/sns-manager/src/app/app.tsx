@@ -1,11 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTwitter, faReddit } from '@fortawesome/free-brands-svg-icons';
+import { SocialProvider } from '@kumi-arts/auth-client';
+import SnsButton from './sns-button/sns-button';
 
 export function App() {
   return (
     <div>
-      <FontAwesomeIcon icon={faTwitter} />
-      <FontAwesomeIcon icon={faReddit} />
+      <SnsButton provider={SocialProvider.TWITTER}></SnsButton>
+      <SnsButton provider={SocialProvider.REDDIT}></SnsButton>
     </div>
   );
 }
