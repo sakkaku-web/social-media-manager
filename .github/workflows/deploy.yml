@@ -14,6 +14,10 @@ jobs:
       - uses: actions/setup-node@v2
       - run: npm ci
       - run: npm run build
+      - run: | # Files need to be commited to deploy them to heroku
+          git config user.name "GitHub Actions"
+          git config user.email "<>"
+          git add -f dist/apps/sns-api && git commit -m 'Add deploy files'
       - uses: akhileshns/heroku-deploy@v3.12.12
         with:
           heroku_api_key: ${{secrets.HEROKU_API}}
