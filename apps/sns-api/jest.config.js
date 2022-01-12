@@ -1,5 +1,5 @@
 module.exports = {
-  displayName: 'sns-auth-api',
+  displayName: 'sns-api',
   preset: '../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -11,5 +11,5 @@ module.exports = {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../coverage/apps/sns-auth-api',
+  coverageDirectory: '../../coverage/apps/sns-api',
 };

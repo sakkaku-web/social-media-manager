@@ -33,7 +33,7 @@
     "core": {
       "tags": []
     },
-    "sns-auth-api": {
+    "sns-api": {
       "tags": []
     },
     "sns-manager": {

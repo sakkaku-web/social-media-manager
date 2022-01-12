@@ -45,19 +45,19 @@
         }
       }
     },
-    "sns-auth-api": {
-      "root": "apps/sns-auth-api",
-      "sourceRoot": "apps/sns-auth-api/src",
+    "sns-api": {
+      "root": "apps/sns-api",
+      "sourceRoot": "apps/sns-api/src",
       "projectType": "application",
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
           "outputs": ["{options.outputPath}"],
           "options": {
-            "outputPath": "dist/apps/sns-auth-api",
-            "main": "apps/sns-auth-api/src/main.ts",
-            "tsConfig": "apps/sns-auth-api/tsconfig.app.json",
-            "assets": ["apps/sns-auth-api/src/assets"]
+            "outputPath": "dist/apps/sns-api",
+            "main": "apps/sns-api/src/main.ts",
+            "tsConfig": "apps/sns-api/tsconfig.app.json",
+            "assets": ["apps/sns-api/src/assets"]
           },
           "configurations": {
             "production": {
@@ -66,8 +66,8 @@
               "inspect": false,
               "fileReplacements": [
                 {
-                  "replace": "apps/sns-auth-api/src/environments/environment.ts",
-                  "with": "apps/sns-auth-api/src/environments/environment.prod.ts"
+                  "replace": "apps/sns-api/src/environments/environment.ts",
+                  "with": "apps/sns-api/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -76,21 +76,21 @@
         "serve": {
           "executor": "@nrwl/node:execute",
           "options": {
-            "buildTarget": "sns-auth-api:build"
+            "buildTarget": "sns-api:build"
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["apps/sns-auth-api/**/*.ts"]
+            "lintFilePatterns": ["apps/sns-api/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/sns-auth-api"],
+          "outputs": ["coverage/apps/sns-api"],
           "options": {
-            "jestConfig": "apps/sns-auth-api/jest.config.js",
+            "jestConfig": "apps/sns-api/jest.config.js",
             "passWithNoTests": true
           }
         }
