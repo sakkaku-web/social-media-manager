@@ -1,4 +1,4 @@
-import { SocialProvider } from '@kumi-arts/auth-client';
+import { SocialProvider } from '@kumi-arts/core';
 import SnsButton from './sns-button/sns-button';
 
 export function App() {

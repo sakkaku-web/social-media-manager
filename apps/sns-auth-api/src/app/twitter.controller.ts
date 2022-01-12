@@ -1,16 +1,19 @@
 import {
+  All,
   Controller,
   Get,
   HttpException,
   Query,
+  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { environment } from '../environments/environment';
-import { AuthToken } from '@kumi-arts/auth-client';
+import { AuthToken } from '@kumi-arts/api-client';
+import { User } from '@kumi-arts/core';
 
 interface TwitterAuthCallback {
   state: string;
@@ -88,5 +91,15 @@ export class TwitterController {
 
     session.TWITTER_TOKEN = response.accessToken;
     return res.redirect(environment.homepage);
+  }
+
+  @Get('user')
+  async user(@Req() req: Request): Promise<User> {
+    const service = new TwitterApi(
+      req.headers.authorization.substring('Bearer '.length)
+    );
+    return service
+      .currentUserV2()
+      .then((data) => ({ username: data.data.username }));
   }
 }

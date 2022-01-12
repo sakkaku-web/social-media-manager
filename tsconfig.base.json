@@ -15,10 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@kumi-arts/auth-client": ["libs/auth-client/src/index.ts"],
-      "@kumi-arts/core": ["libs/core/src/index.ts"],
-      "@kumi-arts/sns/reddit": ["libs/sns/reddit/src/index.ts"],
-      "@kumi-arts/sns/twitter": ["libs/sns/twitter/src/index.ts"]
+      "@kumi-arts/api-client": ["libs/api-client/src/index.ts"],
+      "@kumi-arts/core": ["libs/core/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

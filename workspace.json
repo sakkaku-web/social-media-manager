@@ -1,23 +1,23 @@
 {
   "version": 2,
   "projects": {
-    "auth-client": {
-      "root": "libs/auth-client",
-      "sourceRoot": "libs/auth-client/src",
+    "api-client": {
+      "root": "libs/api-client",
+      "sourceRoot": "libs/api-client/src",
       "projectType": "library",
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["libs/auth-client/**/*.ts"]
+            "lintFilePatterns": ["libs/api-client/**/*.ts"]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/auth-client"],
+          "outputs": ["coverage/libs/api-client"],
           "options": {
-            "jestConfig": "libs/auth-client/jest.config.js",
+            "jestConfig": "libs/api-client/jest.config.js",
             "passWithNoTests": true
           }
         }
@@ -169,50 +169,6 @@
           "outputs": ["coverage/apps/sns-manager"],
           "options": {
             "jestConfig": "apps/sns-manager/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "sns-reddit": {
-      "root": "libs/sns/reddit",
-      "sourceRoot": "libs/sns/reddit/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["libs/sns/reddit/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/sns/reddit"],
-          "options": {
-            "jestConfig": "libs/sns/reddit/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "sns-twitter": {
-      "root": "libs/sns/twitter",
-      "sourceRoot": "libs/sns/twitter/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["libs/sns/twitter/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/sns/twitter"],
-          "options": {
-            "jestConfig": "libs/sns/twitter/jest.config.js",
             "passWithNoTests": true
           }
         }

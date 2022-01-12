@@ -3,16 +3,19 @@ import {
   Get,
   HttpException,
   Query,
+  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
-import { AuthToken } from '@kumi-arts/auth-client';
+import { AuthToken } from '@kumi-arts/api-client';
+import { User } from '@kumi-arts/core';
+import Snoowrap = require('snoowrap');
 
 interface RedditAuthCallback {
   error?: string;
@@ -100,5 +103,17 @@ export class RedditController {
           return res.redirect(environment.homepage);
         })
       );
+  }
+
+  @Get('user')
+  async user(@Req() req: Request): Promise<User> {
+    const service = new Snoowrap({
+      userAgent: 'kumi-arts:0.0.0 (by /u/illu11)',
+      accessToken: req.headers.authorization.substring('Bearer '.length),
+    });
+
+    const name = await service.getMe().name;
+
+    return { username: name };
   }
 }

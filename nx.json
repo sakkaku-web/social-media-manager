@@ -27,7 +27,7 @@
     ]
   },
   "projects": {
-    "auth-client": {
+    "api-client": {
       "tags": []
     },
     "core": {
@@ -37,12 +37,6 @@
       "tags": []
     },
     "sns-manager": {
-      "tags": []
-    },
-    "sns-reddit": {
-      "tags": []
-    },
-    "sns-twitter": {
       "tags": []
     }
   },

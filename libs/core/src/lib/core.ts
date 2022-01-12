@@ -6,8 +6,7 @@ export interface User {
   username: string;
 }
 
-export interface SocialMediaService {
-  getProfileLink(username: string): string;
-  getUser(): Promise<User>;
-  createPost(post: Post);
+export enum SocialProvider {
+  TWITTER = 'twitter',
+  REDDIT = 'reddit',
 }

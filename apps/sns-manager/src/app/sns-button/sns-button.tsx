@@ -1,62 +1,58 @@
 import './sns-button.module.scss';
-import { AuthClient, SocialProvider } from '@kumi-arts/auth-client';
+import { ApiClient } from '@kumi-arts/api-client';
 import { faReddit, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { environment } from '../../environments/environment';
 import { useEffect, useState } from 'react';
-import { TwitterService } from '@kumi-arts/sns/twitter';
-import { RedditService } from '@kumi-arts/sns/reddit';
-import { User } from '@kumi-arts/core';
+import { SocialProvider, User } from '@kumi-arts/core';
 
 export interface SnsButtonProps {
   provider: SocialProvider;
 }
 
-function providerIcon(provider: SocialProvider) {
-  switch (provider) {
-    case SocialProvider.REDDIT:
-      return faReddit;
-    case SocialProvider.TWITTER:
-      return faTwitter;
-  }
-}
-
-function providerService(provider: SocialProvider, token: string) {
-  switch (provider) {
-    case SocialProvider.REDDIT:
-      return new RedditService(token);
-    case SocialProvider.TWITTER:
-      return new TwitterService(token);
-  }
-}
+const data = {
+  [SocialProvider.TWITTER]: {
+    icon: faTwitter,
+    profileUrl: (name: string) => `https://reddit.com/u/${name}`,
+  },
+  [SocialProvider.REDDIT]: {
+    icon: faReddit,
+    profileUrl: (name: string) => `https://twitter.com/${name}`,
+  },
+};
 
 export function SnsButton({ provider }: SnsButtonProps) {
-  const auth = new AuthClient(environment.authApi);
+  const api = new ApiClient(environment.authApi);
 
   const [token, setToken] = useState('');
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
-    auth.getAuth(provider).then((data) => {
+    api.getAuth(provider).then((data) => {
       setToken(data.token);
+
+      console.log(data);
+      if (data.token) {
+        api.getUser({ provider, token: data.token }).then((user) => {
+          console.log(user);
+          setUser(user);
+        });
+      }
     });
-    providerService(provider, token)
-      .getUser()
-      .then((user) => setUser(user));
   }, []);
 
   const buildUrl = () => {
     if (token && user?.username) {
-      return providerService(provider, token).getProfileLink(user.username);
+      return data[provider].profileUrl(user.username);
     } else {
-      return auth.getLoginLink(provider);
+      return api.getLoginLink(provider);
     }
   };
 
   return (
     <button>
       <a href={buildUrl()}>
-        <FontAwesomeIcon icon={providerIcon(provider)} />
+        <FontAwesomeIcon icon={data[provider].icon} />
         {user?.username ? user.username : 'Login'}
       </a>
     </button>
