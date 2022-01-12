@@ -6,7 +6,7 @@
     "start": "node sns-api/main.js",
     "start:server": "nx serve sns-api",
     "build:ui": "nx build sns-manager --watch",
-    "build:prod": "nx build && cp ./package.json dist/apps/",
+    "build:prod": "nx run-many --target=build --all && cp ./package.json dist/apps/",
     "test": "nx test"
   },
   "private": true,
