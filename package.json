@@ -4,8 +4,9 @@
   "license": "MIT",
   "scripts": {
     "start:server": "nx serve sns-api",
-    "start": "nx serve",
-    "build": "nx build",
+    "build:ui": "nx build sns-manager --watch",
+    "start": "node main.js",
+    "build": "nx build && cp ./package.json dist/apps/sns-api",
     "test": "nx test"
   },
   "private": true,

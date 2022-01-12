@@ -178,7 +178,7 @@
   "cli": {
     "defaultCollection": "@nrwl/react"
   },
-  "defaultProject": "sns-manager",
+  "defaultProject": "sns-api",
   "generators": {
     "@nrwl/react": {
       "application": {

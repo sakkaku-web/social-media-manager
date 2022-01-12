@@ -45,7 +45,7 @@ export function SnsButton({ saveToken }: SnsButtonProps) {
 
   const buildUrl = () => {
     if (isLoggedIn) {
-      return data[provider].profileUrl(user.username);
+      return data[provider].profileUrl(user?.username || '');
     } else {
       return api.getLoginLink(provider);
     }
