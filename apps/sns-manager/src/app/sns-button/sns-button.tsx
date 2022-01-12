@@ -13,11 +13,11 @@ export interface SnsButtonProps {
 const data = {
   [SocialProvider.TWITTER]: {
     icon: faTwitter,
-    profileUrl: (name: string) => `https://reddit.com/u/${name}`,
+    profileUrl: (name: string) => `https://twitter.com/${name}`,
   },
   [SocialProvider.REDDIT]: {
     icon: faReddit,
-    profileUrl: (name: string) => `https://twitter.com/${name}`,
+    profileUrl: (name: string) => `https://reddit.com/u/${name}`,
   },
 };
 
@@ -39,8 +39,10 @@ export function SnsButton({ provider }: SnsButtonProps) {
     });
   }, []);
 
+  const isLoggedIn = token && user?.username;
+
   const buildUrl = () => {
-    if (token && user?.username) {
+    if (isLoggedIn) {
       return data[provider].profileUrl(user.username);
     } else {
       return api.getLoginLink(provider);
@@ -49,7 +51,7 @@ export function SnsButton({ provider }: SnsButtonProps) {
 
   return (
     <button>
-      <a href={buildUrl()}>
+      <a href={buildUrl()} target={isLoggedIn ? '_blank' : ''} rel="noreferrer">
         <FontAwesomeIcon icon={data[provider].icon} />
         {user?.username ? user.username : 'Login'}
       </a>

@@ -13,10 +13,8 @@ export interface ProviderRequest {
 export class ApiClient {
   private client: Axios;
 
-  constructor(private baseUrl: string) {
-    this.client = new Axios({
-      baseURL: baseUrl,
-    });
+  constructor(private baseURL: string) {
+    this.client = new Axios({ baseURL });
   }
 
   private providerLink(provider: SocialProvider, url: string): string {
@@ -24,13 +22,13 @@ export class ApiClient {
   }
 
   getLoginLink(provider: SocialProvider): string {
-    return `${this.baseUrl}/${this.providerLink(provider, 'login')}`;
+    return `${this.baseURL}/${this.providerLink(provider, 'login')}`;
   }
 
   async getAuth(provider: SocialProvider): Promise<AuthToken> {
     return this.client
       .get(this.providerLink(provider, 'auth'))
-      .then((res) => res.data);
+      .then((res) => JSON.parse(res.data)); // Somehow does not return an object
   }
 
   private bearerHeader(token: string): AxiosRequestHeaders {
@@ -42,6 +40,6 @@ export class ApiClient {
       .get(this.providerLink(provider, 'user'), {
         headers: this.bearerHeader(token),
       })
-      .then((res) => res.data);
+      .then((res) => JSON.parse(res.data));
   }
 }
