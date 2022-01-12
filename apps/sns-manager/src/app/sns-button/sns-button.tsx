@@ -31,10 +31,8 @@ export function SnsButton({ provider }: SnsButtonProps) {
     api.getAuth(provider).then((data) => {
       setToken(data.token);
 
-      console.log(data);
       if (data.token) {
         api.getUser({ provider, token: data.token }).then((user) => {
-          console.log(user);
           setUser(user);
         });
       }
