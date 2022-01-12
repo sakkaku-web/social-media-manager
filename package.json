@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start": "node main.js",
     "start:server": "nx serve sns-api",
     "build:ui": "nx build sns-manager --watch",
-    "start": "node main.js",
-    "build": "nx build && cp ./package.json dist/apps/sns-api",
+    "build:prod": "nx build && cp ./package.json dist/apps/sns-api",
     "test": "nx test"
   },
   "private": true,
