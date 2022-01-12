@@ -8,10 +8,13 @@ export class TwitterService implements SocialMediaService {
     this.client = new TwitterApi(bearer);
   }
 
+  getProfileLink(username: string) {
+    return `https://twitter.com/${username}`;
+  }
+
   async getUser(): Promise<User> {
     const { data } = await this.client.currentUserV2();
     return {
-      name: data.name,
       username: data.username,
     };
   }

@@ -3,11 +3,11 @@ export interface Post {
 }
 
 export interface User {
-  name: string;
   username: string;
 }
 
 export interface SocialMediaService {
+  getProfileLink(username: string): string;
   getUser(): Promise<User>;
   createPost(post: Post);
 }

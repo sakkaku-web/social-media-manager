@@ -11,12 +11,15 @@ export class RedditService implements SocialMediaService {
     });
   }
 
+  getProfileLink(username: string) {
+    return `https://reddit.com/u/${username}`;
+  }
+
   async getUser(): Promise<User> {
     const user = this.client.getMe();
     const name = await user.name;
 
     return {
-      name: name,
       username: name,
     };
   }
