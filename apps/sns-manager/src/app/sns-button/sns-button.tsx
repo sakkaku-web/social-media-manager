@@ -3,11 +3,12 @@ import { ApiClient } from '@kumi-arts/api-client';
 import { faReddit, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { environment } from '../../environments/environment';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
+import { SocialProviderContext } from '../social-provider-context';
 
 export interface SnsButtonProps {
-  provider: SocialProvider;
+  saveToken: (t: string) => void;
 }
 
 const data = {
@@ -21,15 +22,16 @@ const data = {
   },
 };
 
-export function SnsButton({ provider }: SnsButtonProps) {
+export function SnsButton({ saveToken }: SnsButtonProps) {
+  const { provider, token } = useContext(SocialProviderContext);
+
   const api = new ApiClient(environment.authApi);
 
-  const [token, setToken] = useState('');
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
     api.getAuth(provider).then((data) => {
-      setToken(data.token);
+      saveToken(data.token);
 
       if (data.token) {
         api.getUser({ provider, token: data.token }).then((user) => {
