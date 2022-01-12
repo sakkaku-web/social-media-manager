@@ -6,10 +6,10 @@
     "node": "16.x"
   },
   "scripts": {
-    "start": "node main.js",
-    "start:server": "nx serve sns-api",
+    "start": "node dist/apps/sns-api/main.js",
+    "start:server": "NODE_ENV=production nx serve sns-api",
     "build:ui": "nx build sns-manager --watch",
-    "build:prod": "nx run-many --target=build --all && cp ./package.json dist/apps/ && mv dist/apps/sns-api/* dist/apps/",
+    "build": "nx run-many --target=build --all",
     "test": "nx test"
   },
   "private": true,
