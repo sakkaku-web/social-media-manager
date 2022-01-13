@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import SnsButton from './sns-button';
+import SnsLoginButton from './sns-login-button';
 
 describe('SnsButton', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<SnsButton />);
+    const { baseElement } = render(<SnsLoginButton />);
     expect(baseElement).toBeTruthy();
   });
 });

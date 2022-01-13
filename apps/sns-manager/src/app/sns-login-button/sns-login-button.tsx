@@ -1,4 +1,4 @@
-import './sns-button.module.scss';
+import './sns-login-button.module.scss';
 import { ApiClient } from '@kumi-arts/api-client';
 import { faReddit, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -21,7 +21,7 @@ const data = {
   },
 };
 
-export function SnsButton(props: SnsButtonProps) {
+export function SnsLoginButton(props: SnsButtonProps) {
   const { provider } = useContext(SocialProviderContext);
 
   const api = new ApiClient(environment.authApi);
@@ -53,4 +53,4 @@ export function SnsButton(props: SnsButtonProps) {
   );
 }
 
-export default SnsButton;
+export default SnsLoginButton;

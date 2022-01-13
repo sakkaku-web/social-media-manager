@@ -1,7 +1,7 @@
 import { SocialProvider } from '@kumi-arts/core';
 import { useState } from 'react';
 import PostForm from './post-form/post-form';
-import SnsButton from './sns-button/sns-button';
+import SnsLoginButton from './sns-login-button/sns-login-button';
 import { TwitterPanel } from './twitter-panel/twitter-panel';
 import {
   SocialProviderContext,
@@ -28,12 +28,12 @@ export function App() {
 
       <div>
         <SocialProviderContext.Provider value={twitterProvider}>
-          <SnsButton></SnsButton>
+          <SnsLoginButton></SnsLoginButton>
           <TwitterPanel></TwitterPanel>
         </SocialProviderContext.Provider>
 
         <SocialProviderContext.Provider value={redditProvider}>
-          <SnsButton></SnsButton>
+          <SnsLoginButton></SnsLoginButton>
           <RedditPanel></RedditPanel>
         </SocialProviderContext.Provider>
       </div>
