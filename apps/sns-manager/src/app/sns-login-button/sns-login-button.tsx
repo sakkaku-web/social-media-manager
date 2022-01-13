@@ -34,7 +34,7 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
   }, []);
 
   const buildUrl = () => {
-    if (user) {
+    if (user?.username) {
       return data[provider].profileUrl(user.username);
     } else {
       return api.getLoginLink(provider);
