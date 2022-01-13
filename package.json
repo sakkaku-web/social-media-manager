@@ -7,7 +7,7 @@
   },
   "scripts": {
     "start": "node dist/apps/sns-api/main.js",
-    "start:server": "NODE_ENV=production nx serve sns-api",
+    "start:server": "nx serve sns-api",
     "build:ui": "nx build sns-manager --watch",
     "build": "nx run-many --target=build --all --prod",
     "test": "nx test"

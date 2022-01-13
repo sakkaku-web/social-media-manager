@@ -2,18 +2,15 @@ import { useState } from 'react';
 import './post-form.module.scss';
 
 /* eslint-disable-next-line */
-export interface PostFormProps {}
+export interface PostFormProps {
+  text: string;
+  setText: (t: string) => void;
+}
 
-export function PostForm(props: PostFormProps) {
-  const [text, setText] = useState('');
-
+export function PostForm({ text, setText }: PostFormProps) {
   return (
     <div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+      <textarea value={text} onChange={(e) => setText(e.target.value)} />
     </div>
   );
 }

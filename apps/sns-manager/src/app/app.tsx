@@ -11,6 +11,8 @@ export function App() {
   const [twitterToken, setTwitterToken] = useState('');
   const [redditToken, setRedditToken] = useState('');
 
+  const [text, setText] = useState('');
+
   const twitterProvider: SocialProviderContextValue = {
     provider: SocialProvider.TWITTER,
     token: twitterToken,
@@ -24,7 +26,7 @@ export function App() {
   return (
     <div>
       <div>
-        <PostForm></PostForm>
+        <PostForm text={text} setText={setText}></PostForm>
       </div>
 
       <div>
