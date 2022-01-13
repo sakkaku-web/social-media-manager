@@ -1,7 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
   HttpException,
+  Post,
   Query,
   Res,
   Session,
@@ -10,7 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
 import { Response } from 'express';
 import { environment } from '../environments/environment';
-import { SocialProvider, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { AuthService } from './auth.service';
 
 interface TwitterAuthCallback {
@@ -80,11 +82,21 @@ export class TwitterController {
     return res.redirect(environment.homepage);
   }
 
+  private createService() {
+    return new TwitterApi(this.auth.getToken(SocialProvider.TWITTER));
+  }
+
   @Get('user')
   async user(): Promise<User> {
-    const service = new TwitterApi(this.auth.getToken(SocialProvider.TWITTER));
-    return service
+    return this.createService()
       .currentUserV2()
       .then((data) => ({ username: data.data.username }));
+  }
+
+  @Post('post')
+  async post(@Body() body: SNSPost): Promise<void> {
+    await this.createService().v2.tweet({
+      text: body.text,
+    });
   }
 }

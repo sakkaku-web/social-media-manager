@@ -1,4 +1,4 @@
-export interface Post {
+export interface SNSPost {
   text: string;
 }
 

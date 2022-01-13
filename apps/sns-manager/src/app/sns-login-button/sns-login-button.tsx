@@ -2,13 +2,13 @@ import './sns-login-button.module.scss';
 import { ApiClient } from '@kumi-arts/api-client';
 import { faReddit, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { environment } from '../../environments/environment';
 import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
 import { SocialProviderContext } from '../social-provider-context';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface SnsButtonProps {}
+export interface SnsButtonProps {
+  api: ApiClient;
+}
 
 const data = {
   [SocialProvider.TWITTER]: {
@@ -21,10 +21,8 @@ const data = {
   },
 };
 
-export function SnsLoginButton(props: SnsButtonProps) {
+export function SnsLoginButton({ api }: SnsButtonProps) {
   const { provider } = useContext(SocialProviderContext);
-
-  const api = new ApiClient(environment.authApi);
 
   const [user, setUser] = useState(null as User | null);
 

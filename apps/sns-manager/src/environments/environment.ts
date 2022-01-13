@@ -3,5 +3,5 @@
 
 export const environment = {
   production: false,
-  authApi: '/api',
+  api: '/api',
 };

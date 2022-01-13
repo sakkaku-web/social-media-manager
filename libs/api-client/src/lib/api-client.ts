@@ -1,11 +1,14 @@
 import { Axios, AxiosResponse } from 'axios';
-import { SocialProvider, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 
 export class ApiClient {
   private client: Axios;
 
   constructor(private baseURL: string) {
-    this.client = new Axios({ baseURL });
+    this.client = new Axios({
+      baseURL,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   private providerLink(provider: SocialProvider, url: string): string {
@@ -20,6 +23,12 @@ export class ApiClient {
     return this.client
       .get(this.providerLink(provider, 'user'))
       .then((res) => this.handleResponse(res));
+  }
+
+  async postSNS(provider: SocialProvider, body: SNSPost): Promise<void> {
+    this.client
+      .post(this.providerLink(provider, 'post'), JSON.stringify(body))
+      .then(this.handleResponse);
   }
 
   private handleResponse<T>(res: AxiosResponse): T {
