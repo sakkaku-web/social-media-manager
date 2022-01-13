@@ -4,6 +4,7 @@ import {
   Get,
   Header,
   HttpException,
+  Post,
   Query,
   Req,
   Res,
@@ -25,16 +26,15 @@ interface TwitterAuthCallback {
 export class TwitterController {
   constructor(private readonly config: ConfigService) {}
 
-  private get clientId() {
-    return this.config.get('TWITTER_CLIENT_ID');
-  }
-
-  private get clientSecret() {
-    return this.config.get('TWITTER_CLIENT_SECRET');
-  }
-
   private get redirectUrl() {
     return `${environment.baseUrl}/twitter/callback`;
+  }
+
+  private get oauthClient() {
+    return new TwitterApi({
+      clientId: this.config.get('TWITTER_CLIENT_ID'),
+      clientSecret: this.config.get('TWITTER_CLIENT_SECRET'),
+    });
   }
 
   @Get('auth')
@@ -47,11 +47,7 @@ export class TwitterController {
     @Res() res: Response,
     @Session() session: Record<string, string>
   ) {
-    const client = new TwitterApi({
-      clientId: this.clientId,
-      clientSecret: this.clientSecret,
-    });
-
+    const client = this.oauthClient;
     const authLink = await client.generateOAuth2AuthLink(this.redirectUrl, {
       scope: ['tweet.write', 'tweet.read', 'users.read'],
     });
@@ -79,11 +75,7 @@ export class TwitterController {
       throw new HttpException('State mismatch', 400);
     }
 
-    const client = new TwitterApi({
-      clientId: this.clientId,
-      clientSecret: this.clientSecret,
-    });
-
+    const client = this.oauthClient;
     const response = await client.loginWithOAuth2({
       code: query.code,
       codeVerifier,
