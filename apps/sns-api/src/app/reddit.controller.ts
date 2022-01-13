@@ -3,19 +3,18 @@ import {
   Get,
   HttpException,
   Query,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { environment } from '../environments/environment';
 import { nanoid } from 'nanoid';
 import { map } from 'rxjs';
-import { AuthToken } from '@kumi-arts/api-client';
-import { User } from '@kumi-arts/core';
+import { SocialProvider, User } from '@kumi-arts/core';
 import Snoowrap = require('snoowrap');
+import { AuthService } from './auth.service';
 
 interface RedditAuthCallback {
   error?: string;
@@ -27,7 +26,8 @@ interface RedditAuthCallback {
 export class RedditController {
   constructor(
     private readonly config: ConfigService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly auth: AuthService
   ) {}
 
   private get redirectUrl() {
@@ -40,11 +40,6 @@ export class RedditController {
 
   private get clientSecret() {
     return this.config.get('REDDIT_SECRET');
-  }
-
-  @Get('auth')
-  async auth(@Session() session: Record<string, string>): Promise<AuthToken> {
-    return { token: session.REDDIT_TOKEN };
   }
 
   @Get('login')
@@ -65,7 +60,7 @@ export class RedditController {
   async callback(
     @Query() query: RedditAuthCallback,
     @Session() session: Record<string, string>,
-    @Res() res: Response
+    @Res({ passthrough: true }) res: Response
   ) {
     const state = session.REDDIT_STATE;
 
@@ -99,17 +94,21 @@ export class RedditController {
             throw new HttpException(`${data.status} - ${data.data}`, 400);
           }
 
-          session.REDDIT_TOKEN = data.data.access_token;
+          this.auth.saveToken(
+            res,
+            SocialProvider.REDDIT,
+            data.data.access_token
+          );
           return res.redirect(environment.homepage);
         })
       );
   }
 
   @Get('user')
-  async user(@Req() req: Request): Promise<User> {
+  async user(): Promise<User> {
     const service = new Snoowrap({
       userAgent: 'kumi-arts:0.0.0 (by /u/illu11)',
-      accessToken: req.headers.authorization.substring('Bearer '.length),
+      accessToken: this.auth.getToken(SocialProvider.REDDIT),
     });
 
     const name = await service.getMe().name;

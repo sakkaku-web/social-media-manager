@@ -1,21 +1,17 @@
 import {
-  All,
   Controller,
   Get,
-  Header,
   HttpException,
-  Post,
   Query,
-  Req,
   Res,
   Session,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { environment } from '../environments/environment';
-import { AuthToken } from '@kumi-arts/api-client';
-import { User } from '@kumi-arts/core';
+import { SocialProvider, User } from '@kumi-arts/core';
+import { AuthService } from './auth.service';
 
 interface TwitterAuthCallback {
   state: string;
@@ -24,7 +20,10 @@ interface TwitterAuthCallback {
 
 @Controller('twitter')
 export class TwitterController {
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly auth: AuthService
+  ) {}
 
   private get redirectUrl() {
     return `${environment.baseUrl}/twitter/callback`;
@@ -37,18 +36,13 @@ export class TwitterController {
     });
   }
 
-  @Get('auth')
-  async auth(@Session() session: Record<string, string>): Promise<AuthToken> {
-    return { token: session.TWITTER_TOKEN };
-  }
-
   @Get('login')
   async login(
     @Res() res: Response,
     @Session() session: Record<string, string>
   ) {
     const client = this.oauthClient;
-    const authLink = await client.generateOAuth2AuthLink(this.redirectUrl, {
+    const authLink = client.generateOAuth2AuthLink(this.redirectUrl, {
       scope: ['tweet.write', 'tweet.read', 'users.read'],
     });
 
@@ -60,7 +54,7 @@ export class TwitterController {
 
   @Get('callback')
   async callback(
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Query() query: TwitterAuthCallback,
     @Session() session: Record<string, string>
   ) {
@@ -82,15 +76,13 @@ export class TwitterController {
       redirectUri: this.redirectUrl,
     });
 
-    session.TWITTER_TOKEN = response.accessToken;
+    this.auth.saveToken(res, SocialProvider.TWITTER, response.accessToken);
     return res.redirect(environment.homepage);
   }
 
   @Get('user')
-  async user(@Req() req: Request): Promise<User> {
-    const service = new TwitterApi(
-      req.headers.authorization.substring('Bearer '.length)
-    );
+  async user(): Promise<User> {
+    const service = new TwitterApi(this.auth.getToken(SocialProvider.TWITTER));
     return service
       .currentUserV2()
       .then((data) => ({ username: data.data.username }));

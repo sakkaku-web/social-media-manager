@@ -7,6 +7,7 @@ import { TwitterController } from './twitter.controller';
 import { RedditController } from './reddit.controller';
 import { join } from 'path';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { environment } from '../environments/environment';
     }),
   ],
   controllers: [TwitterController, RedditController],
-  providers: [],
+  providers: [AuthService],
 })
 export class AppModule {}

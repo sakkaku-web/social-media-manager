@@ -3,7 +3,6 @@ import { createContext } from 'react';
 
 export interface SocialProviderContextValue {
   provider: SocialProvider;
-  token?: string;
 }
 
 export const SocialProviderContext = createContext({

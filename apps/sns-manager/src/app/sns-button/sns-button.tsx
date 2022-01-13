@@ -7,9 +7,8 @@ import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
 import { SocialProviderContext } from '../social-provider-context';
 
-export interface SnsButtonProps {
-  saveToken: (t: string) => void;
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface SnsButtonProps {}
 
 const data = {
   [SocialProvider.TWITTER]: {
@@ -22,30 +21,23 @@ const data = {
   },
 };
 
-export function SnsButton({ saveToken }: SnsButtonProps) {
-  const { provider, token } = useContext(SocialProviderContext);
+export function SnsButton(props: SnsButtonProps) {
+  const { provider } = useContext(SocialProviderContext);
 
   const api = new ApiClient(environment.authApi);
 
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
-    api.getAuth(provider).then((data) => {
-      saveToken(data.token);
-
-      if (data.token) {
-        api.getUser({ provider, token: data.token }).then((user) => {
-          setUser(user);
-        });
-      }
-    });
+    api
+      .getUser(provider)
+      .then((user) => setUser(user))
+      .catch((err) => setUser(null));
   }, []);
 
-  const isLoggedIn = token && user?.username;
-
   const buildUrl = () => {
-    if (isLoggedIn) {
-      return data[provider].profileUrl(user?.username || '');
+    if (user) {
+      return data[provider].profileUrl(user.username);
     } else {
       return api.getLoginLink(provider);
     }
@@ -53,7 +45,7 @@ export function SnsButton({ saveToken }: SnsButtonProps) {
 
   return (
     <button>
-      <a href={buildUrl()} target={isLoggedIn ? '_blank' : ''} rel="noreferrer">
+      <a href={buildUrl()} target={user ? '_blank' : ''} rel="noreferrer">
         <FontAwesomeIcon icon={data[provider].icon} />
         {user?.username ? user.username : 'Login'}
       </a>

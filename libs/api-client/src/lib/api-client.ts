@@ -1,14 +1,5 @@
-import { Axios, AxiosRequestHeaders } from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 import { SocialProvider, User } from '@kumi-arts/core';
-
-export interface AuthToken {
-  token: string;
-}
-
-export interface ProviderRequest {
-  provider: SocialProvider;
-  token: string;
-}
 
 export class ApiClient {
   private client: Axios;
@@ -25,21 +16,16 @@ export class ApiClient {
     return `${this.baseURL}/${this.providerLink(provider, 'login')}`;
   }
 
-  async getAuth(provider: SocialProvider): Promise<AuthToken> {
+  async getUser(provider: SocialProvider): Promise<User> {
     return this.client
-      .get(this.providerLink(provider, 'auth'))
-      .then((res) => JSON.parse(res.data)); // Somehow does not return an object
+      .get(this.providerLink(provider, 'user'))
+      .then((res) => this.handleResponse(res));
   }
 
-  private bearerHeader(token: string): AxiosRequestHeaders {
-    return { Authorization: `Bearer ${token}` };
-  }
-
-  async getUser({ provider, token }: ProviderRequest): Promise<User> {
-    return this.client
-      .get(this.providerLink(provider, 'user'), {
-        headers: this.bearerHeader(token),
-      })
-      .then((res) => JSON.parse(res.data));
+  private handleResponse<T>(res: AxiosResponse): T {
+    if (res.status !== 200) {
+      throw new Error(res.data);
+    }
+    return JSON.parse(res.data);
   }
 }

@@ -10,19 +10,14 @@ import {
 import RedditPanel from './reddit-panel/reddit-panel';
 
 export function App() {
-  const [twitterToken, setTwitterToken] = useState('');
-  const [redditToken, setRedditToken] = useState('');
-
   const [text, setText] = useState('');
 
   const twitterProvider: SocialProviderContextValue = {
     provider: SocialProvider.TWITTER,
-    token: twitterToken,
   };
 
   const redditProvider: SocialProviderContextValue = {
     provider: SocialProvider.REDDIT,
-    token: redditToken,
   };
 
   return (
@@ -33,12 +28,12 @@ export function App() {
 
       <div>
         <SocialProviderContext.Provider value={twitterProvider}>
-          <SnsButton saveToken={setTwitterToken}></SnsButton>
+          <SnsButton></SnsButton>
           <TwitterPanel></TwitterPanel>
         </SocialProviderContext.Provider>
 
         <SocialProviderContext.Provider value={redditProvider}>
-          <SnsButton saveToken={setRedditToken}></SnsButton>
+          <SnsButton></SnsButton>
           <RedditPanel></RedditPanel>
         </SocialProviderContext.Provider>
       </div>
