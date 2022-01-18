@@ -1,28 +1,28 @@
 import {
   Controller,
   Get,
+  HttpException,
+  Query,
   Res,
   Session,
-  Query,
-  HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { nanoid } from 'nanoid';
-import { environment } from '../environments/environment';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { HttpService } from '@nestjs/axios';
+import { environment } from '../environments/environment';
+import { nanoid } from 'nanoid';
 import { map, Observable } from 'rxjs';
 import { SocialProvider, User } from '@kumi-arts/core';
 
-interface FacebookAuthCallback {
+interface InstagramAuthCallback {
   state: string;
   error: string;
   code: string;
 }
 
-@Controller('facebook')
-export class FacebookController {
+@Controller('instagram')
+export class InstagramController {
   constructor(
     private readonly config: ConfigService,
     private readonly auth: AuthService,
@@ -30,19 +30,19 @@ export class FacebookController {
   ) {}
 
   private get clientId(): string {
-    return this.config.get('FACEBOOK_CLIENT');
+    return this.config.get('INSTAGRAM_CLIENT');
   }
 
   private get clientSecret(): string {
-    return this.config.get('FACEBOOK_SECRET');
+    return this.config.get('INSTAGRAM_SECRET');
   }
 
   private get redirectUrl() {
-    return `${environment.baseUrl}/facebook/callback`;
+    return `${environment.baseUrl}/instagram/callback`;
   }
 
-  private get graphQlUrl() {
-    return 'https://graph.facebook.com/v12.0';
+  private get apiUrl() {
+    return `https://api.instagram.com`;
   }
 
   @Get('login')
@@ -51,23 +51,27 @@ export class FacebookController {
     @Session() session: Record<string, string>
   ) {
     const state = nanoid();
-    const url = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&state=${state}`;
+    const url = `${this.apiUrl}/oauth/authorize?client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&scope=user_profile&response_type=code&state=${state}`;
 
-    session.FACEBOOK_STATE = state;
+    session.INSTAGRAM_STATE = state;
     return res.redirect(url);
+  }
+
+  private get token() {
+    return this.auth.getToken(SocialProvider.INSTAGRAM);
   }
 
   @Get('callback')
   async callback(
-    @Query() query: FacebookAuthCallback,
+    @Query() query: InstagramAuthCallback,
     @Session() session: Record<string, string>,
     @Res({ passthrough: true }) res: Response
   ) {
-    const state = session.FACEBOOK_STATE;
+    const state = session.INSTAGRAM_STATE;
 
     if (!state) {
       throw new HttpException(
-        'Missing state. Call /api/facebook/login first',
+        'Missing state. Call /api/instagram/login first',
         400
       );
     }
@@ -80,9 +84,14 @@ export class FacebookController {
       throw new HttpException(query.error, 400);
     }
 
-    const params = `client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&client_secret=${this.clientSecret}&code=${query.code}`;
     return this.http
-      .get(`${this.graphQlUrl}/oauth/access_token?${params}`)
+      .post(`${this.apiUrl}/oauth/access_token`, {
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+        code: query.code,
+        grant_type: 'authorization_code',
+        redirect_uri: this.redirectUrl,
+      })
       .pipe(
         map((data) => {
           if (data.status !== 200) {
@@ -91,7 +100,7 @@ export class FacebookController {
 
           this.auth.saveToken(
             res,
-            SocialProvider.FACEBOOK,
+            SocialProvider.INSTAGRAM,
             data.data.access_token
           );
 
@@ -100,22 +109,16 @@ export class FacebookController {
       );
   }
 
-  private get token() {
-    return this.auth.getToken(SocialProvider.FACEBOOK);
-  }
-
   @Get('user')
   user(): Observable<User> {
     return this.http
-      .get(`${this.graphQlUrl}/me`, {
-        headers: { Authorization: `Bearer ${this.token}` },
-      })
+      .get(`${this.apiUrl}/me?access_token=${this.token}&fields=id,username`)
       .pipe(
         map((res) => {
           const data = res.data;
           return {
             id: data.id,
-            name: data.name,
+            name: data.username,
           };
         })
       );

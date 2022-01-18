@@ -2,6 +2,7 @@ import './sns-login-button.module.scss';
 import { ApiClient } from '@kumi-arts/api-client';
 import {
   faFacebook,
+  faInstagram,
   faReddit,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
@@ -17,15 +18,20 @@ export interface SnsButtonProps {
 const data = {
   [SocialProvider.TWITTER]: {
     icon: faTwitter,
-    profileUrl: (id: string) => `https://twitter.com/${id}`,
+    profileUrl: ({ id }: User) => `https://twitter.com/${id}`,
   },
   [SocialProvider.REDDIT]: {
     icon: faReddit,
-    profileUrl: (id: string) => `https://reddit.com/u/${id}`,
+    profileUrl: ({ id }: User) => `https://reddit.com/u/${id}`,
   },
   [SocialProvider.FACEBOOK]: {
     icon: faFacebook,
-    profileUrl: (id: string) => `https://www.facebook.com/profile.php?id=${id}`,
+    profileUrl: ({ id }: User) =>
+      `https://www.facebook.com/profile.php?id=${id}`,
+  },
+  [SocialProvider.INSTAGRAM]: {
+    icon: faInstagram,
+    profileUrl: ({ name }: User) => `https://instagram.com/${name}`,
   },
 };
 
@@ -43,7 +49,7 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
 
   const buildUrl = () => {
     if (user?.id) {
-      return data[provider].profileUrl(user.id);
+      return data[provider].profileUrl(user);
     } else {
       return api.getLoginLink(provider);
     }
