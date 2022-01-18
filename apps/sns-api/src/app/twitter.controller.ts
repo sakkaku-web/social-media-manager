@@ -94,7 +94,10 @@ export class TwitterController {
   async user(): Promise<User> {
     return this.createService()
       .currentUserV2()
-      .then((data) => ({ username: data.data.username }));
+      .then((data) => ({ id: data.data.username, name: data.data.name }))
+      .catch(() => {
+        throw new HttpException('Failed to get user data', 401);
+      });
   }
 
   @Post('post')

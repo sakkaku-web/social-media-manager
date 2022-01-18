@@ -3,10 +3,12 @@ export interface SNSPost {
 }
 
 export interface User {
-  username: string;
+  id: string;
+  name: string;
 }
 
 export enum SocialProvider {
   TWITTER = 'twitter',
   REDDIT = 'reddit',
+  FACEBOOK = 'facebook',
 }

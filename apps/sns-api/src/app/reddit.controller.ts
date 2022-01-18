@@ -113,6 +113,6 @@ export class RedditController {
 
     const name = await service.getMe().name;
 
-    return { username: name };
+    return { id: name, name };
   }
 }

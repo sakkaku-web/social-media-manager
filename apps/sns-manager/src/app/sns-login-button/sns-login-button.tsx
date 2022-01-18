@@ -1,6 +1,10 @@
 import './sns-login-button.module.scss';
 import { ApiClient } from '@kumi-arts/api-client';
-import { faReddit, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import {
+  faFacebook,
+  faReddit,
+  faTwitter,
+} from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
@@ -13,11 +17,15 @@ export interface SnsButtonProps {
 const data = {
   [SocialProvider.TWITTER]: {
     icon: faTwitter,
-    profileUrl: (name: string) => `https://twitter.com/${name}`,
+    profileUrl: (id: string) => `https://twitter.com/${id}`,
   },
   [SocialProvider.REDDIT]: {
     icon: faReddit,
-    profileUrl: (name: string) => `https://reddit.com/u/${name}`,
+    profileUrl: (id: string) => `https://reddit.com/u/${id}`,
+  },
+  [SocialProvider.FACEBOOK]: {
+    icon: faFacebook,
+    profileUrl: (id: string) => `https://www.facebook.com/profile.php?id=${id}`,
   },
 };
 
@@ -34,8 +42,8 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
   }, []);
 
   const buildUrl = () => {
-    if (user?.username) {
-      return data[provider].profileUrl(user.username);
+    if (user?.id) {
+      return data[provider].profileUrl(user.id);
     } else {
       return api.getLoginLink(provider);
     }
@@ -45,7 +53,7 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
     <button>
       <a href={buildUrl()} target={user ? '_blank' : ''} rel="noreferrer">
         <FontAwesomeIcon icon={data[provider].icon} />
-        {user?.username ? user.username : 'Login'}
+        {user?.name ? user.name : 'Login'}
       </a>
     </button>
   );

@@ -20,6 +20,10 @@ export function App() {
     provider: SocialProvider.TWITTER,
   };
 
+  const facebookProvider: SocialProviderContextValue = {
+    provider: SocialProvider.FACEBOOK,
+  };
+
   const redditProvider: SocialProviderContextValue = {
     provider: SocialProvider.REDDIT,
   };
@@ -47,6 +51,11 @@ export function App() {
           <SnsLoginButton api={api}></SnsLoginButton>
           <TwitterPanel></TwitterPanel>
 
+          <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
+        </SocialProviderContext.Provider>
+
+        <SocialProviderContext.Provider value={facebookProvider}>
+          <SnsLoginButton api={api}></SnsLoginButton>
           <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
         </SocialProviderContext.Provider>
 
