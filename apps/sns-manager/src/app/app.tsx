@@ -1,5 +1,5 @@
 import { SocialProvider } from '@kumi-arts/core';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import PostForm from './post-form/post-form';
 import SnsLoginButton from './sns-login-button/sns-login-button';
 import { TwitterPanel } from './twitter-panel/twitter-panel';
@@ -14,6 +14,7 @@ import SnsSubmitButton from './sns-submit-button/sns-submit-button';
 
 export function App() {
   const [text, setText] = useState('');
+  const [images, setImages] = useState([] as File[]);
 
   const twitterProvider: SocialProviderContextValue = {
     provider: SocialProvider.TWITTER,
@@ -25,13 +26,20 @@ export function App() {
 
   const api = new ApiClient(environment.api);
   const postSNS = (provider: SocialProvider) => {
-    api.postSNS(provider, { text });
+    api.postSNS(provider, { text }, images);
+  };
+
+  const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImages(Array.from(event.target.files || []));
   };
 
   return (
     <div>
       <div>
-        <PostForm text={text} setText={setText}></PostForm>
+        <textarea value={text} onChange={(e) => setText(e.target.value)} />
+        <div>
+          <input type="file" multiple onChange={onFileUpload} />
+        </div>
       </div>
 
       <div>

@@ -10,7 +10,6 @@ export interface PostFormProps {
 export function PostForm({ text, setText }: PostFormProps) {
   return (
     <div>
-      <textarea value={text} onChange={(e) => setText(e.target.value)} />
     </div>
   );
 }

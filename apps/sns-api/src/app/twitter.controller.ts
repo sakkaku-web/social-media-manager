@@ -7,13 +7,17 @@ import {
   Query,
   Res,
   Session,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TwitterApi } from 'twitter-api-v2';
-import { Response } from 'express';
+import { Response, Express } from 'express';
+import { Multer } from 'multer';
 import { environment } from '../environments/environment';
 import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { AuthService } from './auth.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 interface TwitterAuthCallback {
   state: string;
@@ -94,9 +98,19 @@ export class TwitterController {
   }
 
   @Post('post')
-  async post(@Body() body: SNSPost): Promise<void> {
-    await this.createService().v2.tweet({
-      text: body.text,
-    });
+  @UseInterceptors(FilesInterceptor('images'))
+  async post(
+    @Body() body: SNSPost,
+    @UploadedFiles() images: Express.Multer.File[]
+  ): Promise<void> {
+    console.log(body);
+    console.log(images);
+
+    // const service = this.createService();
+    // const media = await service.v1.uploadMedia('');
+
+    // await service.v2.tweet({
+    //   text: body.text,
+    // });
   }
 }

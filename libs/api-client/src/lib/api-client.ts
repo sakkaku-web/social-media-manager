@@ -25,9 +25,20 @@ export class ApiClient {
       .then((res) => this.handleResponse(res));
   }
 
-  async postSNS(provider: SocialProvider, body: SNSPost): Promise<void> {
+  async postSNS(
+    provider: SocialProvider,
+    body: SNSPost,
+    images: File[]
+  ): Promise<void> {
+    const data = new FormData();
+    const records = body as unknown as Record<string, string>;
+    Object.keys(records).map((k) => {
+      data.append(k, records[k]);
+    });
+    images.forEach((img) => data.append('images', img, img.name));
+
     this.client
-      .post(this.providerLink(provider, 'post'), JSON.stringify(body))
+      .post(this.providerLink(provider, 'post'), data)
       .then(this.handleResponse);
   }
 
