@@ -1,16 +1,17 @@
-import { Axios } from 'axios';
+import axios from 'axios';
 import { nanoid } from 'nanoid';
-import { OAuthState } from '..';
+import { BaseAuthService } from './sns-auth';
 import {
-  SNSAuthService,
   OAuthOptions,
   OAuthLogin,
   OAuthLoginCallback,
   OAuthCallbackResponse,
 } from './sns-auth';
 
-export class FacebookAuthService implements SNSAuthService {
-  constructor(private options: OAuthOptions) {}
+export class FacebookAuthService extends BaseAuthService {
+  constructor(private options: OAuthOptions) {
+    super();
+  }
 
   getLoginUrl(redirect: string): OAuthLogin {
     const { clientId } = this.options;
@@ -20,22 +21,26 @@ export class FacebookAuthService implements SNSAuthService {
   }
 
   async handleCallback(
-    callback: OAuthLoginCallback,
-    login: OAuthState
+    callback: OAuthLoginCallback
   ): Promise<OAuthCallbackResponse> {
-    if (callback.state != login.state) {
-      throw new Error('State mismatch');
-    }
+    this.validateCallbackState(callback);
 
-    if (callback.error) {
-      throw new Error(callback.error);
-    }
 
     const { clientId, clientSecret } = this.options;
-    const params = `client_id=${clientId}&redirect_uri=${login.redirect}&client_secret=${clientSecret}&code=${callback.code}`;
+    const params = {
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: callback.redirect,
+      code: callback.code,
+    };
 
-    const response = await new Axios().get(
-      `https://graph.facebook.com/oauth/access_token?${params}`
+    console.log(callback, params);
+
+    // `client_id=${clientId}&redirect_uri=${callback.redirect}&client_secret=${clientSecret}&code=${callback.code}`;
+
+    const response = await axios.get(
+      `https://graph.facebook.com/oauth/access_token?${params}`,
+      { params }
     );
 
     if (response.status !== 200) {

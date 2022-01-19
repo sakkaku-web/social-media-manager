@@ -14,15 +14,12 @@ export interface OAuthLogin {
   url: string;
 }
 
-export interface OAuthState {
-  state: string;
-  redirect: string;
-}
-
 export interface OAuthLoginCallback {
   state: string;
   code: string;
   error?: string;
+  originalState: string;
+  redirect: string;
 }
 
 export interface OAuthOptions {
@@ -32,8 +29,17 @@ export interface OAuthOptions {
 
 export interface SNSAuthService {
   getLoginUrl(redirect: string): OAuthLogin;
-  handleCallback(
-    data: OAuthLoginCallback,
-    login: OAuthState
-  ): Promise<OAuthCallbackResponse>;
+  handleCallback(data: OAuthLoginCallback): Promise<OAuthCallbackResponse>;
+}
+
+export abstract class BaseAuthService {
+  protected validateCallbackState(callback: OAuthLoginCallback) {
+    if (callback.state != callback.originalState) {
+      throw new Error('State mismatch');
+    }
+
+    if (callback.error) {
+      throw new Error(callback.error);
+    }
+  }
 }

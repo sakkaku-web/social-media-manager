@@ -71,9 +71,10 @@ export class FacebookController {
     const state = session.FACEBOOK_STATE;
 
     try {
-      const { token } = await this.facebookAuth.handleCallback(query, {
+      const { token } = await this.facebookAuth.handleCallback({
+        ...query,
         redirect: this.redirectUrl,
-        state,
+        originalState: state,
       });
 
       this.auth.saveToken(res, SocialProvider.FACEBOOK, token);

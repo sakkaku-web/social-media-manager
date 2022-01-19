@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  HttpException,
   Query,
   Res,
   Session,
@@ -11,9 +10,9 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { HttpService } from '@nestjs/axios';
 import { environment } from '../environments/environment';
-import { nanoid } from 'nanoid';
 import { map, Observable } from 'rxjs';
 import { SocialProvider, User } from '@kumi-arts/core';
+import { InstagramAuthService } from '@kumi-arts/sns-auth';
 
 interface InstagramAuthCallback {
   state: string;
@@ -41,6 +40,13 @@ export class InstagramController {
     return `${environment.baseUrl}/instagram/callback`;
   }
 
+  private get instagramAuth() {
+    return new InstagramAuthService({
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
+    });
+  }
+
   private get apiUrl() {
     return `https://api.instagram.com`;
   }
@@ -50,9 +56,7 @@ export class InstagramController {
     @Res() res: Response,
     @Session() session: Record<string, string>
   ) {
-    const state = nanoid();
-    const url = `${this.apiUrl}/oauth/authorize?client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&scope=user_profile&response_type=code&state=${state}`;
-
+    const { state, url } = this.instagramAuth.getLoginUrl(this.redirectUrl);
     session.INSTAGRAM_STATE = state;
     return res.redirect(url);
   }
@@ -68,45 +72,15 @@ export class InstagramController {
     @Res({ passthrough: true }) res: Response
   ) {
     const state = session.INSTAGRAM_STATE;
+    const { token } = await this.instagramAuth.handleCallback({
+      ...query,
+      redirect: this.redirectUrl,
+      originalState: state,
+    });
 
-    if (!state) {
-      throw new HttpException(
-        'Missing state. Call /api/instagram/login first',
-        400
-      );
-    }
+    this.auth.saveToken(res, SocialProvider.INSTAGRAM, token);
 
-    if (state != query.state) {
-      throw new HttpException('State mismatch', 400);
-    }
-
-    if (query.error) {
-      throw new HttpException(query.error, 400);
-    }
-
-    return this.http
-      .post(`${this.apiUrl}/oauth/access_token`, {
-        client_id: this.clientId,
-        client_secret: this.clientSecret,
-        code: query.code,
-        grant_type: 'authorization_code',
-        redirect_uri: this.redirectUrl,
-      })
-      .pipe(
-        map((data) => {
-          if (data.status !== 200) {
-            throw new HttpException(`${data.status} - ${data.data}`, 400);
-          }
-
-          this.auth.saveToken(
-            res,
-            SocialProvider.INSTAGRAM,
-            data.data.access_token
-          );
-
-          return res.redirect(environment.homepage);
-        })
-      );
+    return res.redirect(environment.homepage);
   }
 
   @Get('user')

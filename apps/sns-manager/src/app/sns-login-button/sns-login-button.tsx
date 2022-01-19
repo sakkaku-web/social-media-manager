@@ -57,7 +57,7 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
 
   return (
     <button>
-      <a href={buildUrl()} target={user ? '_blank' : ''} rel="noreferrer">
+      <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
         <FontAwesomeIcon icon={data[provider].icon} />
         {user?.name ? user.name : 'Login'}
       </a>
