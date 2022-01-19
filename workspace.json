@@ -96,6 +96,28 @@
         }
       }
     },
+    "sns-auth": {
+      "root": "libs/sns-auth",
+      "sourceRoot": "libs/sns-auth/src",
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/sns-auth/**/*.ts"]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/sns-auth"],
+          "options": {
+            "jestConfig": "libs/sns-auth/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "sns-manager": {
       "root": "apps/sns-manager",
       "sourceRoot": "apps/sns-manager/src",

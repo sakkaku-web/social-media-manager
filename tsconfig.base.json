@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@kumi-arts/api-client": ["libs/api-client/src/index.ts"],
-      "@kumi-arts/core": ["libs/core/src/index.ts"]
+      "@kumi-arts/core": ["libs/core/src/index.ts"],
+      "@kumi-arts/sns-auth": ["libs/sns-auth/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

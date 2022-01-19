@@ -7,13 +7,13 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { nanoid } from 'nanoid';
 import { environment } from '../environments/environment';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { HttpService } from '@nestjs/axios';
 import { map, Observable } from 'rxjs';
 import { SocialProvider, User } from '@kumi-arts/core';
+import { FacebookAuthService, SNSAuthService } from '@kumi-arts/sns-auth';
 
 interface FacebookAuthCallback {
   state: string;
@@ -41,6 +41,13 @@ export class FacebookController {
     return `${environment.baseUrl}/facebook/callback`;
   }
 
+  private get facebookAuth(): SNSAuthService {
+    return new FacebookAuthService({
+      clientId: this.clientId,
+      clientSecret: this.clientSecret,
+    });
+  }
+
   private get graphQlUrl() {
     return 'https://graph.facebook.com/v12.0';
   }
@@ -50,9 +57,7 @@ export class FacebookController {
     @Res() res: Response,
     @Session() session: Record<string, string>
   ) {
-    const state = nanoid();
-    const url = `https://www.facebook.com/v12.0/dialog/oauth?client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&state=${state}`;
-
+    const { state, url } = this.facebookAuth.getLoginUrl(this.redirectUrl);
     session.FACEBOOK_STATE = state;
     return res.redirect(url);
   }
@@ -65,39 +70,18 @@ export class FacebookController {
   ) {
     const state = session.FACEBOOK_STATE;
 
-    if (!state) {
-      throw new HttpException(
-        'Missing state. Call /api/facebook/login first',
-        400
-      );
+    try {
+      const { token } = await this.facebookAuth.handleCallback(query, {
+        redirect: this.redirectUrl,
+        state,
+      });
+
+      this.auth.saveToken(res, SocialProvider.FACEBOOK, token);
+
+      return res.redirect(environment.homepage);
+    } catch (e) {
+      throw new HttpException(e.message, 400);
     }
-
-    if (state != query.state) {
-      throw new HttpException('State mismatch', 400);
-    }
-
-    if (query.error) {
-      throw new HttpException(query.error, 400);
-    }
-
-    const params = `client_id=${this.clientId}&redirect_uri=${this.redirectUrl}&client_secret=${this.clientSecret}&code=${query.code}`;
-    return this.http
-      .get(`${this.graphQlUrl}/oauth/access_token?${params}`)
-      .pipe(
-        map((data) => {
-          if (data.status !== 200) {
-            throw new HttpException(`${data.status} - ${data.data}`, 400);
-          }
-
-          this.auth.saveToken(
-            res,
-            SocialProvider.FACEBOOK,
-            data.data.access_token
-          );
-
-          return res.redirect(environment.homepage);
-        })
-      );
   }
 
   private get token() {
