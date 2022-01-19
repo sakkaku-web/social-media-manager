@@ -1,0 +1,135 @@
+import { SocialProvider } from '@kumi-arts/core';
+import {
+  FacebookAuthService,
+  InstagramAuthService,
+  OAuthOptions,
+  RedditAuthService,
+  SNSAuthService,
+} from '@kumi-arts/sns-auth';
+import {
+  FacebookClient,
+  InstagramClient,
+  RedditClient,
+  SNSClient,
+  User,
+} from '@kumi-arts/sns-client';
+import {
+  Controller,
+  Get,
+  HttpException,
+  Query,
+  Req,
+  Res,
+  Session,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service';
+import { Request, Response } from 'express';
+import { environment } from '../environments/environment';
+
+@Controller([
+  SocialProvider.FACEBOOK,
+  SocialProvider.INSTAGRAM,
+  SocialProvider.REDDIT,
+])
+export class AuthController {
+  constructor(
+    private readonly config: ConfigService,
+    private readonly auth: AuthService
+  ) {}
+
+  private getProvider(req: Request): SocialProvider {
+    return Object.values(SocialProvider).find((p) =>
+      req.url.includes(`/${p}/`)
+    );
+  }
+
+  private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
+    const tokens: OAuthOptions = {
+      clientId: this.config.get(`${provider.toUpperCase()}_CLIENT`),
+      clientSecret: this.config.get(`${provider.toUpperCase()}_SECRET`),
+    };
+
+    switch (provider) {
+      case SocialProvider.FACEBOOK:
+        return new FacebookAuthService(tokens);
+      case SocialProvider.INSTAGRAM:
+        return new InstagramAuthService(tokens);
+      case SocialProvider.REDDIT:
+        return new RedditAuthService(tokens);
+    }
+  }
+
+  private getClientForProvider(provider: SocialProvider): SNSClient {
+    const token = this.auth.getToken(provider);
+
+    switch (provider) {
+      case SocialProvider.FACEBOOK:
+        return new FacebookClient(token);
+      case SocialProvider.INSTAGRAM:
+        return new InstagramClient(token);
+      case SocialProvider.REDDIT:
+        return new RedditClient(token);
+    }
+  }
+
+  private getRedirectUrl(provider: SocialProvider) {
+    return `${environment.baseUrl}/${provider}/callback`;
+  }
+
+  @Get('login')
+  async login(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Session() session: Record<string, string>
+  ) {
+    const provider = this.getProvider(req);
+    const { state, url } = this.getAuthServiceForProvider(provider).getLoginUrl(
+      this.getRedirectUrl(provider)
+    );
+    session[`${provider}_STATE`] = state;
+    return res.redirect(url);
+  }
+
+  @Get('callback')
+  async callback(
+    @Req() req: Request,
+    @Query() query: AuthCallback,
+    @Session() session: Record<string, string>,
+    @Res({ passthrough: true }) res: Response
+  ) {
+    const provider = this.getProvider(req);
+    try {
+      const { token } = await this.getAuthServiceForProvider(
+        provider
+      ).handleCallback({
+        ...query,
+        redirect: this.getRedirectUrl(provider),
+        originalState: session[`${provider}_STATE`],
+      });
+
+      this.auth.saveToken(res, provider, token);
+      return res.redirect(environment.homepage);
+    } catch (e) {
+      console.log(e);
+      throw new HttpException(e.message, 400);
+    }
+  }
+
+  @Get('user')
+  async user(@Req() req: Request): Promise<User> {
+    const provider = this.getProvider(req);
+    const client = this.getClientForProvider(provider);
+
+    return client.getUser().catch((e) => {
+      console.log(e);
+      throw new HttpException(`Failed to get user data: ${e.message}`, 401);
+    });
+  }
+}
+
+interface AuthCallback {
+  state: string;
+  error: string;
+  code: string;
+}

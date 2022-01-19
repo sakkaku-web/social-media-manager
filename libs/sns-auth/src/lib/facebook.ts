@@ -34,10 +34,6 @@ export class FacebookAuthService extends BaseAuthService {
       code: callback.code,
     };
 
-    console.log(callback, params);
-
-    // `client_id=${clientId}&redirect_uri=${callback.redirect}&client_secret=${clientSecret}&code=${callback.code}`;
-
     const response = await axios.get(
       `https://graph.facebook.com/oauth/access_token?${params}`,
       { params }
