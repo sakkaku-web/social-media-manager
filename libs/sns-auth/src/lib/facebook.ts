@@ -25,7 +25,6 @@ export class FacebookAuthService extends BaseAuthService {
   ): Promise<OAuthCallbackResponse> {
     this.validateCallbackState(callback);
 
-
     const { clientId, clientSecret } = this.options;
     const params = {
       client_id: clientId,
@@ -35,7 +34,7 @@ export class FacebookAuthService extends BaseAuthService {
     };
 
     const response = await axios.get(
-      `https://graph.facebook.com/oauth/access_token?${params}`,
+      `https://graph.facebook.com/oauth/access_token`,
       { params }
     );
 

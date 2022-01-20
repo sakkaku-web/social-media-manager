@@ -1,7 +1,5 @@
-import { SNSClient } from './sns-client';
 import { Axios } from 'axios';
-import { User } from './sns-client';
-import { jsonParseInterceptor } from '..';
+import { jsonParseInterceptor, MediaPost, User, SNSClient } from './sns-client';
 
 export class FacebookClient implements SNSClient {
   private client: Axios;
@@ -11,7 +9,6 @@ export class FacebookClient implements SNSClient {
       baseURL: 'https://graph.facebook.com/',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
       },
     });
 
@@ -23,5 +20,19 @@ export class FacebookClient implements SNSClient {
       id: data.id,
       name: data.name,
     }));
+  }
+
+  async postMedia(post: MediaPost) {
+    const { id } = await this.getUser();
+    const { data: d } = await this.client.get('/me/permissions');
+    console.log(d);
+
+    const { data } = await this.client.post(`${id}_51428047474/media`, null, {
+      params: {
+        image_url: 'https://placekitten.com/300/200',
+      },
+    });
+
+    console.log(data);
   }
 }

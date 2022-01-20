@@ -9,14 +9,17 @@ import {
 import {
   FacebookClient,
   InstagramClient,
+  MediaPost,
   RedditClient,
   SNSClient,
   User,
 } from '@kumi-arts/sns-client';
 import {
+  Body,
   Controller,
   Get,
   HttpException,
+  Post,
   Query,
   Req,
   Res,
@@ -73,6 +76,11 @@ export class AuthController {
     }
   }
 
+  private clientForRequest(req: Request): SNSClient {
+    const provider = this.getProvider(req);
+    return this.getClientForProvider(provider);
+  }
+
   private getRedirectUrl(provider: SocialProvider) {
     return `${environment.baseUrl}/${provider}/callback`;
   }
@@ -118,13 +126,18 @@ export class AuthController {
 
   @Get('user')
   async user(@Req() req: Request): Promise<User> {
-    const provider = this.getProvider(req);
-    const client = this.getClientForProvider(provider);
+    const client = this.clientForRequest(req);
 
     return client.getUser().catch((e) => {
       console.log(e);
       throw new HttpException(`Failed to get user data: ${e.message}`, 401);
     });
+  }
+
+  @Post('post')
+  async post(@Req() req: Request, @Body() body: MediaPost) {
+    const client = this.clientForRequest(req);
+    return client.postMedia(body);
   }
 }
 

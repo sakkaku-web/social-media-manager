@@ -1,5 +1,5 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, SNSClient, User } from './sns-client';
+import { jsonParseInterceptor, MediaPost, SNSClient, User } from './sns-client';
 
 export class InstagramClient implements SNSClient {
   private client: Axios;
@@ -14,6 +14,9 @@ export class InstagramClient implements SNSClient {
 
     this.client.interceptors.response.use(jsonParseInterceptor);
   }
+  postMedia(media: MediaPost) {
+    throw new Error('Method not implemented.');
+  }
 
   async getUser(): Promise<User> {
     return this.client
@@ -23,4 +26,5 @@ export class InstagramClient implements SNSClient {
         name: data.username,
       }));
   }
+
 }

@@ -1,5 +1,10 @@
 import { AxiosResponse } from 'axios';
 
+export interface MediaPost {
+  text: string;
+  image: string;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -7,6 +12,7 @@ export interface User {
 
 export interface SNSClient {
   getUser(): Promise<User>;
+  postMedia(media: MediaPost);
 }
 
 export const jsonParseInterceptor = (res: AxiosResponse) => {
