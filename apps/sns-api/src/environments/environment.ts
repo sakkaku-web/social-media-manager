@@ -3,4 +3,5 @@ export const environment = {
   homepage: '/',
   staticFiles: '../../apps/sns-manager',
   baseUrl: 'http://localhost:3333/api',
+  https: undefined,
 };

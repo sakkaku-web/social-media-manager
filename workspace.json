@@ -70,6 +70,14 @@
                   "with": "apps/sns-api/src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "https": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/sns-api/src/environments/environment.ts",
+                  "with": "apps/sns-api/src/environments/environment.https.ts"
+                }
+              ]
             }
           }
         },
@@ -77,6 +85,11 @@
           "executor": "@nrwl/node:execute",
           "options": {
             "buildTarget": "sns-api:build"
+          },
+          "configurations": {
+            "https": {
+              "buildTarget": "sns-api:build:https"
+            }
           }
         },
         "lint": {

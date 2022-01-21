@@ -4,14 +4,17 @@
  */
 
 import { Logger } from '@nestjs/common';
+import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 
 import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions: HttpsOptions = environment.https;
+  const app = await NestFactory.create(AppModule, { httpsOptions });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
 
