@@ -2,7 +2,13 @@ import { AxiosResponse } from 'axios';
 
 export interface MediaPost {
   text: string;
-  image: string;
+  images: MediaImage[];
+}
+
+export interface MediaImage {
+  filename: string;
+  data: Buffer;
+  type: string;
 }
 
 export interface User {

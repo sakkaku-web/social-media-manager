@@ -164,7 +164,14 @@ export class AuthController {
     @UploadedFiles() images: Express.Multer.File[]
   ) {
     const client = this.clientForRequest(req);
-    return client.postMedia(body);
+    return client.postMedia({
+      ...body,
+      images: images.map((i) => ({
+        data: i.buffer,
+        filename: i.originalname,
+        type: i.mimetype,
+      })),
+    });
   }
 }
 
