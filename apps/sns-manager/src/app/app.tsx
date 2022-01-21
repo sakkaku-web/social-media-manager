@@ -1,55 +1,25 @@
-import { SocialProvider } from '@kumi-arts/core';
-import React, { useState } from 'react';
-import SnsLoginButton from './sns-login-button/sns-login-button';
 import { ApiClient } from '@kumi-arts/api-client';
+import { useState } from 'react';
 import { environment } from '../environments/environment';
+import PostForm from './post-form/post-form';
+import SnsLogins from './sns-logins/sns-logins';
+import { SocialProviderContext, Tokens } from './social-provider-context';
 
 export function App() {
-  const [text, setText] = useState('');
-  const [images, setImages] = useState([] as File[]);
-
   const api = new ApiClient(environment.api);
-  const postSNS = (provider: SocialProvider) => {
-    api.postSNS(provider, { text }, images);
-  };
 
-  const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImages(Array.from(event.target.files || []));
-  };
+  const [tokens, setTokens] = useState({} as Tokens);
 
   return (
     <div>
-      <div>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} />
-        <div>
-          <input type="file" multiple onChange={onFileUpload} />
-        </div>
-      </div>
+      <SnsLogins
+        api={api}
+        updateToken={(t) => setTokens({ ...tokens, ...t })}
+      />
 
-      <div>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.TWITTER}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.REDDIT}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.IMGUR}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.FACEBOOK}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.INSTAGRAM}
-        ></SnsLoginButton>
-
-        <button onClick={() => postSNS(SocialProvider.IMGUR)}>Submit</button>
-      </div>
+      <SocialProviderContext.Provider value={tokens}>
+        <PostForm />
+      </SocialProviderContext.Provider>
     </div>
   );
 }

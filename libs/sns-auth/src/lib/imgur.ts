@@ -26,7 +26,6 @@ export class ImgurAuthService implements SNSAuthService {
     url.searchParams.set('client_id', clientId);
     url.searchParams.set('state', state);
 
-    console.log(state);
     return { url: url.toString(), state };
   }
 
@@ -34,8 +33,6 @@ export class ImgurAuthService implements SNSAuthService {
     callback: ImgurOAuthCallback
   ): Promise<OAuthCallbackResponse> {
     validateCallbackState(callback);
-    console.log(callback);
-
     return { token: callback.access_token };
   }
 }

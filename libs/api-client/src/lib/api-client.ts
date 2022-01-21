@@ -4,7 +4,7 @@ import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 export class ApiClient {
   private client: Axios;
 
-  constructor(private baseURL: string) {
+  constructor(baseURL: string) {
     this.client = new Axios({
       baseURL,
       headers: { 'Content-Type': 'application/json' },
@@ -15,8 +15,8 @@ export class ApiClient {
     return `${provider}/${url}`;
   }
 
-  getLoginLink(provider: SocialProvider): string {
-    return `${this.baseURL}/${this.providerLink(provider, 'login')}`;
+  async getToken(provider: SocialProvider): Promise<string> {
+    return this.client.get(this.providerLink(provider, 'token'));
   }
 
   async getUser(provider: SocialProvider): Promise<User> {

@@ -57,10 +57,7 @@
             "outputPath": "dist/apps/sns-api",
             "main": "apps/sns-api/src/main.ts",
             "tsConfig": "apps/sns-api/tsconfig.app.json",
-            "assets": [
-              "apps/sns-api/src/assets",
-              "apps/sns-api/src/views"
-            ]
+            "assets": ["apps/sns-api/src/assets", "apps/sns-api/src/views"]
           },
           "configurations": {
             "production": {

@@ -1,10 +1,6 @@
 import { SocialProvider } from '@kumi-arts/core';
 import { createContext } from 'react';
 
-export interface SocialProviderContextValue {
-  provider: SocialProvider;
-}
+export type Tokens = { [p in SocialProvider]?: string | null };
 
-export const SocialProviderContext = createContext({
-  provider: SocialProvider.TWITTER,
-} as SocialProviderContextValue);
+export const SocialProviderContext = createContext({} as Tokens);

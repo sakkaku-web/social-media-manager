@@ -118,6 +118,11 @@ export class AuthController {
     return `${environment.baseUrl}/${provider}/callback`;
   }
 
+  @Get('token')
+  async tokens(@Req() req: Request) {
+    return this.auth.getToken(this.getProvider(req));
+  }
+
   @Get('login')
   async login(
     @Req() req: Request,
@@ -158,11 +163,11 @@ export class AuthController {
       });
 
       this.auth.saveToken(res, provider, token);
-      return res.redirect(environment.homepage);
     } catch (e) {
-      console.log(e);
-      throw new HttpException(e.message, 400);
+      console.log('Login failed', e.message);
     }
+
+    return res.redirect(environment.homepage);
   }
 
   @Get('user')
@@ -170,7 +175,6 @@ export class AuthController {
     const client = this.clientForRequest(req);
 
     return client.getUser().catch((e) => {
-      console.log(e);
       throw new HttpException(`Failed to get user data: ${e.message}`, 401);
     });
   }
