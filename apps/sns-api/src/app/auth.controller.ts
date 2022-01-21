@@ -5,6 +5,7 @@ import {
   OAuthOptions,
   RedditAuthService,
   SNSAuthService,
+  TwitterAuthService,
 } from '@kumi-arts/sns-auth';
 import {
   FacebookClient,
@@ -12,6 +13,7 @@ import {
   MediaPost,
   RedditClient,
   SNSClient,
+  TwitterClient,
   User,
 } from '@kumi-arts/sns-client';
 import {
@@ -24,16 +26,21 @@ import {
   Req,
   Res,
   Session,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
+import { Request, Response, Express } from 'express';
+import { Multer } from 'multer';
 import { environment } from '../environments/environment';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller([
   SocialProvider.FACEBOOK,
   SocialProvider.INSTAGRAM,
   SocialProvider.REDDIT,
+  SocialProvider.TWITTER,
 ])
 export class AuthController {
   constructor(
@@ -60,6 +67,8 @@ export class AuthController {
         return new InstagramAuthService(tokens);
       case SocialProvider.REDDIT:
         return new RedditAuthService(tokens);
+      case SocialProvider.TWITTER:
+        return new TwitterAuthService(tokens);
     }
   }
 
@@ -73,7 +82,18 @@ export class AuthController {
         return new InstagramClient(token);
       case SocialProvider.REDDIT:
         return new RedditClient(token);
+      case SocialProvider.TWITTER:
+        return new TwitterClient(token);
     }
+  }
+
+  private getScopesForProvider(provider: SocialProvider): string[] {
+    switch (provider) {
+      case SocialProvider.TWITTER:
+        return ['users.read', 'tweet.write', 'tweet.read'];
+    }
+
+    return [];
   }
 
   private clientForRequest(req: Request): SNSClient {
@@ -92,8 +112,10 @@ export class AuthController {
     @Session() session: Record<string, string>
   ) {
     const provider = this.getProvider(req);
+    const scopes = this.getScopesForProvider(provider);
     const { state, url } = this.getAuthServiceForProvider(provider).getLoginUrl(
-      this.getRedirectUrl(provider)
+      this.getRedirectUrl(provider),
+      scopes
     );
     session[`${provider}_STATE`] = state;
     return res.redirect(url);
@@ -135,7 +157,12 @@ export class AuthController {
   }
 
   @Post('post')
-  async post(@Req() req: Request, @Body() body: MediaPost) {
+  @UseInterceptors(FilesInterceptor('images'))
+  async post(
+    @Req() req: Request,
+    @Body() body: MediaPost,
+    @UploadedFiles() images: Express.Multer.File[]
+  ) {
     const client = this.clientForRequest(req);
     return client.postMedia(body);
   }

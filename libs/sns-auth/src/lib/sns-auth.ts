@@ -28,18 +28,16 @@ export interface OAuthOptions {
 }
 
 export interface SNSAuthService {
-  getLoginUrl(redirect: string): OAuthLogin;
+  getLoginUrl(redirect: string, scopes?: string[]): OAuthLogin;
   handleCallback(data: OAuthLoginCallback): Promise<OAuthCallbackResponse>;
 }
 
-export abstract class BaseAuthService {
-  protected validateCallbackState(callback: OAuthLoginCallback) {
-    if (callback.state != callback.originalState) {
-      throw new Error('State mismatch');
-    }
+export function validateCallbackState(callback: OAuthLoginCallback) {
+  if (callback.state != callback.originalState) {
+    throw new Error('State mismatch');
+  }
 
-    if (callback.error) {
-      throw new Error(callback.error);
-    }
+  if (callback.error) {
+    throw new Error(callback.error);
   }
 }

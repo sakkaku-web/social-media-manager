@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
-import { TwitterController } from './twitter.controller';
 import { join } from 'path';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth.service';
@@ -17,7 +16,7 @@ import { AuthController } from './auth.controller';
       rootPath: join(__dirname, environment.staticFiles),
     }),
   ],
-  controllers: [TwitterController, AuthController],
+  controllers: [AuthController],
   providers: [AuthService],
 })
 export class AppModule {}

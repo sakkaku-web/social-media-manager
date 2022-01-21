@@ -1,17 +1,16 @@
 import axios from 'axios';
 import { nanoid } from 'nanoid';
-import { BaseAuthService } from './sns-auth';
 import {
   OAuthOptions,
   OAuthLogin,
   OAuthLoginCallback,
   OAuthCallbackResponse,
+  SNSAuthService,
+  validateCallbackState,
 } from './sns-auth';
 
-export class RedditAuthService extends BaseAuthService {
-  constructor(private options: OAuthOptions) {
-    super();
-  }
+export class RedditAuthService implements SNSAuthService {
+  constructor(private options: OAuthOptions) {}
 
   getLoginUrl(redirect: string): OAuthLogin {
     const { clientId } = this.options;
@@ -23,7 +22,7 @@ export class RedditAuthService extends BaseAuthService {
   async handleCallback(
     callback: OAuthLoginCallback
   ): Promise<OAuthCallbackResponse> {
-    this.validateCallbackState(callback);
+    validateCallbackState(callback);
 
     const { clientId, clientSecret } = this.options;
 
