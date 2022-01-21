@@ -8,9 +8,8 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
-import { SocialProviderContext } from '../social-provider-context';
 
 export interface SnsButtonProps {
   api: ApiClient;
@@ -41,7 +40,10 @@ const data = {
   },
 };
 
-export function SnsLoginButton({ api, provider }: SnsButtonProps) {
+export function SnsLoginButton({
+  api,
+  provider,
+}: SnsButtonProps) {
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
@@ -60,12 +62,14 @@ export function SnsLoginButton({ api, provider }: SnsButtonProps) {
   };
 
   return (
-    <button>
-      <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
-        <FontAwesomeIcon icon={data[provider].icon} />
-        {user?.name ? user.name : `${provider} login`}
-      </a>
-    </button>
+    <a
+      href={buildUrl()}
+      target={user?.id ? '_blank' : ''}
+      rel="noreferrer"
+    >
+      <FontAwesomeIcon icon={data[provider].icon} />
+      {user?.name ? user.name : `${provider} login`}
+    </a>
   );
 }
 

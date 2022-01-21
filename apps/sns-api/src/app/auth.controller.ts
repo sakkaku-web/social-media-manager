@@ -10,6 +10,7 @@ import {
 } from '@kumi-arts/sns-auth';
 import {
   FacebookClient,
+  ImgurClient,
   InstagramClient,
   MediaPost,
   RedditClient,
@@ -89,6 +90,8 @@ export class AuthController {
         return new RedditClient(token);
       case SocialProvider.TWITTER:
         return new TwitterClient(token);
+      case SocialProvider.IMGUR:
+        return new ImgurClient(token);
     }
   }
 

@@ -41,19 +41,19 @@ export function App() {
         ></SnsLoginButton>
         <SnsLoginButton
           api={api}
-          provider={SocialProvider.FACEBOOK}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
-          provider={SocialProvider.INSTAGRAM}
-        ></SnsLoginButton>
-        <SnsLoginButton
-          api={api}
           provider={SocialProvider.REDDIT}
         ></SnsLoginButton>
         <SnsLoginButton
           api={api}
           provider={SocialProvider.IMGUR}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.FACEBOOK}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.INSTAGRAM}
         ></SnsLoginButton>
       </div>
     </div>
