@@ -6,6 +6,7 @@ import {
   faReddit,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
+import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
@@ -13,6 +14,7 @@ import { SocialProviderContext } from '../social-provider-context';
 
 export interface SnsButtonProps {
   api: ApiClient;
+  provider: SocialProvider;
 }
 
 const data = {
@@ -33,11 +35,13 @@ const data = {
     icon: faInstagram,
     profileUrl: ({ name }: User) => `https://instagram.com/${name}`,
   },
+  [SocialProvider.IMGUR]: {
+    icon: faImages,
+    profileUrl: ({ name }: User) => `https://imgur.com/user/${name}/posts`,
+  },
 };
 
-export function SnsLoginButton({ api }: SnsButtonProps) {
-  const { provider } = useContext(SocialProviderContext);
-
+export function SnsLoginButton({ api, provider }: SnsButtonProps) {
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
@@ -59,7 +63,7 @@ export function SnsLoginButton({ api }: SnsButtonProps) {
     <button>
       <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
         <FontAwesomeIcon icon={data[provider].icon} />
-        {user?.name ? user.name : 'Login'}
+        {user?.name ? user.name : `${provider} login`}
       </a>
     </button>
   );

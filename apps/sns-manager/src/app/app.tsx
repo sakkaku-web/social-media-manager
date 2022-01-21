@@ -16,22 +16,6 @@ export function App() {
   const [text, setText] = useState('');
   const [images, setImages] = useState([] as File[]);
 
-  const twitterProvider: SocialProviderContextValue = {
-    provider: SocialProvider.TWITTER,
-  };
-
-  const facebookProvider: SocialProviderContextValue = {
-    provider: SocialProvider.FACEBOOK,
-  };
-
-  const instagramProvider: SocialProviderContextValue = {
-    provider: SocialProvider.INSTAGRAM,
-  };
-
-  const redditProvider: SocialProviderContextValue = {
-    provider: SocialProvider.REDDIT,
-  };
-
   const api = new ApiClient(environment.api);
   const postSNS = (provider: SocialProvider) => {
     api.postSNS(provider, { text }, images);
@@ -51,25 +35,26 @@ export function App() {
       </div>
 
       <div>
-        <SocialProviderContext.Provider value={twitterProvider}>
-          <SnsLoginButton api={api}></SnsLoginButton>
-          <TwitterPanel></TwitterPanel>
-
-          <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
-        </SocialProviderContext.Provider>
-        <SocialProviderContext.Provider value={facebookProvider}>
-          <SnsLoginButton api={api}></SnsLoginButton>
-          <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
-        </SocialProviderContext.Provider>
-        <SocialProviderContext.Provider value={instagramProvider}>
-          <SnsLoginButton api={api}></SnsLoginButton>
-          <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
-        </SocialProviderContext.Provider>
-        <SocialProviderContext.Provider value={redditProvider}>
-          <SnsLoginButton api={api}></SnsLoginButton>
-          <RedditPanel></RedditPanel>
-          <SnsSubmitButton onSubmit={postSNS}></SnsSubmitButton>
-        </SocialProviderContext.Provider>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.TWITTER}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.FACEBOOK}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.INSTAGRAM}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.REDDIT}
+        ></SnsLoginButton>
+        <SnsLoginButton
+          api={api}
+          provider={SocialProvider.IMGUR}
+        ></SnsLoginButton>
       </div>
     </div>
   );

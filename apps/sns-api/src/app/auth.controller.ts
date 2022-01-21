@@ -1,6 +1,7 @@
 import { SocialProvider } from '@kumi-arts/core';
 import {
   FacebookAuthService,
+  ImgurAuthService,
   InstagramAuthService,
   OAuthOptions,
   RedditAuthService,
@@ -23,6 +24,7 @@ import {
   HttpException,
   Post,
   Query,
+  Render,
   Req,
   Res,
   Session,
@@ -41,6 +43,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
   SocialProvider.INSTAGRAM,
   SocialProvider.REDDIT,
   SocialProvider.TWITTER,
+  SocialProvider.IMGUR,
 ])
 export class AuthController {
   constructor(
@@ -69,6 +72,8 @@ export class AuthController {
         return new RedditAuthService(tokens);
       case SocialProvider.TWITTER:
         return new TwitterAuthService(tokens);
+      case SocialProvider.IMGUR:
+        return new ImgurAuthService(tokens);
     }
   }
 
@@ -119,6 +124,12 @@ export class AuthController {
     );
     session[`${provider}_STATE`] = state;
     return res.redirect(url);
+  }
+
+  @Get('hashCallback')
+  @Render('hashCallback')
+  async hashCallback() {
+    return {};
   }
 
   @Get('callback')

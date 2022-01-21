@@ -6,17 +6,24 @@
 import { Logger } from '@nestjs/common';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import { join } from 'path';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 async function bootstrap() {
   const httpsOptions: HttpsOptions = environment.https;
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    httpsOptions,
+  });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  app.setBaseViewsDir(join(__dirname, 'views'));
+  app.setViewEngine('hbs');
 
   app.use(cookieParser());
   app.use(

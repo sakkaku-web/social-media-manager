@@ -1,0 +1,8 @@
+<script>
+  var paths = location.pathname.split('/');
+  paths.pop();
+
+  var query = `${location.search}&${location.hash.substring(1)}`;
+  var url = `${paths.join('/')}/callback${query}`;
+  window.location.href = url;
+</script>
