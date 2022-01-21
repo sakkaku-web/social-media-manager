@@ -109,8 +109,13 @@ export class TwitterController {
     console.log(body);
     console.log(images);
 
-    // const service = this.createService();
-    // const media = await service.v1.uploadMedia('');
+    if (images.length > 0) {
+      const service = this.createService();
+      const media = await service.v1.uploadMedia(images[0].buffer, {
+        type: 'png',
+      });
+      console.log(media);
+    }
 
     // await service.v2.tweet({
     //   text: body.text,

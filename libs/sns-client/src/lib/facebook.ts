@@ -29,7 +29,7 @@ export class FacebookClient implements SNSClient {
 
     const { data } = await this.client.post(`${id}_51428047474/media`, null, {
       params: {
-        image_url: 'https://placekitten.com/300/200',
+        image_url: 'https://placekitten.com/320/400',
       },
     });
 
