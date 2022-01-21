@@ -1,16 +1,8 @@
 import { SocialProvider } from '@kumi-arts/core';
 import React, { useState } from 'react';
-import PostForm from './post-form/post-form';
 import SnsLoginButton from './sns-login-button/sns-login-button';
-import { TwitterPanel } from './twitter-panel/twitter-panel';
-import {
-  SocialProviderContext,
-  SocialProviderContextValue,
-} from './social-provider-context';
-import RedditPanel from './reddit-panel/reddit-panel';
 import { ApiClient } from '@kumi-arts/api-client';
 import { environment } from '../environments/environment';
-import SnsSubmitButton from './sns-submit-button/sns-submit-button';
 
 export function App() {
   const [text, setText] = useState('');
@@ -55,6 +47,8 @@ export function App() {
           api={api}
           provider={SocialProvider.INSTAGRAM}
         ></SnsLoginButton>
+
+        <button onClick={() => postSNS(SocialProvider.IMGUR)}>Submit</button>
       </div>
     </div>
   );

@@ -58,11 +58,15 @@ export class AuthController {
     );
   }
 
-  private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
-    const tokens: OAuthOptions = {
+  private getOAuthOptions(provider: SocialProvider): OAuthOptions {
+    return {
       clientId: this.config.get(`${provider.toUpperCase()}_CLIENT`),
       clientSecret: this.config.get(`${provider.toUpperCase()}_SECRET`),
     };
+  }
+
+  private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
+    const tokens = this.getOAuthOptions(provider);
 
     switch (provider) {
       case SocialProvider.FACEBOOK:
@@ -79,6 +83,7 @@ export class AuthController {
   }
 
   private getClientForProvider(provider: SocialProvider): SNSClient {
+    const { clientId } = this.getOAuthOptions(provider);
     const token = this.auth.getToken(provider);
 
     switch (provider) {
@@ -91,7 +96,7 @@ export class AuthController {
       case SocialProvider.TWITTER:
         return new TwitterClient(token);
       case SocialProvider.IMGUR:
-        return new ImgurClient(token);
+        return new ImgurClient(token, clientId);
     }
   }
 

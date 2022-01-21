@@ -1,10 +1,17 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, MediaPost, SNSClient, User } from './sns-client';
+import * as FormData from 'form-data';
+import {
+  jsonParseInterceptor,
+  MediaPost,
+  MediaImage,
+  SNSClient,
+  User,
+} from './sns-client';
 
 export class ImgurClient implements SNSClient {
   private client: Axios;
 
-  constructor(token: string) {
+  constructor(token: string, private clientId: string) {
     this.client = new Axios({
       baseURL: 'https://api.imgur.com',
       headers: {
@@ -14,8 +21,27 @@ export class ImgurClient implements SNSClient {
 
     this.client.interceptors.response.use(jsonParseInterceptor);
   }
-  postMedia(media: MediaPost) {
-    throw new Error('Method not implemented.');
+
+  async uploadImage({ data: image, filename }: MediaImage): Promise<string> {
+    const body = new FormData();
+    body.append('image', image.toString('base64'));
+    body.append('name', filename);
+
+    const { data } = await this.client.post('/3/image', body, {
+      headers: {
+        // Authorization: `Client-ID ${this.clientId}`,
+        ...body.getHeaders(),
+      },
+    });
+    return data.data.link;
+  }
+
+  async postMedia(media: MediaPost) {
+    const links = await Promise.all(
+      media.images.map((i) => this.uploadImage(i))
+    );
+
+    console.log(links);
   }
 
   async getUser(): Promise<User> {

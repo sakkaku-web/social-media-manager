@@ -6,11 +6,10 @@ import './sns-submit-button.module.scss';
 /* eslint-disable-next-line */
 export interface SnsSubmitButtonProps {
   onSubmit: (p: SocialProvider) => void;
+  provider: SocialProvider;
 }
 
-export function SnsSubmitButton({ onSubmit }: SnsSubmitButtonProps) {
-  const { provider } = useContext(SocialProviderContext);
-
+export function SnsSubmitButton({ onSubmit, provider }: SnsSubmitButtonProps) {
   return (
     <div>
       <button onClick={() => onSubmit(provider)}>Submit</button>
