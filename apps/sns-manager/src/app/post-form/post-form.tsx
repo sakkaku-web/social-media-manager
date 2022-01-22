@@ -16,7 +16,7 @@ export function PostForm({ api }: PostFormProps) {
   const tokens: Tokens = useContext(SocialProviderContext);
 
   const [text, setText] = useState('');
-  const [images, setImages] = useState([] as File[]);
+  const [uploadImages, setImages] = useState([] as File[]);
   const [selectedProvider, setSelectedProvider] = useState(
     [] as SocialProvider[]
   );
@@ -28,12 +28,14 @@ export function PostForm({ api }: PostFormProps) {
   };
 
   const onSubmit = async () => {
-    if (images.length > 0 && imgurToken) {
-      const links = await api.upload(SocialProvider.IMGUR, images);
-      console.log(links);
+    const images: string[] = [];
+    if (uploadImages.length > 0 && imgurToken) {
+      images.push(...(await api.upload(SocialProvider.IMGUR, uploadImages)));
     }
 
-    console.log(selectedProvider);
+    selectedProvider.forEach((provider) => {
+      api.postSNS(provider, { text, images });
+    });
   };
 
   return (

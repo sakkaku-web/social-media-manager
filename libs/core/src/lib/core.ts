@@ -1,5 +1,6 @@
 export interface SNSPost {
   text: string;
+  images: string[];
 }
 
 export interface User {

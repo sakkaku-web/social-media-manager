@@ -1,4 +1,4 @@
-import { SocialProvider, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import {
   FacebookAuthService,
   ImgurAuthService,
@@ -12,7 +12,6 @@ import {
   FacebookClient,
   ImgurClient,
   InstagramClient,
-  MediaPost,
   RedditClient,
   SNSClient,
   TwitterClient,
@@ -175,7 +174,7 @@ export class AuthController {
   }
 
   @Post('post')
-  async post(@Req() req: Request, @Body() body: MediaPost) {
+  async post(@Req() req: Request, @Body() body: SNSPost) {
     const client = this.clientForRequest(req);
     return client.postMedia(body);
   }

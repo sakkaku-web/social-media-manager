@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
-import { User } from '@kumi-arts/core';
+import { jsonParseInterceptor, SNSClient } from './sns-client';
+import { SNSPost, User } from '@kumi-arts/core';
 
 export class FacebookClient implements SNSClient {
   private client: Axios;
@@ -23,7 +23,7 @@ export class FacebookClient implements SNSClient {
     }));
   }
 
-  async postMedia(post: MediaPost) {
+  async postMedia(post: SNSPost): Promise<string> {
     const { id } = await this.getUser();
     const { data: d } = await this.client.get('/me/permissions');
     console.log(d);
@@ -35,5 +35,6 @@ export class FacebookClient implements SNSClient {
     });
 
     console.log(data);
+    return '';
   }
 }

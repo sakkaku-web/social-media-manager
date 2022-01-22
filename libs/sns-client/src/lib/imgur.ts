@@ -1,7 +1,7 @@
 import { Axios } from 'axios';
 import * as FormData from 'form-data';
-import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
-import { User } from '@kumi-arts/core';
+import { jsonParseInterceptor, SNSClient } from './sns-client';
+import { SNSPost, User } from '@kumi-arts/core';
 
 export class ImgurClient implements SNSClient {
   private client: Axios;
@@ -28,7 +28,9 @@ export class ImgurClient implements SNSClient {
     return data.data.link;
   }
 
-  async postMedia(media: MediaPost) {}
+  async postMedia(media: SNSPost): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
 
   async getUser(): Promise<User> {
     const { data } = await this.client.get('/3/account/me/settings');

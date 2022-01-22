@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
-import { User } from '@kumi-arts/core';
+import { jsonParseInterceptor, SNSClient } from './sns-client';
+import { SNSPost, User } from '@kumi-arts/core';
 
 export class InstagramClient implements SNSClient {
   private client: Axios;
@@ -15,7 +15,7 @@ export class InstagramClient implements SNSClient {
 
     this.client.interceptors.response.use(jsonParseInterceptor);
   }
-  postMedia(media: MediaPost) {
+  postMedia(media: SNSPost): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

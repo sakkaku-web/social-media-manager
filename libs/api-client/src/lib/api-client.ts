@@ -29,7 +29,7 @@ export class ApiClient {
 
   async postSNS(provider: SocialProvider, body: SNSPost): Promise<void> {
     this.client
-      .post(this.providerLink(provider, 'post'), body)
+      .post(this.providerLink(provider, 'post'), JSON.stringify(body))
       .then(this.handleResponse);
   }
 

@@ -1,5 +1,5 @@
-import { MediaPost, SNSClient } from './sns-client';
-import { User } from '@kumi-arts/core';
+import { SNSClient } from './sns-client';
+import { SNSPost, User } from '@kumi-arts/core';
 import * as Snoowrap from 'snoowrap';
 
 export class RedditClient implements SNSClient {
@@ -11,7 +11,8 @@ export class RedditClient implements SNSClient {
       accessToken: token,
     });
   }
-  postMedia(media: MediaPost) {
+
+  postMedia(media: SNSPost): Promise<string> {
     throw new Error('Method not implemented.');
   }
 

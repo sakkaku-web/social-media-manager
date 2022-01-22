@@ -1,5 +1,5 @@
-import { MediaPost, SNSClient } from './sns-client';
-import { User } from '@kumi-arts/core';
+import { SNSClient } from './sns-client';
+import { SNSPost, User } from '@kumi-arts/core';
 import { TwitterApi } from 'twitter-api-v2';
 
 export class TwitterClient implements SNSClient {
@@ -8,14 +8,11 @@ export class TwitterClient implements SNSClient {
   constructor(token: string) {
     this.client = new TwitterApi(token);
   }
-  async postMedia({ text, images }: MediaPost): Promise<string> {
+
+  async postMedia({ text, images }: SNSPost): Promise<string> {
     return await this.client.v2
-      .tweet(text, {
-        media: {
-          media_ids: images,
-        },
-      })
-      .then((result) => result.data.id);
+      .tweet(`${text}\n\n${images.join('\n')}`)
+      .then((res) => res.data.id);
   }
 
   async getUser(): Promise<User> {
