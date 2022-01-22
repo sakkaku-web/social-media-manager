@@ -28,15 +28,11 @@ import {
   Req,
   Res,
   Session,
-  UploadedFiles,
-  UseInterceptors,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { Request, Response, Express } from 'express';
-import { Multer } from 'multer';
+import { Request, Response } from 'express';
 import { environment } from '../environments/environment';
-import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller([
   SocialProvider.FACEBOOK,
@@ -179,21 +175,9 @@ export class AuthController {
   }
 
   @Post('post')
-  @UseInterceptors(FilesInterceptor('images'))
-  async post(
-    @Req() req: Request,
-    @Body() body: MediaPost,
-    @UploadedFiles() images: Express.Multer.File[]
-  ) {
+  async post(@Req() req: Request, @Body() body: MediaPost) {
     const client = this.clientForRequest(req);
-    return client.postMedia({
-      ...body,
-      images: images.map((i) => ({
-        data: i.buffer,
-        filename: i.originalname,
-        type: i.mimetype,
-      })),
-    });
+    return client.postMedia(body);
   }
 }
 

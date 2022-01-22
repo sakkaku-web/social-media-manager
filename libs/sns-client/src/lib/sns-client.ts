@@ -3,12 +3,7 @@ import { User } from '@kumi-arts/core';
 
 export interface MediaPost {
   text: string;
-  images: MediaImage[];
-}
-
-export interface MediaImage {
-  filename: string;
-  data: Buffer;
+  images: string[];
 }
 
 export interface SNSClient {
