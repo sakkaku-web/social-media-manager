@@ -8,7 +8,7 @@ export interface MediaPost {
 
 export interface SNSClient {
   getUser(): Promise<User>;
-  postMedia(media: MediaPost);
+  postMedia(media: MediaPost): Promise<string>;
 }
 
 export const jsonParseInterceptor = (res: AxiosResponse) => {

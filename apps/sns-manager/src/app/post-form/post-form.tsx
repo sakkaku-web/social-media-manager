@@ -5,6 +5,7 @@ import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SocialProvider } from '@kumi-arts/core';
 import { ApiClient } from '@kumi-arts/api-client';
+import ProviderSelect from './provider-select/provider-select';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {
@@ -16,6 +17,9 @@ export function PostForm({ api }: PostFormProps) {
 
   const [text, setText] = useState('');
   const [images, setImages] = useState([] as File[]);
+  const [selectedProvider, setSelectedProvider] = useState(
+    [] as SocialProvider[]
+  );
 
   const imgurToken = tokens[SocialProvider.IMGUR];
 
@@ -28,6 +32,8 @@ export function PostForm({ api }: PostFormProps) {
       const links = await api.upload(SocialProvider.IMGUR, images);
       console.log(links);
     }
+
+    console.log(selectedProvider);
   };
 
   return (
@@ -55,18 +61,10 @@ export function PostForm({ api }: PostFormProps) {
         </div>
       </div>
 
-      <div>
-        {Object.keys(tokens)
-          .filter((t) => !!tokens[t as SocialProvider])
-          .map((t) => {
-            return (
-              <span key={t}>
-                <input id={t} type="checkbox" />
-                <label htmlFor={t}>{t}</label>
-              </span>
-            );
-          })}
-      </div>
+      <ProviderSelect
+        selected={selectedProvider}
+        onChange={setSelectedProvider}
+      />
 
       <div>
         <button onClick={onSubmit}>Submit</button>

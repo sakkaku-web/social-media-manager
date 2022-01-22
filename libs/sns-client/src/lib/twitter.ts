@@ -8,7 +8,15 @@ export class TwitterClient implements SNSClient {
   constructor(token: string) {
     this.client = new TwitterApi(token);
   }
-  async postMedia(media: MediaPost) {}
+  async postMedia({ text, images }: MediaPost): Promise<string> {
+    return await this.client.v2
+      .tweet(text, {
+        media: {
+          media_ids: images,
+        },
+      })
+      .then((result) => result.data.id);
+  }
 
   async getUser(): Promise<User> {
     return this.client
