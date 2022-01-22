@@ -18,7 +18,7 @@ export function App() {
       />
 
       <SocialProviderContext.Provider value={tokens}>
-        <PostForm />
+        <PostForm api={api} />
       </SocialProviderContext.Provider>
     </div>
   );

@@ -7,6 +7,7 @@ import { join } from 'path';
 import { environment } from '../environments/environment';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { ImgurController } from './imgur.controller';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { AuthController } from './auth.controller';
       rootPath: join(__dirname, environment.staticFiles),
     }),
   ],
-  controllers: [AuthController],
+  controllers: [ImgurController, AuthController],
   providers: [AuthService],
 })
 export class AppModule {}

@@ -4,30 +4,29 @@ import './post-form.module.scss';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SocialProvider } from '@kumi-arts/core';
-import { ImgurClient } from '../imgur';
+import { ApiClient } from '@kumi-arts/api-client';
 
 /* eslint-disable-next-line */
-export interface PostFormProps {}
+export interface PostFormProps {
+  api: ApiClient;
+}
 
-export function PostForm(props: PostFormProps) {
+export function PostForm({ api }: PostFormProps) {
   const tokens: Tokens = useContext(SocialProviderContext);
 
   const [text, setText] = useState('');
   const [images, setImages] = useState([] as File[]);
 
   const imgurToken = tokens[SocialProvider.IMGUR];
-  const imgurClient = new ImgurClient(imgurToken || '');
 
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImages(Array.from(event.target.files || []));
   };
 
   const onSubmit = async () => {
-    console.log('Submit');
     if (images.length > 0 && imgurToken) {
-      imgurClient.credits();
-      const link = await imgurClient.uploadImage(images[0]);
-      console.log(link);
+      const links = await api.upload(SocialProvider.IMGUR, images);
+      console.log(links);
     }
   };
 

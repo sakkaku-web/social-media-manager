@@ -9,7 +9,6 @@ export interface MediaPost {
 export interface MediaImage {
   filename: string;
   data: Buffer;
-  type: string;
 }
 
 export interface SNSClient {
