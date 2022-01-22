@@ -9,12 +9,13 @@ export function App() {
   const api = new ApiClient(environment.api);
 
   const [tokens, setTokens] = useState({} as Tokens);
+  console.log(tokens);
 
   return (
     <div>
       <SnsLogins
         api={api}
-        updateToken={(t) => setTokens({ ...tokens, ...t })}
+        updateToken={(t) => setTokens((v) => ({ ...v, ...t }))}
       />
 
       <SocialProviderContext.Provider value={tokens}>

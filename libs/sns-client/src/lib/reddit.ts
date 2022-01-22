@@ -16,6 +16,10 @@ export class RedditClient implements SNSClient {
 
   async getUser(): Promise<User> {
     const name = await this.client.getMe().name;
+    if (!name) {
+      throw new Error('Failed to get user');
+    }
+
     return { id: name, name };
   }
 }

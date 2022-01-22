@@ -1,14 +1,15 @@
 import { useContext, useState } from 'react';
-import { SocialProviderContext } from '../social-provider-context';
+import { SocialProviderContext, Tokens } from '../social-provider-context';
 import './post-form.module.scss';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { SocialProvider } from '@kumi-arts/core';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {}
 
 export function PostForm(props: PostFormProps) {
-  const { imgur } = useContext(SocialProviderContext);
+  const tokens: Tokens = useContext(SocialProviderContext);
 
   const [text, setText] = useState('');
   const [images, setImages] = useState([] as File[]);
@@ -37,9 +38,22 @@ export function PostForm(props: PostFormProps) {
             type="file"
             multiple
             onChange={onFileUpload}
-            disabled={!imgur}
+            disabled={!tokens[SocialProvider.IMGUR]}
           />
         </div>
+      </div>
+
+      <div>
+        {Object.keys(tokens)
+          .filter((t) => !!tokens[t as SocialProvider])
+          .map((t) => {
+            return (
+              <span key={t}>
+                <input id={t} type="checkbox" />
+                <label htmlFor={t}>{t}</label>
+              </span>
+            );
+          })}
       </div>
 
       <div>

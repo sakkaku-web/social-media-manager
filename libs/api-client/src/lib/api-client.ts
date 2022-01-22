@@ -16,7 +16,9 @@ export class ApiClient {
   }
 
   async getToken(provider: SocialProvider): Promise<string> {
-    return this.client.get(this.providerLink(provider, 'token'));
+    return this.client
+      .get(this.providerLink(provider, 'token'))
+      .then((res) => this.handleResponse(res));
   }
 
   async getUser(provider: SocialProvider): Promise<User> {
@@ -46,6 +48,10 @@ export class ApiClient {
     if (res.status !== 200) {
       throw new Error(res.data);
     }
-    return JSON.parse(res.data);
+    if (typeof res.data === 'string' && res.data.startsWith('{')) {
+      return JSON.parse(res.data);
+    }
+
+    return res.data;
   }
 }

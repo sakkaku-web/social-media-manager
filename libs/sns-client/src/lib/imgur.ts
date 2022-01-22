@@ -11,7 +11,7 @@ import {
 export class ImgurClient implements SNSClient {
   private client: Axios;
 
-  constructor(token: string, private clientId: string) {
+  constructor(token: string) {
     this.client = new Axios({
       baseURL: 'https://api.imgur.com',
       headers: {
@@ -29,7 +29,6 @@ export class ImgurClient implements SNSClient {
 
     const { data } = await this.client.post('/3/image', body, {
       headers: {
-        // Authorization: `Client-ID ${this.clientId}`,
         ...body.getHeaders(),
       },
     });
