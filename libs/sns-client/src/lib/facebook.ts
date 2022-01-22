@@ -1,5 +1,6 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, MediaPost, User, SNSClient } from './sns-client';
+import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
+import { User } from '@kumi-arts/core';
 
 export class FacebookClient implements SNSClient {
   private client: Axios;

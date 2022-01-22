@@ -4,6 +4,7 @@ import './post-form.module.scss';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { SocialProvider } from '@kumi-arts/core';
+import { ImgurClient } from '../imgur';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {}
@@ -14,8 +15,20 @@ export function PostForm(props: PostFormProps) {
   const [text, setText] = useState('');
   const [images, setImages] = useState([] as File[]);
 
+  const imgurToken = tokens[SocialProvider.IMGUR];
+  const imgurClient = new ImgurClient(imgurToken || '');
+
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImages(Array.from(event.target.files || []));
+  };
+
+  const onSubmit = async () => {
+    console.log('Submit');
+    if (images.length > 0 && imgurToken) {
+      imgurClient.credits();
+      const link = await imgurClient.uploadImage(images[0]);
+      console.log(link);
+    }
   };
 
   return (
@@ -57,7 +70,7 @@ export function PostForm(props: PostFormProps) {
       </div>
 
       <div>
-        <button>Submit</button>
+        <button onClick={onSubmit}>Submit</button>
       </div>
     </div>
   );

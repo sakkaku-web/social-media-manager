@@ -1,4 +1,5 @@
-import { MediaPost, SNSClient, User } from './sns-client';
+import { MediaPost, SNSClient } from './sns-client';
+import { User } from '@kumi-arts/core';
 import * as Snoowrap from 'snoowrap';
 
 export class RedditClient implements SNSClient {

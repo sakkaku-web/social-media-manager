@@ -1,5 +1,6 @@
 import { Axios } from 'axios';
-import { jsonParseInterceptor, MediaPost, SNSClient, User } from './sns-client';
+import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
+import { User } from '@kumi-arts/core';
 
 export class InstagramClient implements SNSClient {
   private client: Axios;
@@ -26,5 +27,4 @@ export class InstagramClient implements SNSClient {
         name: data.username,
       }));
   }
-
 }

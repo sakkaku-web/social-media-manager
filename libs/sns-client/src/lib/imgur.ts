@@ -1,12 +1,6 @@
 import { Axios } from 'axios';
-import * as FormData from 'form-data';
-import {
-  jsonParseInterceptor,
-  MediaPost,
-  MediaImage,
-  SNSClient,
-  User,
-} from './sns-client';
+import { jsonParseInterceptor, MediaPost, SNSClient } from './sns-client';
+import { User } from '@kumi-arts/core';
 
 export class ImgurClient implements SNSClient {
   private client: Axios;
@@ -22,25 +16,20 @@ export class ImgurClient implements SNSClient {
     this.client.interceptors.response.use(jsonParseInterceptor);
   }
 
-  async uploadImage({ data: image, filename }: MediaImage): Promise<string> {
+  async uploadImage(image: File): Promise<string> {
     const body = new FormData();
-    body.append('image', image.toString('base64'));
-    body.append('name', filename);
+    body.append('image', image);
+    body.append('name', image.name);
 
-    const { data } = await this.client.post('/3/image', body, {
-      headers: {
-        ...body.getHeaders(),
-      },
-    });
+    const { data } = await this.client.post('/3/image', body, {});
     return data.data.link;
   }
 
   async postMedia(media: MediaPost) {
-    const links = await Promise.all(
-      media.images.map((i) => this.uploadImage(i))
-    );
-
-    console.log(links);
+    // const links = await Promise.all(
+    //   media.images.map((i) => this.uploadImage(i))
+    // );
+    // console.log(links);
   }
 
   async getUser(): Promise<User> {

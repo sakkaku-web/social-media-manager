@@ -9,7 +9,7 @@ import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { ApiClient } from '@kumi-arts/api-client';
 
 export interface SnsButtonProps {

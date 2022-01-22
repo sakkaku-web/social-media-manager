@@ -1,4 +1,5 @@
-import { MediaPost, SNSClient, User } from './sns-client';
+import { MediaPost, SNSClient } from './sns-client';
+import { User } from '@kumi-arts/core';
 import { TwitterApi } from 'twitter-api-v2';
 
 export class TwitterClient implements SNSClient {

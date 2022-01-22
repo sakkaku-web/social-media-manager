@@ -1,6 +1,6 @@
 import { ApiClient } from '@kumi-arts/api-client';
 import { SocialProvider } from '@kumi-arts/core';
-import SnsLoginButton from '../sns-login-button/sns-login-button';
+import SnsLoginButton from './sns-login-button/sns-login-button';
 import { Tokens } from '../social-provider-context';
 import './sns-logins.module.scss';
 

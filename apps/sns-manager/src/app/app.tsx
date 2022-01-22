@@ -9,7 +9,6 @@ export function App() {
   const api = new ApiClient(environment.api);
 
   const [tokens, setTokens] = useState({} as Tokens);
-  console.log(tokens);
 
   return (
     <div>

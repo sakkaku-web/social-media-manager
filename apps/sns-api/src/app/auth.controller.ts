@@ -1,4 +1,4 @@
-import { SocialProvider } from '@kumi-arts/core';
+import { SocialProvider, User } from '@kumi-arts/core';
 import {
   FacebookAuthService,
   ImgurAuthService,
@@ -16,7 +16,6 @@ import {
   RedditClient,
   SNSClient,
   TwitterClient,
-  User,
 } from '@kumi-arts/sns-client';
 import {
   Body,
@@ -96,7 +95,7 @@ export class AuthController {
       case SocialProvider.TWITTER:
         return new TwitterClient(token);
       case SocialProvider.IMGUR:
-        return new ImgurClient(token, clientId);
+        return new ImgurClient(token);
     }
   }
 

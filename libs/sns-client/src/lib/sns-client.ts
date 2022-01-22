@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios';
+import { User } from '@kumi-arts/core';
 
 export interface MediaPost {
   text: string;
@@ -9,11 +10,6 @@ export interface MediaImage {
   filename: string;
   data: Buffer;
   type: string;
-}
-
-export interface User {
-  id: string;
-  name: string;
 }
 
 export interface SNSClient {
