@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node dist/apps/sns-api/main.js",
     "start:server": "nx serve sns-api",
+    "start:server:https": "nx serve sns-api --configuration https",
     "build:ui": "nx build sns-manager --watch",
     "build": "nx run-many --target=build --all --prod",
     "test": "nx test"
