@@ -1,4 +1,4 @@
-import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
+import { SocialProvider } from '@kumi-arts/core';
 import {
   FacebookAuthService,
   ImgurAuthService,
@@ -9,19 +9,8 @@ import {
   TwitterAuthService,
 } from '@kumi-arts/sns-auth';
 import {
-  FacebookClient,
-  ImgurClient,
-  InstagramClient,
-  RedditClient,
-  SNSClient,
-  TwitterClient,
-} from '@kumi-arts/sns-client';
-import {
-  Body,
   Controller,
   Get,
-  HttpException,
-  Post,
   Query,
   Render,
   Req,
@@ -32,6 +21,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { environment } from '../environments/environment';
+import { getProvider } from './shared';
 
 @Controller([
   SocialProvider.FACEBOOK,
@@ -45,12 +35,6 @@ export class AuthController {
     private readonly config: ConfigService,
     private readonly auth: AuthService
   ) {}
-
-  private getProvider(req: Request): SocialProvider {
-    return Object.values(SocialProvider).find((p) =>
-      req.url.includes(`/${p}/`)
-    );
-  }
 
   private getOAuthOptions(provider: SocialProvider): OAuthOptions {
     return {
@@ -76,24 +60,6 @@ export class AuthController {
     }
   }
 
-  private getClientForProvider(provider: SocialProvider): SNSClient {
-    const { clientId } = this.getOAuthOptions(provider);
-    const token = this.auth.getToken(provider);
-
-    switch (provider) {
-      case SocialProvider.FACEBOOK:
-        return new FacebookClient(token);
-      case SocialProvider.INSTAGRAM:
-        return new InstagramClient(token);
-      case SocialProvider.REDDIT:
-        return new RedditClient(token);
-      case SocialProvider.TWITTER:
-        return new TwitterClient(token);
-      case SocialProvider.IMGUR:
-        return new ImgurClient(token);
-    }
-  }
-
   private getScopesForProvider(provider: SocialProvider): string[] {
     switch (provider) {
       case SocialProvider.TWITTER:
@@ -103,18 +69,13 @@ export class AuthController {
     return [];
   }
 
-  private clientForRequest(req: Request): SNSClient {
-    const provider = this.getProvider(req);
-    return this.getClientForProvider(provider);
-  }
-
   private getRedirectUrl(provider: SocialProvider) {
     return `${environment.baseUrl}/${provider}/callback`;
   }
 
   @Get('token')
   async tokens(@Req() req: Request) {
-    return this.auth.getToken(this.getProvider(req));
+    return this.auth.getToken(getProvider(req));
   }
 
   @Get('login')
@@ -123,7 +84,7 @@ export class AuthController {
     @Res() res: Response,
     @Session() session: Record<string, string>
   ) {
-    const provider = this.getProvider(req);
+    const provider = getProvider(req);
     const scopes = this.getScopesForProvider(provider);
     const { state, url } = this.getAuthServiceForProvider(provider).getLoginUrl(
       this.getRedirectUrl(provider),
@@ -146,7 +107,7 @@ export class AuthController {
     @Session() session: Record<string, string>,
     @Res({ passthrough: true }) res: Response
   ) {
-    const provider = this.getProvider(req);
+    const provider = getProvider(req);
     try {
       const { token } = await this.getAuthServiceForProvider(
         provider
@@ -162,21 +123,6 @@ export class AuthController {
     }
 
     return res.redirect(environment.homepage);
-  }
-
-  @Get('user')
-  async user(@Req() req: Request): Promise<User> {
-    const client = this.clientForRequest(req);
-
-    return client.getUser().catch((e) => {
-      throw new HttpException(`Failed to get user data: ${e.message}`, 401);
-    });
-  }
-
-  @Post('post')
-  async post(@Req() req: Request, @Body() body: SNSPost) {
-    const client = this.clientForRequest(req);
-    return client.postMedia(body);
   }
 }
 

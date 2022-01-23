@@ -4,6 +4,7 @@ import { SNSPost, User } from '@kumi-arts/core';
 export interface SNSClient {
   getUser(): Promise<User>;
   postMedia(media: SNSPost): Promise<string>;
+  uploadImage(data: Buffer, filename: string): Promise<string>;
 }
 
 export const jsonParseInterceptor = (res: AxiosResponse) => {

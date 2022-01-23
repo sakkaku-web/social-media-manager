@@ -20,4 +20,8 @@ export class TwitterClient implements SNSClient {
       .currentUserV2()
       .then((data) => ({ id: data.data.username, name: data.data.name }));
   }
+
+  async uploadImage(data: Buffer, filename: string): Promise<string> {
+    throw new Error('Method not implemented');
+  }
 }

@@ -28,12 +28,12 @@ export function PostForm({ api }: PostFormProps) {
   };
 
   const onSubmit = async () => {
-    const images: string[] = [];
-    if (uploadImages.length > 0 && imgurToken) {
-      images.push(...(await api.upload(SocialProvider.IMGUR, uploadImages)));
-    }
+    selectedProvider.forEach(async (provider) => {
+      const images: string[] = [];
+      if (uploadImages.length > 0 && imgurToken) {
+        images.push(...(await api.upload(provider, uploadImages)));
+      }
 
-    selectedProvider.forEach((provider) => {
       api.postSNS(provider, { text, images });
     });
   };

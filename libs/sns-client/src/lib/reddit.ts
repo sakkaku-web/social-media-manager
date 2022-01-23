@@ -24,4 +24,8 @@ export class RedditClient implements SNSClient {
 
     return { id: name, name };
   }
+
+  async uploadImage(data: Buffer, filename: string): Promise<string> {
+    throw new Error('Method not implemented');
+  }
 }

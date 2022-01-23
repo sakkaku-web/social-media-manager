@@ -37,4 +37,8 @@ export class FacebookClient implements SNSClient {
     console.log(data);
     return '';
   }
+
+  async uploadImage(data: Buffer, filename: string): Promise<string> {
+    throw new Error('Method not implemented');
+  }
 }
