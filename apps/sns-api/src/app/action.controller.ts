@@ -23,7 +23,7 @@ import { ConfigService } from '@nestjs/config';
   SocialProvider.TWITTER,
   SocialProvider.IMGUR,
 ])
-export class ImgurController {
+export class ActionController {
   constructor(
     private readonly auth: AuthService,
     private readonly config: ConfigService
