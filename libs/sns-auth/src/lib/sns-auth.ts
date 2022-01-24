@@ -28,7 +28,7 @@ export interface OAuthOptions {
 }
 
 export interface SNSAuthService {
-  getLoginUrl(redirect: string, scopes?: string[]): OAuthLogin;
+  getLoginUrl(redirect: string, scopes?: string[]): Promise<OAuthLogin>;
   handleCallback(data: OAuthLoginCallback): Promise<OAuthCallbackResponse>;
 }
 

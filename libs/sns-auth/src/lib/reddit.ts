@@ -12,7 +12,7 @@ import {
 export class RedditAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
 
-  getLoginUrl(redirect: string): OAuthLogin {
+  async getLoginUrl(redirect: string): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
     const url = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirect}&duration=temporary&scope=identity+submit`;

@@ -5,8 +5,16 @@ import { TwitterApi } from 'twitter-api-v2';
 export class TwitterClient implements SNSClient {
   private client: TwitterApi;
 
-  constructor(token: string) {
-    this.client = new TwitterApi(token);
+  constructor(token: string, clientId: string, clientSecret: string) {
+    // this.client = new TwitterApi(token);
+    const [accessToken, secret] = token.split(';');
+
+    this.client = new TwitterApi({
+      appKey: clientId,
+      appSecret: clientSecret,
+      accessToken: accessToken,
+      accessSecret: secret,
+    });
   }
 
   async postMedia({ text, images }: SNSPost): Promise<string> {
@@ -17,12 +25,12 @@ export class TwitterClient implements SNSClient {
 
   async getUser(): Promise<User> {
     return this.client
-      .currentUserV2()
-      .then((data) => ({ id: data.data.username, name: data.data.name }));
+      .currentUser()
+      .then((data) => ({ id: data.screen_name, name: data.name }));
   }
 
   async uploadImage(file: Buffer, filename: string): Promise<string> {
-    return await this.client.readWrite.v1.uploadMedia(file, {
+    return await this.client.v1.uploadMedia(file, {
       type: filename.split('.')[1],
     });
   }

@@ -17,7 +17,10 @@ interface ImgurOAuthCallback extends OAuthLoginCallback {
 export class ImgurAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
 
-  getLoginUrl(redirect: string, scope: string[] = []): OAuthLogin {
+  async getLoginUrl(
+    redirect: string,
+    scope: string[] = []
+  ): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
 

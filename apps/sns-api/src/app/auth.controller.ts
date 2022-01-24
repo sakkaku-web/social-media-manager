@@ -21,7 +21,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { environment } from '../environments/environment';
-import { getProvider } from './shared';
+import { getOAuthOptions, getProvider } from './shared';
 
 @Controller([
   SocialProvider.FACEBOOK,
@@ -36,15 +36,8 @@ export class AuthController {
     private readonly auth: AuthService
   ) {}
 
-  private getOAuthOptions(provider: SocialProvider): OAuthOptions {
-    return {
-      clientId: this.config.get(`${provider.toUpperCase()}_CLIENT`),
-      clientSecret: this.config.get(`${provider.toUpperCase()}_SECRET`),
-    };
-  }
-
   private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
-    const tokens = this.getOAuthOptions(provider);
+    const tokens = getOAuthOptions(provider, this.config);
 
     switch (provider) {
       case SocialProvider.FACEBOOK:
@@ -86,7 +79,8 @@ export class AuthController {
   ) {
     const provider = getProvider(req);
     const scopes = this.getScopesForProvider(provider);
-    const { state, url } = this.getAuthServiceForProvider(provider).getLoginUrl(
+    const service = this.getAuthServiceForProvider(provider);
+    const { state, url } = await service.getLoginUrl(
       this.getRedirectUrl(provider),
       scopes
     );

@@ -12,7 +12,7 @@ import {
 export class FacebookAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
 
-  getLoginUrl(redirect: string): OAuthLogin {
+  async getLoginUrl(redirect: string): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
     const url = `https://www.facebook.com/dialog/oauth?client_id=${clientId}&redirect_uri=${redirect}&state=${state}`;

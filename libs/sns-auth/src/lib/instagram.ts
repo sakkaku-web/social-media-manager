@@ -12,7 +12,7 @@ import {
 export class InstagramAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
 
-  getLoginUrl(redirect: string): OAuthLogin {
+  async getLoginUrl(redirect: string): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
     const url = `https://api.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect}&scope=user_profile&response_type=code&state=${state}`;
