@@ -14,6 +14,7 @@ export interface PostFormProps {
 export function PostForm({ api }: PostFormProps) {
   const tokens: Tokens = useContext(SocialProviderContext);
 
+  const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [uploadImages, setImages] = useState([] as File[]);
   const [selectedProvider, setSelectedProvider] = useState(
@@ -28,7 +29,11 @@ export function PostForm({ api }: PostFormProps) {
 
   const onSubmit = async () => {
     selectedProvider.forEach(async (provider) => {
-      api.postSNS(provider, { text, group: selectedGroup }, uploadImages);
+      api.postSNS(
+        provider,
+        { title, text, group: selectedGroup },
+        uploadImages
+      );
     });
   };
 
@@ -45,6 +50,10 @@ export function PostForm({ api }: PostFormProps) {
   return (
     <div>
       <div>
+        <div>
+          <label>Title</label>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
         <div>
           <label>Text</label>
           <textarea value={text} onChange={(e) => setText(e.target.value)} />
@@ -65,6 +74,7 @@ export function PostForm({ api }: PostFormProps) {
         value={selectedGroup}
         onChange={(e) => setSelectedGroup(e.target.value)}
       >
+        <option value=""></option>
         {groupSelect}
       </select>
 

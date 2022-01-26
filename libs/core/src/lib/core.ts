@@ -1,4 +1,5 @@
 export interface SNSPost {
+  title: string;
   text: string;
   group?: string;
 }

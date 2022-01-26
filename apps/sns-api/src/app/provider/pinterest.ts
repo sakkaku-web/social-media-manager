@@ -78,6 +78,7 @@ export class PinterestClient implements SNSClient {
     if (!image) return null;
 
     const body = {
+      title: media.title,
       board_id: media.group,
       description: media.text,
       media_source: {
