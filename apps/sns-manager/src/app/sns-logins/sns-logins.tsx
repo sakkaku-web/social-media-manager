@@ -11,16 +11,21 @@ export interface SnsLoginsProps {
 }
 
 export function SnsLogins({ api, updateToken }: SnsLoginsProps) {
-  const loginButtons = Object.values(SocialProvider).map((p) => (
-    <SnsLoginButton
-      key={p}
-      api={api}
-      provider={p}
-      setToken={(t) => updateToken({ [p]: t })}
-    />
-  ));
+  return (
+    <div>
+      <SnsLoginButton
+        api={api}
+        provider={SocialProvider.TWITTER}
+        setToken={(t) => updateToken({ [SocialProvider.TWITTER]: t })}
+      />
 
-  return <div>{loginButtons}</div>;
+      <SnsLoginButton
+        api={api}
+        provider={SocialProvider.PINTEREST}
+        setToken={(t) => updateToken({ [SocialProvider.PINTEREST]: t })}
+      />
+    </div>
+  );
 }
 
 export default SnsLogins;

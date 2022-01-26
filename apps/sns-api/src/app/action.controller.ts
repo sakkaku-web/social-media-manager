@@ -16,13 +16,7 @@ import { AuthService } from './auth.service';
 import { clientForRequest } from './shared';
 import { ConfigService } from '@nestjs/config';
 
-@Controller([
-  SocialProvider.FACEBOOK,
-  SocialProvider.INSTAGRAM,
-  SocialProvider.REDDIT,
-  SocialProvider.TWITTER,
-  SocialProvider.IMGUR,
-])
+@Controller(Object.values(SocialProvider))
 export class ActionController {
   constructor(
     private readonly auth: AuthService,

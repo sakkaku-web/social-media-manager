@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { OAuthOptions } from './auth';
+import { PinterestClient } from './provider/pinterest';
 
 export function clientForRequest(
   req: Request,
@@ -54,5 +55,7 @@ export function getClientForProvider(
       return new TwitterClient(token, options?.clientId, options.clientSecret);
     case SocialProvider.IMGUR:
       return new ImgurClient(token);
+    case SocialProvider.PINTEREST:
+      return new PinterestClient(token);
   }
 }

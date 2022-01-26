@@ -2,6 +2,7 @@ import './sns-login-button.module.scss';
 import {
   faFacebook,
   faInstagram,
+  faPinterest,
   faReddit,
   faTwitter,
 } from '@fortawesome/free-brands-svg-icons';
@@ -39,6 +40,10 @@ const data = {
   [SocialProvider.IMGUR]: {
     icon: faImages,
     profileUrl: ({ name }: User) => `https://imgur.com/user/${name}/posts`,
+  },
+  [SocialProvider.PINTEREST]: {
+    icon: faPinterest,
+    profileUrl: ({ name }: User) => `https://www.pinterest.at/${name}/_saved/`,
   },
 };
 

@@ -21,14 +21,9 @@ import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { environment } from '../environments/environment';
 import { getOAuthOptions, getProvider } from './shared';
+import { PinterestAuthService } from './provider/pinterest';
 
-@Controller([
-  SocialProvider.FACEBOOK,
-  SocialProvider.INSTAGRAM,
-  SocialProvider.REDDIT,
-  SocialProvider.TWITTER,
-  SocialProvider.IMGUR,
-])
+@Controller(Object.values(SocialProvider))
 export class AuthController {
   constructor(
     private readonly config: ConfigService,
@@ -49,6 +44,8 @@ export class AuthController {
         return new TwitterAuthService(tokens);
       case SocialProvider.IMGUR:
         return new ImgurAuthService(tokens);
+      case SocialProvider.PINTEREST:
+        return new PinterestAuthService(tokens);
     }
   }
 

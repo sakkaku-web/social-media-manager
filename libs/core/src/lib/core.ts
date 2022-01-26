@@ -14,4 +14,5 @@ export enum SocialProvider {
   FACEBOOK = 'facebook',
   INSTAGRAM = 'instagram',
   IMGUR = 'imgur',
+  PINTEREST = 'pinterest',
 }
