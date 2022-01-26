@@ -6,11 +6,11 @@ import {
   RedditClient,
   SNSClient,
   TwitterClient,
-} from '@kumi-arts/sns-client';
+} from './client';
 import { AuthService } from './auth.service';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { OAuthOptions } from '@kumi-arts/sns-auth';
+import { OAuthOptions } from './auth';
 
 export function clientForRequest(
   req: Request,

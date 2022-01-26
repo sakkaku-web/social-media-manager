@@ -36,12 +36,6 @@
     "sns-api": {
       "tags": []
     },
-    "sns-auth": {
-      "tags": []
-    },
-    "sns-client": {
-      "tags": []
-    },
     "sns-manager": {
       "tags": []
     }

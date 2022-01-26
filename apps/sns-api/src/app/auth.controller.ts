@@ -3,11 +3,10 @@ import {
   FacebookAuthService,
   ImgurAuthService,
   InstagramAuthService,
-  OAuthOptions,
   RedditAuthService,
   SNSAuthService,
   TwitterAuthService,
-} from '@kumi-arts/sns-auth';
+} from './auth/';
 import {
   Controller,
   Get,
