@@ -1,11 +1,10 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocialProviderContext, Tokens } from '../social-provider-context';
 import './post-form.module.scss';
-import { faInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { SocialProvider } from '@kumi-arts/core';
+import { Group, SocialProvider } from '@kumi-arts/core';
 import { ApiClient } from '@kumi-arts/api-client';
 import ProviderSelect from './provider-select/provider-select';
+import axios from 'axios';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {
@@ -21,15 +20,27 @@ export function PostForm({ api }: PostFormProps) {
     [] as SocialProvider[]
   );
 
+  const [selectedGroup, setSelectedGroup] = useState('');
+
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImages(Array.from(event.target.files || []));
   };
 
   const onSubmit = async () => {
     selectedProvider.forEach(async (provider) => {
-      api.postSNS(provider, { text }, uploadImages);
+      api.postSNS(provider, { text, group: selectedGroup }, uploadImages);
     });
   };
+
+  const [groups, setGroup] = useState([] as Group[]);
+  useEffect(() => {
+    api.getGroups(SocialProvider.PINTEREST).then((res) => setGroup(res));
+  }, []);
+  const groupSelect = groups.map((b) => (
+    <option key={b.id} value={b.id}>
+      {b.name}
+    </option>
+  ));
 
   return (
     <div>
@@ -49,6 +60,13 @@ export function PostForm({ api }: PostFormProps) {
         selected={selectedProvider}
         onChange={setSelectedProvider}
       />
+
+      <select
+        value={selectedGroup}
+        onChange={(e) => setSelectedGroup(e.target.value)}
+      >
+        {groupSelect}
+      </select>
 
       <div>
         <button onClick={onSubmit}>Submit</button>

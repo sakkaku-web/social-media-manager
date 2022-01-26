@@ -1,5 +1,5 @@
 import { Axios, AxiosResponse } from 'axios';
-import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
+import { Group, SNSPost, SocialProvider, User } from '@kumi-arts/core';
 
 export class ApiClient {
   private client: Axios;
@@ -58,11 +58,9 @@ export class ApiClient {
     return res.data;
   }
 
-  async upload(provider: SocialProvider, images: File[]): Promise<string[]> {
-    const data = new FormData();
-
+  async getGroups(provider: SocialProvider): Promise<Group[]> {
     return this.client
-      .post(this.providerLink(provider, 'upload'), data)
+      .get(this.providerLink(provider, 'groups'))
       .then((res) => this.handleResponse(res));
   }
 }

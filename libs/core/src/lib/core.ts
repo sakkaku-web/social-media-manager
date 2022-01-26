@@ -1,5 +1,6 @@
 export interface SNSPost {
   text: string;
+  group?: string;
 }
 
 export interface SNSMedia {
@@ -8,6 +9,11 @@ export interface SNSMedia {
 }
 
 export interface User {
+  id: string;
+  name: string;
+}
+
+export interface Group {
   id: string;
   name: string;
 }

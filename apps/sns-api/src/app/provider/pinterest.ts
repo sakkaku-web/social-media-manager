@@ -1,4 +1,4 @@
-import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
+import { Group, SNSMedia, SNSPost, User } from '@kumi-arts/core';
 import axios, { Axios } from 'axios';
 import { nanoid } from 'nanoid';
 import {
@@ -78,7 +78,7 @@ export class PinterestClient implements SNSClient {
     if (!image) return null;
 
     const body = {
-      board_id: 0,
+      board_id: media.group,
       description: media.text,
       media_source: {
         source_type: 'image_base64',
@@ -88,10 +88,11 @@ export class PinterestClient implements SNSClient {
     };
     const { data, status, statusText } = await this.client.post(
       '/pins',
-      JSON.stringify(body)
+      JSON.stringify(body),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      }
     );
-
-    console.log(status, statusText);
 
     return data.id;
   }
@@ -105,5 +106,9 @@ export class PinterestClient implements SNSClient {
     return this.client.get('/user_account').then(({ data }) => {
       return { id: data.username, name: data.username };
     });
+  }
+
+  async getGroups(): Promise<Group[]> {
+    return this.client.get('boards').then((res) => res.data.items);
   }
 }

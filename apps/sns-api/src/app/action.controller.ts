@@ -49,4 +49,13 @@ export class ActionController {
         : null;
     return client.postMedia(body, image);
   }
+
+  @Get('groups')
+  async groups(@Req() req: Request) {
+    return this.getClient(req).getGroups();
+  }
+
+  private getClient(req: Request) {
+    return clientForRequest(req, this.auth, this.config);
+  }
 }

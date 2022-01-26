@@ -1,9 +1,10 @@
 import { AxiosResponse } from 'axios';
-import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
+import { Group, SNSMedia, SNSPost, User } from '@kumi-arts/core';
 
 export interface SNSClient {
   getUser(): Promise<User>;
   postMedia(media: SNSPost, image?: SNSMedia): Promise<string>;
+  getGroups(): Promise<Group[]>;
 }
 
 export const jsonParseInterceptor = (res: AxiosResponse) => {
