@@ -1,4 +1,4 @@
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
 import axios, { Axios } from 'axios';
 import { nanoid } from 'nanoid';
 import {
@@ -9,7 +9,7 @@ import {
   validateCallbackState,
   OAuthCallbackResponse,
 } from '../auth';
-import { jsonParseInterceptor, SNSClient } from '../client';
+import { ImgurClient, jsonParseInterceptor, SNSClient } from '../client';
 
 export class PinterestAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
@@ -21,9 +21,11 @@ export class PinterestAuthService implements SNSAuthService {
     url.searchParams.append('client_id', clientId);
     url.searchParams.append('redirect_uri', redirect);
     url.searchParams.append('response_type', 'code');
-    url.searchParams.append('scope', 'pins:write,user_accounts:read');
+    url.searchParams.append(
+      'scope',
+      'boards:read,boards:write,pins:read,pins:write,user_accounts:read'
+    );
     url.searchParams.append('state', state);
-    console.log(url.toString());
     return { url: url.toString(), state };
   }
 
@@ -72,12 +74,31 @@ export class PinterestClient implements SNSClient {
     this.client.interceptors.response.use(jsonParseInterceptor);
   }
 
-  async uploadImage(file: Buffer, filename: string): Promise<string> {
-    throw new Error('implement');
+  async postMedia(media: SNSPost, image: SNSMedia): Promise<string> {
+    if (!image) return null;
+
+    const body = {
+      board_id: 0,
+      description: media.text,
+      media_source: {
+        source_type: 'image_base64',
+        data: image.image.toString('base64'),
+        content_type: this.getType(image),
+      },
+    };
+    const { data, status, statusText } = await this.client.post(
+      '/pins',
+      JSON.stringify(body)
+    );
+
+    console.log(status, statusText);
+
+    return data.id;
   }
 
-  async postMedia(media: SNSPost): Promise<string> {
-    throw new Error('implement');
+  private getType(image: SNSMedia) {
+    const [_, ext] = image.filename.split('.');
+    return `image/${ext === 'jpg' ? 'jpeg' : ext}`;
   }
 
   async getUser(): Promise<User> {

@@ -1,10 +1,9 @@
 import { AxiosResponse } from 'axios';
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
 
 export interface SNSClient {
   getUser(): Promise<User>;
-  postMedia(media: SNSPost): Promise<string>;
-  uploadImage(data: Buffer, filename: string): Promise<string>;
+  postMedia(media: SNSPost, image?: SNSMedia): Promise<string>;
 }
 
 export const jsonParseInterceptor = (res: AxiosResponse) => {

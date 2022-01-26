@@ -27,8 +27,7 @@ export function PostForm({ api }: PostFormProps) {
 
   const onSubmit = async () => {
     selectedProvider.forEach(async (provider) => {
-      const images = await api.upload(provider, uploadImages);
-      api.postSNS(provider, { text, images });
+      api.postSNS(provider, { text }, uploadImages);
     });
   };
 
@@ -42,7 +41,7 @@ export function PostForm({ api }: PostFormProps) {
 
         <div>
           <label>Image</label>
-          <input type="file" multiple onChange={onFileUpload} />
+          <input type="file" onChange={onFileUpload} />
         </div>
       </div>
 

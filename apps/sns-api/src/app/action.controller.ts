@@ -8,7 +8,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
+import { SNSMedia, SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { Request } from 'express';
 import {} from 'multer';
@@ -33,20 +33,20 @@ export class ActionController {
   }
 
   @Post('post')
-  async post(@Req() req: Request, @Body() body: SNSPost) {
-    const client = clientForRequest(req, this.auth, this.config);
-    return client.postMedia(body);
-  }
-
-  @Post('upload')
   @UseInterceptors(FilesInterceptor('images'))
-  async upload(
+  async post(
     @Req() req: Request,
+    @Body() body: SNSPost,
     @UploadedFiles() images: Express.Multer.File[]
   ) {
     const client = clientForRequest(req, this.auth, this.config);
-    return Promise.all(
-      images.map((i) => client.uploadImage(i.buffer, i.originalname))
-    );
+    const image: SNSMedia | null =
+      images.length > 0
+        ? {
+            filename: images[0].originalname,
+            image: images[0].buffer,
+          }
+        : null;
+    return client.postMedia(body, image);
   }
 }

@@ -1,6 +1,10 @@
 export interface SNSPost {
   text: string;
-  images: string[];
+}
+
+export interface SNSMedia {
+  image: Buffer;
+  filename: string;
 }
 
 export interface User {
