@@ -21,19 +21,13 @@ export function PostForm({ api }: PostFormProps) {
     [] as SocialProvider[]
   );
 
-  const imgurToken = tokens[SocialProvider.IMGUR];
-
   const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     setImages(Array.from(event.target.files || []));
   };
 
   const onSubmit = async () => {
     selectedProvider.forEach(async (provider) => {
-      const images: string[] = [];
-      if (uploadImages.length > 0 && imgurToken) {
-        images.push(...(await api.upload(provider, uploadImages)));
-      }
-
+      const images = await api.upload(provider, uploadImages);
       api.postSNS(provider, { text, images });
     });
   };
@@ -47,19 +41,8 @@ export function PostForm({ api }: PostFormProps) {
         </div>
 
         <div>
-          <label>
-            Image
-            <FontAwesomeIcon
-              title="Imgur is needed for image uploads"
-              icon={faInfo}
-            />
-          </label>
-          <input
-            type="file"
-            multiple
-            onChange={onFileUpload}
-            disabled={!tokens[SocialProvider.IMGUR]}
-          />
+          <label>Image</label>
+          <input type="file" multiple onChange={onFileUpload} />
         </div>
       </div>
 

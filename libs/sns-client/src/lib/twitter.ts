@@ -19,8 +19,10 @@ export class TwitterClient implements SNSClient {
 
   async postMedia({ text, images }: SNSPost): Promise<string> {
     return await this.client.v2
-      .tweet(`${text}\n\n${images.join('\n')}`)
-      .then((res) => res.data.id);
+      .tweet(text, {
+        media: { media_ids: images },
+      })
+      .then((res) => `${res.data.id}`);
   }
 
   async getUser(): Promise<User> {
@@ -30,8 +32,13 @@ export class TwitterClient implements SNSClient {
   }
 
   async uploadImage(file: Buffer, filename: string): Promise<string> {
-    return await this.client.v1.uploadMedia(file, {
-      type: filename.split('.')[1],
-    });
+    try {
+      return await this.client.v1.uploadMedia(file, {
+        type: filename.split('.')[1],
+      });
+    } catch (e) {
+      console.log(e);
+      console.log(e.data);
+    }
   }
 }
