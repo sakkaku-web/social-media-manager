@@ -1,4 +1,5 @@
 import { ApiClient } from '@kumi-arts/api-client';
+import { Pane } from 'evergreen-ui';
 import { useState } from 'react';
 import { environment } from '../environments/environment';
 import PostForm from './post-form/post-form';
@@ -11,16 +12,18 @@ export function App() {
   const [tokens, setTokens] = useState({} as Tokens);
 
   return (
-    <div>
+    <Pane>
       <SnsLogins
         api={api}
         updateToken={(t) => setTokens((v) => ({ ...v, ...t }))}
       />
 
-      <SocialProviderContext.Provider value={tokens}>
-        <PostForm api={api} />
-      </SocialProviderContext.Provider>
-    </div>
+      <Pane padding="1em">
+        <SocialProviderContext.Provider value={tokens}>
+          <PostForm api={api} />
+        </SocialProviderContext.Provider>
+      </Pane>
+    </Pane>
   );
 }
 

@@ -4,7 +4,16 @@ import './post-form.module.scss';
 import { Group, SocialProvider } from '@kumi-arts/core';
 import { ApiClient } from '@kumi-arts/api-client';
 import ProviderSelect from './provider-select/provider-select';
-import axios from 'axios';
+import {
+  Button,
+  FilePicker,
+  FormField,
+  Label,
+  Pane,
+  SelectField,
+  TextareaField,
+  TextInputField,
+} from 'evergreen-ui';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {
@@ -12,7 +21,7 @@ export interface PostFormProps {
 }
 
 export function PostForm({ api }: PostFormProps) {
-  const tokens: Tokens = useContext(SocialProviderContext);
+  const { pinterest }: Tokens = useContext(SocialProviderContext);
 
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
@@ -23,8 +32,8 @@ export function PostForm({ api }: PostFormProps) {
 
   const [selectedGroup, setSelectedGroup] = useState('');
 
-  const onFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImages(Array.from(event.target.files || []));
+  const onFileUpload = (files: FileList) => {
+    setImages(Array.from(files || []));
   };
 
   const onSubmit = async () => {
@@ -39,7 +48,12 @@ export function PostForm({ api }: PostFormProps) {
 
   const [groups, setGroup] = useState([] as Group[]);
   useEffect(() => {
-    api.getGroups(SocialProvider.PINTEREST).then((res) => setGroup(res));
+    api.getGroups(SocialProvider.PINTEREST).then((res) => {
+      setGroup(res);
+      if (res.length > 0) {
+        setSelectedGroup(res[0].id);
+      }
+    });
   }, []);
   const groupSelect = groups.map((b) => (
     <option key={b.id} value={b.id}>
@@ -49,38 +63,44 @@ export function PostForm({ api }: PostFormProps) {
 
   return (
     <div>
-      <div>
-        <div>
-          <label>Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-        </div>
-        <div>
-          <label>Text</label>
-          <textarea value={text} onChange={(e) => setText(e.target.value)} />
-        </div>
+      <TextInputField
+        label="Title"
+        value={title}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTitle(e.target.value)
+        }
+      />
 
-        <div>
-          <label>Image</label>
-          <input type="file" onChange={onFileUpload} />
-        </div>
-      </div>
+      <TextareaField
+        label="Text"
+        value={text}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          setText(e.target.value)
+        }
+      />
+
+      <FormField label="Image">
+        <FilePicker onChange={onFileUpload} />
+      </FormField>
 
       <ProviderSelect
         selected={selectedProvider}
         onChange={setSelectedProvider}
       />
 
-      <select
-        value={selectedGroup}
-        onChange={(e) => setSelectedGroup(e.target.value)}
-      >
-        <option value=""></option>
-        {groupSelect}
-      </select>
+      {selectedProvider.includes(SocialProvider.PINTEREST) && (
+        <SelectField
+          label="Pinterest Board"
+          value={selectedGroup}
+          onChange={(e) => setSelectedGroup(e.target.value)}
+        >
+          {groupSelect}
+        </SelectField>
+      )}
 
-      <div>
-        <button onClick={onSubmit}>Submit</button>
-      </div>
+      <Button onClick={onSubmit} appearance="primary">
+        Submit
+      </Button>
     </div>
   );
 }

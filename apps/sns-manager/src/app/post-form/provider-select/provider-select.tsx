@@ -1,4 +1,5 @@
 import { SocialProvider } from '@kumi-arts/core';
+import { Checkbox, Pane } from 'evergreen-ui';
 import { useContext } from 'react';
 import { SocialProviderContext, Tokens } from '../../social-provider-context';
 import './provider-select.module.scss';
@@ -20,25 +21,24 @@ export function ProviderSelect({ onChange, selected }: ProviderSelectProps) {
     }
   };
 
+  const checkboxes = Object.keys(tokens)
+    .map((key) => key as SocialProvider)
+    .filter((p) => !!tokens[p])
+    .map((p: SocialProvider) => {
+      return (
+        <Checkbox
+          key={p}
+          label={p}
+          checked={selected.includes(p)}
+          onChange={() => onChecked(p)}
+        />
+      );
+    });
+
   return (
-    <div>
-      {Object.keys(tokens)
-        .map((key) => key as SocialProvider)
-        .filter((p) => !!tokens[p])
-        .map((p: SocialProvider) => {
-          return (
-            <span key={p}>
-              <input
-                id={p}
-                type="checkbox"
-                checked={selected.includes(p)}
-                onChange={() => onChecked(p)}
-              />
-              <label htmlFor={p}>{p}</label>
-            </span>
-          );
-        })}
-    </div>
+    <Pane display="flex" gap="1em">
+      {checkboxes}
+    </Pane>
   );
 }
 

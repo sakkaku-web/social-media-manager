@@ -9,7 +9,7 @@ import {
   validateCallbackState,
   OAuthCallbackResponse,
 } from '../auth';
-import { ImgurClient, jsonParseInterceptor, SNSClient } from '../client';
+import { jsonParseInterceptor, SNSClient } from '../client';
 
 export class PinterestAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
@@ -41,7 +41,9 @@ export class PinterestAuthService implements SNSAuthService {
     params.append('redirect_uri', callback.redirect);
     params.append('grant_type', 'authorization_code');
 
-    const encoded = btoa(`${clientId}:${clientSecret}`);
+    const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString(
+      'base64'
+    );
     const response = await axios.post(
       `https://api.pinterest.com/v5/oauth/token`,
       params,

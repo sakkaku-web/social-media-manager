@@ -2,9 +2,8 @@ import './sns-login-button.module.scss';
 import {
   faFacebook,
   faInstagram,
-  faPinterest,
   faReddit,
-  faTwitter,
+  IconDefinition,
 } from '@fortawesome/free-brands-svg-icons';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,18 +11,18 @@ import { useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
 import { environment } from '../../../environments/environment';
 import { ApiClient } from '@kumi-arts/api-client';
+import { Button } from 'evergreen-ui';
 
 export interface SnsButtonProps {
   provider: SocialProvider;
   api: ApiClient;
   setToken: (t: string | null) => void;
+  icon: IconDefinition;
+  profileUrl: (u: User) => string;
 }
 
+// TODO: move to props
 const data = {
-  [SocialProvider.TWITTER]: {
-    icon: faTwitter,
-    profileUrl: ({ id }: User) => `https://twitter.com/${id}`,
-  },
   [SocialProvider.REDDIT]: {
     icon: faReddit,
     profileUrl: ({ id }: User) => `https://reddit.com/u/${id}`,
@@ -41,13 +40,15 @@ const data = {
     icon: faImages,
     profileUrl: ({ name }: User) => `https://imgur.com/user/${name}/posts`,
   },
-  [SocialProvider.PINTEREST]: {
-    icon: faPinterest,
-    profileUrl: ({ name }: User) => `https://www.pinterest.at/${name}/_saved/`,
-  },
 };
 
-export function SnsLoginButton({ api, provider, setToken }: SnsButtonProps) {
+export function SnsLoginButton({
+  api,
+  provider,
+  setToken,
+  icon,
+  profileUrl,
+}: SnsButtonProps) {
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
@@ -64,17 +65,29 @@ export function SnsLoginButton({ api, provider, setToken }: SnsButtonProps) {
 
   const buildUrl = () => {
     if (user?.id) {
-      return data[provider].profileUrl(user);
+      return profileUrl(user);
     } else {
       return `${environment.api}/${provider}/login`;
     }
   };
 
+  const redirectLogin = () => {
+    window.location.href = buildUrl();
+  };
+
+  const text = user?.name ? user.name : `${provider} login`;
   return (
-    <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
-      <FontAwesomeIcon icon={data[provider].icon} />
-      {user?.name ? user.name : `${provider} login`}
-    </a>
+    <Button
+      onClick={redirectLogin}
+      iconBefore={<FontAwesomeIcon icon={icon} />}
+    >
+      {text}
+    </Button>
+
+    // <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
+    //   <FontAwesomeIcon icon={data[provider].icon} />
+    //   {user?.name ? user.name : `${provider} login`}
+    // </a>
   );
 }
 
