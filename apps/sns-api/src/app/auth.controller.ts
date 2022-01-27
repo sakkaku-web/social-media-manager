@@ -23,7 +23,7 @@ import { environment } from '../environments/environment';
 import { getOAuthOptions, getProvider } from './shared';
 import { PinterestAuthService } from './provider/pinterest';
 
-@Controller(Object.values(SocialProvider))
+@Controller(Object.values(SocialProvider).map((p) => `auth/${p}`))
 export class AuthController {
   constructor(
     private readonly config: ConfigService,
@@ -59,7 +59,7 @@ export class AuthController {
   }
 
   private getRedirectUrl(provider: SocialProvider) {
-    return `${environment.baseUrl}/${provider}/callback`;
+    return `${environment.baseUrl}/auth/${provider}/callback`;
   }
 
   @Get('token')

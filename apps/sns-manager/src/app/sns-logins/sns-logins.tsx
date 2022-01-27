@@ -5,14 +5,13 @@ import { Tokens } from '../social-provider-context';
 import './sns-logins.module.scss';
 import { Pane } from 'evergreen-ui';
 import { faPinterest, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { TwitterClient } from '../clients/twitter';
+import { PinterestClient } from '../clients/pinterest';
 
 /* eslint-disable-next-line */
-export interface SnsLoginsProps {
-  api: ApiClient;
-  updateToken: (t: Tokens) => void;
-}
+export interface SnsLoginsProps {}
 
-export function SnsLogins({ api, updateToken }: SnsLoginsProps) {
+export function SnsLogins(props: SnsLoginsProps) {
   return (
     <Pane
       borderBottom
@@ -23,19 +22,17 @@ export function SnsLogins({ api, updateToken }: SnsLoginsProps) {
       background="tint2"
     >
       <SnsLoginButton
-        api={api}
+        api={new TwitterClient()}
         provider={SocialProvider.TWITTER}
-        setToken={(t) => updateToken({ [SocialProvider.TWITTER]: t })}
         icon={faTwitter}
         profileUrl={(u) => `https://twitter.com/${u.id}`}
       />
 
       <SnsLoginButton
-        api={api}
+        api={new PinterestClient()}
         provider={SocialProvider.PINTEREST}
-        setToken={(t) => updateToken({ [SocialProvider.PINTEREST]: t })}
         icon={faPinterest}
-        profileUrl={(u) => `https://pinterest.at/${u.name}/_saved`}
+        profileUrl={(u) => `https://pinterest.at/${u.name}`}
       />
     </Pane>
   );

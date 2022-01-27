@@ -18,6 +18,7 @@ async function bootstrap() {
   const httpsOptions: HttpsOptions = environment.https;
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     httpsOptions,
+    bodyParser: false,
   });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

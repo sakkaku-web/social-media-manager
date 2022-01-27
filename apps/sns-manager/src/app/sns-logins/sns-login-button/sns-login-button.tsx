@@ -10,13 +10,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
 import { environment } from '../../../environments/environment';
-import { ApiClient } from '@kumi-arts/api-client';
 import { Button } from 'evergreen-ui';
+import { Client } from '../../clients/client';
 
 export interface SnsButtonProps {
   provider: SocialProvider;
-  api: ApiClient;
-  setToken: (t: string | null) => void;
+  api: Client;
   icon: IconDefinition;
   profileUrl: (u: User) => string;
 }
@@ -45,7 +44,6 @@ const data = {
 export function SnsLoginButton({
   api,
   provider,
-  setToken,
   icon,
   profileUrl,
 }: SnsButtonProps) {
@@ -53,13 +51,10 @@ export function SnsLoginButton({
 
   useEffect(() => {
     api
-      .getUser(provider)
+      .getUser()
       .then((user) => setUser(user))
-      .then(() => api.getToken(provider))
-      .then((t) => setToken(t))
       .catch((err) => {
         setUser(null);
-        setToken(null);
       });
   }, []);
 
@@ -67,7 +62,7 @@ export function SnsLoginButton({
     if (user?.id) {
       return profileUrl(user);
     } else {
-      return `${environment.api}/${provider}/login`;
+      return `${environment.api}/auth/${provider}/login`;
     }
   };
 
@@ -83,11 +78,6 @@ export function SnsLoginButton({
     >
       {text}
     </Button>
-
-    // <a href={buildUrl()} target={user?.id ? '_blank' : ''} rel="noreferrer">
-    //   <FontAwesomeIcon icon={data[provider].icon} />
-    //   {user?.name ? user.name : `${provider} login`}
-    // </a>
   );
 }
 
