@@ -1,11 +1,11 @@
 export interface SNSPost {
   title: string;
   text: string;
-  group?: string;
+  media?: SNSMedia;
 }
 
 export interface SNSMedia {
-  image: Buffer;
+  image: File;
   filename: string;
 }
 

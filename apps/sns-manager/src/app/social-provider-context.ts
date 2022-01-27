@@ -1,6 +1,11 @@
 import { SocialProvider } from '@kumi-arts/core';
 import { createContext } from 'react';
 
-export type Tokens = { [p in SocialProvider]?: string | null };
+export type LoggedIn = { [p in SocialProvider]?: boolean };
 
-export const SocialProviderContext = createContext({} as Tokens);
+export interface SocialProviderValue {
+  loggedIn: LoggedIn;
+  setLoggedIn: (provider: SocialProvider, value: boolean) => void;
+}
+
+export const SocialProviderContext = createContext({} as SocialProviderValue);

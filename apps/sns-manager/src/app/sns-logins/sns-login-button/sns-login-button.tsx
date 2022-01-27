@@ -7,11 +7,12 @@ import {
 } from '@fortawesome/free-brands-svg-icons';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocialProvider, User } from '@kumi-arts/core';
 import { environment } from '../../../environments/environment';
 import { Button } from 'evergreen-ui';
 import { Client } from '../../clients/client';
+import { SocialProviderContext } from '../../social-provider-context';
 
 export interface SnsButtonProps {
   provider: SocialProvider;
@@ -47,14 +48,19 @@ export function SnsLoginButton({
   icon,
   profileUrl,
 }: SnsButtonProps) {
+  const { setLoggedIn } = useContext(SocialProviderContext);
   const [user, setUser] = useState(null as User | null);
 
   useEffect(() => {
     api
       .getUser()
-      .then((user) => setUser(user))
+      .then((user) => {
+        setUser(user);
+        setLoggedIn(provider, true);
+      })
       .catch((err) => {
         setUser(null);
+        setLoggedIn(provider, false);
       });
   }, []);
 

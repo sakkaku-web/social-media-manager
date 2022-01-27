@@ -1,19 +1,15 @@
-import { useContext, useEffect, useState } from 'react';
-import { SocialProviderContext, Tokens } from '../social-provider-context';
+import { useState } from 'react';
 import './post-form.module.scss';
-import { Group, SocialProvider } from '@kumi-arts/core';
-import { ApiClient } from '@kumi-arts/api-client';
-import ProviderSelect from './provider-select/provider-select';
+import { SNSMedia, SNSPost, SocialProvider } from '@kumi-arts/core';
 import {
   Button,
   FilePicker,
   FormField,
-  Label,
-  Pane,
-  SelectField,
   TextareaField,
   TextInputField,
 } from 'evergreen-ui';
+import Pinterest from '../pinterest/pinterest';
+import ProviderSelect from './provider-select/provider-select';
 
 /* eslint-disable-next-line */
 export interface PostFormProps {}
@@ -30,10 +26,17 @@ export function PostForm(props: PostFormProps) {
     setImages(Array.from(files || []));
   };
 
-  const onSubmit = async () => {
-    selectedProvider.forEach(async (provider) => {
-      // api.postSNS(provider, { title, text }, uploadImages);
-    });
+  const isSelected = (provider: SocialProvider) =>
+    selectedProvider.includes(provider);
+
+  const file = uploadImages.length ? uploadImages[0] : null;
+  const media: SNSMedia | undefined = file
+    ? { filename: file.name, image: file }
+    : undefined;
+  const post: SNSPost = {
+    media,
+    text,
+    title,
   };
 
   return (
@@ -63,9 +66,7 @@ export function PostForm(props: PostFormProps) {
         onChange={setSelectedProvider}
       />
 
-      <Button onClick={onSubmit} appearance="primary">
-        Submit
-      </Button>
+      {isSelected(SocialProvider.PINTEREST) && <Pinterest defaultPost={post} />}
     </div>
   );
 }

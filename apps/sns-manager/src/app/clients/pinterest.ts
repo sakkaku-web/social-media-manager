@@ -1,6 +1,10 @@
-import { Group, SNSMedia, SNSPost, User } from '@kumi-arts/core';
+import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
 import { Axios } from 'axios';
 import { Client, createClient } from './client';
+
+export interface PinterestPost extends SNSPost {
+  board: string;
+}
 
 export class PinterestClient implements Client {
   private client: Axios;
@@ -11,17 +15,17 @@ export class PinterestClient implements Client {
     });
   }
 
-  async postMedia(media: SNSPost, image: SNSMedia): Promise<string> {
-    if (!image) return '';
+  async postMedia(post: PinterestPost): Promise<string> {
+    if (!post.media) return '';
 
     const body = {
-      title: media.title,
-      board_id: media.group,
-      description: media.text,
+      title: post.title,
+      board_id: post.board,
+      description: post.text,
       media_source: {
         source_type: 'image_base64',
-        data: image.image.toString('base64'),
-        content_type: this.getType(image),
+        data: await this.fileToBase64(post.media.image),
+        content_type: this.getType(post.media),
       },
     };
     const { data } = await this.client.post('/pins', JSON.stringify(body), {
@@ -29,6 +33,19 @@ export class PinterestClient implements Client {
     });
 
     return data.id;
+  }
+
+  private fileToBase64(file: File) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      // Read file content on file loaded event
+      reader.onload = function (event) {
+        resolve(event?.target?.result?.toString().split(',', 2)[1]);
+      };
+
+      // Convert data to base64
+      reader.readAsDataURL(file);
+    });
   }
 
   private getType(image: SNSMedia) {
@@ -42,7 +59,12 @@ export class PinterestClient implements Client {
     });
   }
 
-  async getGroups(): Promise<Group[]> {
+  async getBoards(): Promise<Board[]> {
     return this.client.get('/boards').then((res) => res.data.items);
   }
+}
+
+export interface Board {
+  id: string;
+  name: string;
 }
