@@ -9,8 +9,8 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { ActionController } from './action.controller';
 import { TokenMiddleware } from './middleware/token-middleware';
-import { ProxyMiddleware } from './middleware/proxy-middleware';
 import { SocialProvider } from '@kumi-arts/core';
+import { PinterestMiddleware } from './middleware/pinterest-middleware';
 
 @Module({
   imports: [
@@ -25,7 +25,10 @@ import { SocialProvider } from '@kumi-arts/core';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    const providerUrls = Object.values(SocialProvider) as string[];
-    consumer.apply(TokenMiddleware, ProxyMiddleware).forRoutes(...providerUrls);
+    consumer
+      .apply(TokenMiddleware)
+      .forRoutes(...Object.values(SocialProvider))
+      .apply(PinterestMiddleware)
+      .forRoutes(SocialProvider.PINTEREST);
   }
 }

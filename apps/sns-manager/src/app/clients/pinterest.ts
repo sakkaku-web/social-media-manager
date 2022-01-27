@@ -1,24 +1,14 @@
 import { Group, SNSMedia, SNSPost, User } from '@kumi-arts/core';
-import { Axios, AxiosResponse } from 'axios';
-import { Client } from './client';
-
-export const jsonParseInterceptor = (res: AxiosResponse) => {
-  if (typeof res.data === 'string' && res.data.startsWith('{')) {
-    res.data = JSON.parse(res.data);
-  }
-
-  return res;
-};
+import { Axios } from 'axios';
+import { Client, createClient } from './client';
 
 export class PinterestClient implements Client {
   private client: Axios;
 
   constructor() {
-    this.client = new Axios({
+    this.client = createClient({
       baseURL: '/api/pinterest',
     });
-
-    this.client.interceptors.response.use(jsonParseInterceptor);
   }
 
   async postMedia(media: SNSPost, image: SNSMedia): Promise<string> {
@@ -34,13 +24,9 @@ export class PinterestClient implements Client {
         content_type: this.getType(image),
       },
     };
-    const { data, status, statusText } = await this.client.post(
-      '/pins',
-      JSON.stringify(body),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
+    const { data } = await this.client.post('/pins', JSON.stringify(body), {
+      headers: { 'Content-Type': 'application/json' },
+    });
 
     return data.id;
   }
@@ -57,6 +43,6 @@ export class PinterestClient implements Client {
   }
 
   async getGroups(): Promise<Group[]> {
-    return this.client.get('boards').then((res) => res.data.items);
+    return this.client.get('/boards').then((res) => res.data.items);
   }
 }

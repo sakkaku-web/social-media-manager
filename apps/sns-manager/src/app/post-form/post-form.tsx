@@ -16,13 +16,9 @@ import {
 } from 'evergreen-ui';
 
 /* eslint-disable-next-line */
-export interface PostFormProps {
-  api: ApiClient;
-}
+export interface PostFormProps {}
 
-export function PostForm({ api }: PostFormProps) {
-  const { pinterest }: Tokens = useContext(SocialProviderContext);
-
+export function PostForm(props: PostFormProps) {
   const [title, setTitle] = useState('');
   const [text, setText] = useState('');
   const [uploadImages, setImages] = useState([] as File[]);
@@ -30,36 +26,15 @@ export function PostForm({ api }: PostFormProps) {
     [] as SocialProvider[]
   );
 
-  const [selectedGroup, setSelectedGroup] = useState('');
-
   const onFileUpload = (files: FileList) => {
     setImages(Array.from(files || []));
   };
 
   const onSubmit = async () => {
     selectedProvider.forEach(async (provider) => {
-      api.postSNS(
-        provider,
-        { title, text, group: selectedGroup },
-        uploadImages
-      );
+      // api.postSNS(provider, { title, text }, uploadImages);
     });
   };
-
-  const [groups, setGroup] = useState([] as Group[]);
-  useEffect(() => {
-    api.getGroups(SocialProvider.PINTEREST).then((res) => {
-      setGroup(res);
-      if (res.length > 0) {
-        setSelectedGroup(res[0].id);
-      }
-    });
-  }, []);
-  const groupSelect = groups.map((b) => (
-    <option key={b.id} value={b.id}>
-      {b.name}
-    </option>
-  ));
 
   return (
     <div>
@@ -87,16 +62,6 @@ export function PostForm({ api }: PostFormProps) {
         selected={selectedProvider}
         onChange={setSelectedProvider}
       />
-
-      {selectedProvider.includes(SocialProvider.PINTEREST) && (
-        <SelectField
-          label="Pinterest Board"
-          value={selectedGroup}
-          onChange={(e) => setSelectedGroup(e.target.value)}
-        >
-          {groupSelect}
-        </SelectField>
-      )}
 
       <Button onClick={onSubmit} appearance="primary">
         Submit
