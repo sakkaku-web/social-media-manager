@@ -18,7 +18,12 @@ const unsuccessfulInterceptor = (res: AxiosResponse) => {
 };
 
 export const createClient = (config: AxiosRequestConfig) => {
-  const client = new Axios(config);
+  const client = new Axios({
+    ...config,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   client.interceptors.response.use(jsonParseInterceptor);
   client.interceptors.response.use(unsuccessfulInterceptor);
   return client;

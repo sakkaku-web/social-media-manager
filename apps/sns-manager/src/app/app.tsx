@@ -12,15 +12,23 @@ import {
   Status,
 } from './social-provider-context';
 import { ProviderForm } from './forms/form';
+import TwitterForm from './forms/twitter-form';
 
 export function App() {
   const [loggedIn, setLoggedIn] = useState({} as ProviderBool);
   const [status, setStatus] = useState({} as ProviderStatus);
 
-  const [defaultPost, setDefaultPost] = useState({} as SNSPost);
+  const [defaultPost, setDefaultPost] = useState({
+    text: '',
+    title: '',
+    media: {
+      filename: '',
+    },
+  } as SNSPost);
   const [providers, setProviders] = useState([] as SocialProvider[]);
 
-  const pinterestRef = useRef({} as ProviderForm);
+  const pinterestRef = useRef(null as ProviderForm | null);
+  const twitterRef = useRef(null as ProviderForm | null);
 
   const isSubmitting = Object.values(status).some(
     (s) => s === Status.SUBMITTING
@@ -30,7 +38,18 @@ export function App() {
   const onSubmit = () => {
     if (!hasErrors) {
       pinterestRef.current?.submit();
+      twitterRef.current?.submit();
     }
+  };
+
+  const onProviderChange = (providers: SocialProvider[]) => {
+    setProviders(providers);
+
+    Object.keys(status)
+      .map((p) => p as SocialProvider)
+      .filter((p) => !providers.includes(p))
+      .forEach((p) => (status[p] = Status.VALID));
+    setStatus(status);
   };
 
   return (
@@ -51,12 +70,20 @@ export function App() {
             onPostChange={setDefaultPost}
             disabled={isSubmitting}
           />
-          <ProviderSelect selected={providers} onChange={setProviders} />
+          <ProviderSelect selected={providers} onChange={onProviderChange} />
 
           {providers.includes(SocialProvider.PINTEREST) && (
             <PinterestForm
               defaultPost={defaultPost}
               ref={pinterestRef}
+              disabled={isSubmitting}
+            />
+          )}
+
+          {providers.includes(SocialProvider.TWITTER) && (
+            <TwitterForm
+              defaultPost={defaultPost}
+              ref={twitterRef}
               disabled={isSubmitting}
             />
           )}

@@ -16,11 +16,14 @@ import {
   forwardRef,
   useImperativeHandle,
   ForwardedRef,
+  useRef,
 } from 'react';
-import { Board, PinterestClient } from '../clients/pinterest';
+import { Board, PinterestClient, PinterestPost } from '../clients/pinterest';
 import { isValid, requiredMessage } from './validation';
 import { SocialProviderContext, Status } from '../social-provider-context';
 import { HttpError } from '../clients/client';
+import BaseForm from './base-form';
+import { ProviderForm } from './form';
 
 export interface PinterestProps {
   defaultPost: SNSPost;
@@ -33,9 +36,13 @@ function PinterestForm(
 ) {
   const { setStatus } = useContext(SocialProviderContext);
 
+  const formRef = useRef<ProviderForm>();
   const [boards, setBoards] = useState([] as Board[]);
-  const [selectedBoard, setSelectedBoard] = useState('');
-  const [message, setMessage] = useState({ error: false, message: '' });
+  const [lastSubmittedId, setLastSubmittedId] = useState('');
+  const [post, setPost] = useState({
+    ...defaultPost,
+    board: '',
+  } as PinterestPost);
 
   const client = new PinterestClient();
 
@@ -48,67 +55,55 @@ function PinterestForm(
     });
   }, []);
 
-  const updateStatus = (s: Status) => setStatus(SocialProvider.PINTEREST, s);
-
   useImperativeHandle(ref, () => ({
-    submit: async () => {
-      try {
-        updateStatus(Status.SUBMITTING);
-        const id = await client.postMedia({
-          ...defaultPost,
-          board: selectedBoard,
-        });
-
-        setMessage({
-          error: false,
-          message: `https://www.pinterest.at/pin/${id}`,
-        });
-        updateStatus(Status.SUCCESS);
-      } catch (e) {
-        const { data } = e as HttpError;
-        setMessage({
-          error: true,
-          message: `${data.message} - code: ${data.code}`,
-        });
-        updateStatus(Status.ERROR);
-      }
-    },
+    submit: () => formRef.current?.submit(),
   }));
 
-  const validation = {
-    image: requiredMessage(defaultPost.media?.filename),
+  const submitFn = async () => {
+    try {
+      const id = await client.postMedia(post);
+
+      setLastSubmittedId(id);
+    } catch (e) {
+      const { data } = e as HttpError;
+      throw new Error(`${data.message} - code: ${data.code}`);
+    }
   };
 
+  const validation = {
+    image: requiredMessage(post.media?.filename), // Might have to change if file is editable in here
+  };
+
+  useEffect(() => setPost((s) => ({ ...s, ...defaultPost })), [defaultPost]);
   useEffect(() => {
     if (!isValid(validation)) {
       setStatus(SocialProvider.PINTEREST, Status.ERROR);
     } else {
       setStatus(SocialProvider.PINTEREST, Status.VALID);
     }
-  }, [defaultPost]);
+  }, [post]);
 
   const onSelectedBoardChange = (id: string) => {
-    setSelectedBoard(id);
+    setPost((s) => ({ ...s, board: id }));
   };
 
+  const postLink = lastSubmittedId
+    ? `https://www.pinterest.com/pin/${lastSubmittedId}`
+    : undefined;
   return (
-    <Card border padding="1em" marginBottom="1em">
-      <Pane display="flex" alignItems="center" gap="1em" marginBottom="1em">
-        <Heading>Pinterest</Heading>
-        <Spinner size={24} />
-      </Pane>
-
-      <TextInputField label="Title" value={defaultPost.title} disabled={true} />
-      <TextInputField
-        label="Description"
-        value={defaultPost.text}
-        disabled={true}
-      />
+    <BaseForm
+      provider={SocialProvider.PINTEREST}
+      link={postLink}
+      submitFn={submitFn}
+      ref={formRef}
+    >
+      <TextInputField label="Title" value={post.title} disabled={true} />
+      <TextInputField label="Description" value={post.text} disabled={true} />
 
       <SelectField
         label="Board"
         required={true}
-        value={selectedBoard}
+        value={post.board}
         onChange={(e) => onSelectedBoardChange(e.target.value)}
         disabled={disabled}
       >
@@ -123,19 +118,10 @@ function PinterestForm(
         label="Image"
         validationMessage={validation.image}
         required={true}
-        value={defaultPost.media?.filename || ''}
+        value={post.media?.filename}
         disabled={true}
       />
-
-      {message.message &&
-        ((!message.error && (
-          <Alert
-            role="status"
-            intent="success"
-            title={<Link href={message.message}>Posted successfully</Link>}
-          />
-        )) || <Alert role="status" intent="danger" title={message.message} />)}
-    </Card>
+    </BaseForm>
   );
 }
 
