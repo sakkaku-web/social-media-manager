@@ -1,14 +1,18 @@
 import { NestMiddleware } from '@nestjs/common';
-import { createProxyMiddleware, RequestHandler } from 'http-proxy-middleware';
+import {
+  createProxyMiddleware,
+  Options,
+  RequestHandler,
+} from 'http-proxy-middleware';
 
 export class ProxyMiddleware implements NestMiddleware {
   private proxy: RequestHandler;
 
-  constructor(target: string) {
-    this.proxy = this.createProxy(target);
+  constructor(target: string, options: Options = {}) {
+    this.proxy = this.createProxy(target, options);
   }
 
-  private createProxy(target: string) {
+  private createProxy(target: string, options: Options) {
     return createProxyMiddleware({
       target,
       changeOrigin: true,
@@ -21,6 +25,7 @@ export class ProxyMiddleware implements NestMiddleware {
           `[ProxyMiddleware]: ${req.originalUrl} -> ${req.url} - ${req.method}`
         );
       },
+      ...options,
     });
   }
 

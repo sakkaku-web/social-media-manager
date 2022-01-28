@@ -11,6 +11,7 @@ import { ActionController } from './action.controller';
 import { TokenMiddleware } from './middleware/token-middleware';
 import { SocialProvider } from '@kumi-arts/core';
 import { PinterestMiddleware } from './middleware/pinterest-middleware';
+import { TwitterMiddleware } from './middleware/twitter-middleware';
 
 @Module({
   imports: [
@@ -29,6 +30,8 @@ export class AppModule implements NestModule {
       .apply(TokenMiddleware)
       .forRoutes(...Object.values(SocialProvider))
       .apply(PinterestMiddleware)
-      .forRoutes(SocialProvider.PINTEREST);
+      .forRoutes(SocialProvider.PINTEREST)
+      .apply(TwitterMiddleware)
+      .forRoutes(SocialProvider.TWITTER);
   }
 }

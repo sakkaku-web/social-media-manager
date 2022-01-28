@@ -18,7 +18,7 @@ export class AuthService {
     });
   }
 
-  getToken(provider: SocialProvider) {
+  getToken(provider: SocialProvider): string {
     const token = this.request.cookies[this.tokenKey(provider)];
     if (!token) {
       throw new HttpException('Missing token', 401);
