@@ -1,72 +1,54 @@
-import { useState } from 'react';
 import './post-form.module.scss';
-import { SNSMedia, SNSPost, SocialProvider } from '@kumi-arts/core';
+import { SNSPost } from '@kumi-arts/core';
 import {
-  Button,
   FilePicker,
   FormField,
   TextareaField,
   TextInputField,
 } from 'evergreen-ui';
-import Pinterest from '../pinterest/pinterest';
-import ProviderSelect from './provider-select/provider-select';
 
 /* eslint-disable-next-line */
-export interface PostFormProps {}
+export interface PostFormProps {
+  post: SNSPost;
+  onPostChange: (post: SNSPost) => void;
+}
 
-export function PostForm(props: PostFormProps) {
-  const [title, setTitle] = useState('');
-  const [text, setText] = useState('');
-  const [uploadImages, setImages] = useState([] as File[]);
-  const [selectedProvider, setSelectedProvider] = useState(
-    [] as SocialProvider[]
-  );
-
+export function PostForm({ post, onPostChange }: PostFormProps) {
   const onFileUpload = (files: FileList) => {
-    setImages(Array.from(files || []));
+    if (files.length > 0) {
+      const file = Array.from(files)[0];
+      emitPostChange({ media: { filename: file.name, image: file } });
+    }
   };
 
-  const isSelected = (provider: SocialProvider) =>
-    selectedProvider.includes(provider);
+  const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    emitPostChange({ title: e.target.value });
+  };
 
-  const file = uploadImages.length ? uploadImages[0] : null;
-  const media: SNSMedia | undefined = file
-    ? { filename: file.name, image: file }
-    : undefined;
-  const post: SNSPost = {
-    media,
-    text,
-    title,
+  const onTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    emitPostChange({ text: e.target.value });
+  };
+
+  const emitPostChange = (update: Partial<SNSPost>) => {
+    onPostChange({
+      ...post,
+      ...update,
+    });
   };
 
   return (
     <div>
       <TextInputField
         label="Title"
-        value={title}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setTitle(e.target.value)
-        }
+        value={post.title}
+        onChange={onTitleChange}
       />
 
-      <TextareaField
-        label="Text"
-        value={text}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-          setText(e.target.value)
-        }
-      />
+      <TextareaField label="Text" value={post.text} onChange={onTextChange} />
 
       <FormField label="Image">
-        <FilePicker onChange={onFileUpload} />
+        <FilePicker onChange={onFileUpload} accept="image/*" />
       </FormField>
-
-      <ProviderSelect
-        selected={selectedProvider}
-        onChange={setSelectedProvider}
-      />
-
-      {isSelected(SocialProvider.PINTEREST) && <Pinterest defaultPost={post} />}
     </div>
   );
 }
