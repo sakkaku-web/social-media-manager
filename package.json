@@ -42,7 +42,6 @@
     "react-dom": "17.0.2",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
-    "rxjs": "^7.0.0",
     "snoowrap": "^1.23.0",
     "tslib": "^2.0.0",
     "twitter-api-v2": "^1.9.1"

@@ -1,37 +1,41 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
 import { Button, Pane } from 'evergreen-ui';
-import { useState } from 'react';
-import { PinterestClient, PinterestPost } from './clients/pinterest';
+import { useRef, useState } from 'react';
 import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';
 import ProviderSelect from './post-form/provider-select/provider-select';
 import SnsLogins from './sns-logins/sns-logins';
-import { LoggedIn, SocialProviderContext } from './social-provider-context';
+import {
+  ProviderStatus,
+  SocialProviderContext,
+} from './social-provider-context';
+import { ProviderForm } from './forms/form';
 
 export function App() {
-  const [loggedIn, setLoggedIn] = useState({} as LoggedIn);
+  const [loggedIn, setLoggedIn] = useState({} as ProviderStatus);
+  const [errors, setErrors] = useState({} as ProviderStatus);
+
   const [defaultPost, setDefaultPost] = useState({} as SNSPost);
   const [providers, setProviders] = useState([] as SocialProvider[]);
 
-  const [pinterestPost, setPinterestPost] = useState({} as PinterestPost);
-  const pinterestClient = new PinterestClient();
-  const showPinterest = providers.includes(SocialProvider.PINTEREST);
+  const pinterestRef = useRef({} as ProviderForm);
 
-  const onSubmit = async () => {
-    if (showPinterest) {
-      await pinterestClient.postMedia({
-        ...defaultPost,
-        ...pinterestPost,
-      });
+  const onSubmit = () => {
+    if (Object.values(errors).every((err) => !err)) {
+      pinterestRef.current?.submit();
     }
   };
+
+  const hasErrors = Object.values(errors).some((e) => e);
 
   return (
     <Pane>
       <SocialProviderContext.Provider
         value={{
           loggedIn,
+          errors,
           setLoggedIn: (p, v) => setLoggedIn((s) => ({ ...s, [p]: v })),
+          setError: (p, v) => setErrors((s) => ({ ...s, [p]: v })),
         }}
       >
         <SnsLogins />
@@ -40,15 +44,11 @@ export function App() {
           <PostForm post={defaultPost} onPostChange={setDefaultPost} />
           <ProviderSelect selected={providers} onChange={setProviders} />
 
-          {showPinterest && (
-            <PinterestForm
-              defaultPost={defaultPost}
-              client={pinterestClient}
-              onPostChange={setPinterestPost}
-            />
+          {providers.includes(SocialProvider.PINTEREST) && (
+            <PinterestForm defaultPost={defaultPost} ref={pinterestRef} />
           )}
 
-          <Button onClick={onSubmit} appearance="primary">
+          <Button onClick={onSubmit} appearance="primary" disabled={hasErrors}>
             Submit
           </Button>
         </Pane>

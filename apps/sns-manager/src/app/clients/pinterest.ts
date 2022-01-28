@@ -16,15 +16,13 @@ export class PinterestClient implements Client {
   }
 
   async postMedia(post: PinterestPost): Promise<string> {
-    if (!post.media) return '';
-
     const body = {
       title: post.title,
       board_id: post.board,
       description: post.text,
       media_source: {
         source_type: 'image_base64',
-        data: await this.fileToBase64(post.media.image),
+        data: await this.fileToBase64(post.media?.image),
         content_type: this.getType(post.media),
       },
     };
@@ -35,8 +33,13 @@ export class PinterestClient implements Client {
     return data.id;
   }
 
-  private fileToBase64(file: File) {
+  private fileToBase64(file?: File) {
     return new Promise((resolve) => {
+      if (!file) {
+        resolve(null);
+        return;
+      }
+
       const reader = new FileReader();
       // Read file content on file loaded event
       reader.onload = function (event) {
@@ -48,7 +51,8 @@ export class PinterestClient implements Client {
     });
   }
 
-  private getType(image: SNSMedia) {
+  private getType(image?: SNSMedia): string {
+    if (!image) return '';
     const [_, ext] = image.filename.split('.');
     return `image/${ext === 'jpg' ? 'jpeg' : ext}`;
   }

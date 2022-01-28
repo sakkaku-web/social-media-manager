@@ -1,22 +1,31 @@
-import { SNSPost } from '@kumi-arts/core';
+import { SNSPost, SocialProvider } from '@kumi-arts/core';
 import { Card, Heading, SelectField, TextInputField } from 'evergreen-ui';
-import { useEffect, useState } from 'react';
-import { Board, PinterestClient, PinterestPost } from '../clients/pinterest';
-import { requiredMessage } from './validation';
+import {
+  useEffect,
+  useState,
+  useContext,
+  forwardRef,
+  useImperativeHandle,
+  ForwardedRef,
+} from 'react';
+import { Board, PinterestClient } from '../clients/pinterest';
+import { isValid, requiredMessage } from './validation';
+import { SocialProviderContext } from '../social-provider-context';
 
 export interface PinterestProps {
-  client: PinterestClient;
   defaultPost: SNSPost;
-  onPostChange: (p: PinterestPost) => void;
 }
 
-export function PinterestForm({
-  defaultPost,
-  client,
-  onPostChange,
-}: PinterestProps) {
+function PinterestForm(
+  { defaultPost }: PinterestProps,
+  ref: ForwardedRef<unknown>
+) {
+  const { setError } = useContext(SocialProviderContext);
+
   const [boards, setBoards] = useState([] as Board[]);
   const [selectedBoard, setSelectedBoard] = useState('');
+
+  const client = new PinterestClient();
 
   useEffect(() => {
     client.getBoards().then((boards) => {
@@ -27,9 +36,26 @@ export function PinterestForm({
     });
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    submit: async () => {
+      await client.postMedia({
+        ...defaultPost,
+        board: selectedBoard,
+      });
+    },
+  }));
+
+  const validation = {
+    image: requiredMessage(defaultPost.media?.filename),
+  };
+
+  useEffect(() => {
+    setError(SocialProvider.PINTEREST, !isValid(validation));
+  }, [defaultPost]);
+
   const onSelectedBoardChange = (id: string) => {
+    console.log(id);
     setSelectedBoard(id);
-    onPostChange({ ...defaultPost, board: id });
   };
 
   return (
@@ -58,13 +84,13 @@ export function PinterestForm({
 
       <TextInputField
         label="Image"
-        validationMessage={requiredMessage(defaultPost.media?.filename)}
+        validationMessage={validation.image}
         required={true}
-        value={defaultPost.media?.filename}
+        value={defaultPost.media?.filename || ''}
         disabled={true}
       />
     </Card>
   );
 }
 
-export default PinterestForm;
+export default forwardRef(PinterestForm);
