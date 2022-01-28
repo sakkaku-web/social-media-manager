@@ -1,14 +1,8 @@
 import { SNSPost } from '@kumi-arts/core';
-import {
-  Heading,
-  Pane,
-  SelectField,
-  TextInputField,
-  FormField,
-  FilePicker,
-} from 'evergreen-ui';
+import { Card, Heading, SelectField, TextInputField } from 'evergreen-ui';
 import { useEffect, useState } from 'react';
 import { Board, PinterestClient, PinterestPost } from '../clients/pinterest';
+import { requiredMessage } from './validation';
 
 export interface PinterestProps {
   client: PinterestClient;
@@ -39,7 +33,7 @@ export function PinterestForm({
   };
 
   return (
-    <Pane>
+    <Card border padding="1em" marginBottom="1em">
       <Heading>Pinterest</Heading>
 
       <TextInputField label="Title" value={defaultPost.title} disabled={true} />
@@ -64,11 +58,12 @@ export function PinterestForm({
 
       <TextInputField
         label="Image"
+        validationMessage={requiredMessage(defaultPost.media?.filename)}
         required={true}
         value={defaultPost.media?.filename}
         disabled={true}
       />
-    </Pane>
+    </Card>
   );
 }
 
