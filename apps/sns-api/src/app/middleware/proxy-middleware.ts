@@ -2,17 +2,10 @@ import { NestMiddleware } from '@nestjs/common';
 import {
   createProxyMiddleware,
   Options,
-  RequestHandler,
 } from 'http-proxy-middleware';
 
-export class ProxyMiddleware implements NestMiddleware {
-  private proxy: RequestHandler;
-
-  constructor(target: string, options: Options = {}) {
-    this.proxy = this.createProxy(target, options);
-  }
-
-  private createProxy(target: string, options: Options) {
+export abstract class ProxyMiddleware implements NestMiddleware {
+  protected createProxy(target: string, options: Options = {}) {
     return createProxyMiddleware({
       target,
       changeOrigin: true,
@@ -30,6 +23,6 @@ export class ProxyMiddleware implements NestMiddleware {
   }
 
   use(req: any, res: any, next: () => void) {
-    this.proxy(req, res, next);
+    throw new Error('Method not implemented.');
   }
 }

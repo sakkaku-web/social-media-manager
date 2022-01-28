@@ -1,7 +1,9 @@
 import { ProxyMiddleware } from './proxy-middleware';
 
 export class PinterestMiddleware extends ProxyMiddleware {
-  constructor() {
-    super('https://api.pinterest.com/v5');
+  private proxy = this.createProxy('https://api.pinterest.com/v5');
+
+  use(req: any, res: any, next: () => void) {
+    this.proxy(req, res, next);
   }
 }
