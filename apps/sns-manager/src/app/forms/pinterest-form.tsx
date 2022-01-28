@@ -4,7 +4,9 @@ import {
   Card,
   Heading,
   Link,
+  Pane,
   SelectField,
+  Spinner,
   TextInputField,
 } from 'evergreen-ui';
 import {
@@ -17,22 +19,23 @@ import {
 } from 'react';
 import { Board, PinterestClient } from '../clients/pinterest';
 import { isValid, requiredMessage } from './validation';
-import { SocialProviderContext } from '../social-provider-context';
+import { SocialProviderContext, Status } from '../social-provider-context';
 import { HttpError } from '../clients/client';
 
 export interface PinterestProps {
   defaultPost: SNSPost;
+  disabled: boolean;
 }
 
 function PinterestForm(
-  { defaultPost }: PinterestProps,
+  { defaultPost, disabled }: PinterestProps,
   ref: ForwardedRef<unknown>
 ) {
-  const { setError } = useContext(SocialProviderContext);
+  const { setStatus } = useContext(SocialProviderContext);
 
   const [boards, setBoards] = useState([] as Board[]);
   const [selectedBoard, setSelectedBoard] = useState('');
-  const [status, setStatus] = useState({ error: false, message: '' });
+  const [message, setMessage] = useState({ error: false, message: '' });
 
   const client = new PinterestClient();
 
@@ -45,26 +48,30 @@ function PinterestForm(
     });
   }, []);
 
+  const updateStatus = (s: Status) => setStatus(SocialProvider.PINTEREST, s);
+
   useImperativeHandle(ref, () => ({
-    submit: () => {
-      client
-        .postMedia({
+    submit: async () => {
+      try {
+        updateStatus(Status.SUBMITTING);
+        const id = await client.postMedia({
           ...defaultPost,
           board: selectedBoard,
-        })
-        .then((id) =>
-          setStatus({
-            error: false,
-            message: `https://www.pinterest.at/pin/${id}`,
-          })
-        )
-        .catch(({ data }: HttpError) => {
-          setStatus({
-            error: true,
-            message: `${data.message} - code: ${data.code}`,
-          });
-          setError(SocialProvider.PINTEREST, true);
         });
+
+        setMessage({
+          error: false,
+          message: `https://www.pinterest.at/pin/${id}`,
+        });
+        updateStatus(Status.SUCCESS);
+      } catch (e) {
+        const { data } = e as HttpError;
+        setMessage({
+          error: true,
+          message: `${data.message} - code: ${data.code}`,
+        });
+        updateStatus(Status.ERROR);
+      }
     },
   }));
 
@@ -73,7 +80,11 @@ function PinterestForm(
   };
 
   useEffect(() => {
-    setError(SocialProvider.PINTEREST, !isValid(validation));
+    if (!isValid(validation)) {
+      setStatus(SocialProvider.PINTEREST, Status.ERROR);
+    } else {
+      setStatus(SocialProvider.PINTEREST, Status.VALID);
+    }
   }, [defaultPost]);
 
   const onSelectedBoardChange = (id: string) => {
@@ -82,7 +93,10 @@ function PinterestForm(
 
   return (
     <Card border padding="1em" marginBottom="1em">
-      <Heading>Pinterest</Heading>
+      <Pane display="flex" alignItems="center" gap="1em" marginBottom="1em">
+        <Heading>Pinterest</Heading>
+        <Spinner size={24} />
+      </Pane>
 
       <TextInputField label="Title" value={defaultPost.title} disabled={true} />
       <TextInputField
@@ -96,6 +110,7 @@ function PinterestForm(
         required={true}
         value={selectedBoard}
         onChange={(e) => onSelectedBoardChange(e.target.value)}
+        disabled={disabled}
       >
         {boards.map((b) => (
           <option key={b.id} value={b.id}>
@@ -112,14 +127,14 @@ function PinterestForm(
         disabled={true}
       />
 
-      {status.message &&
-        ((!status.error && (
+      {message.message &&
+        ((!message.error && (
           <Alert
             role="status"
             intent="success"
-            title={<Link href={status.message}>Posted successfully</Link>}
+            title={<Link href={message.message}>Posted successfully</Link>}
           />
-        )) || <Alert role="status" intent="danger" title={status.message} />)}
+        )) || <Alert role="status" intent="danger" title={message.message} />)}
     </Card>
   );
 }

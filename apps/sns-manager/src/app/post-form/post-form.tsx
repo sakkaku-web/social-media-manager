@@ -3,6 +3,7 @@ import { SNSPost } from '@kumi-arts/core';
 import {
   FilePicker,
   FormField,
+  Pane,
   TextareaField,
   TextInputField,
 } from 'evergreen-ui';
@@ -10,10 +11,11 @@ import {
 /* eslint-disable-next-line */
 export interface PostFormProps {
   post: SNSPost;
+  disabled: boolean;
   onPostChange: (post: SNSPost) => void;
 }
 
-export function PostForm({ post, onPostChange }: PostFormProps) {
+export function PostForm({ post, disabled, onPostChange }: PostFormProps) {
   const onFileUpload = (files: FileList) => {
     if (files.length > 0) {
       const file = Array.from(files)[0];
@@ -37,19 +39,29 @@ export function PostForm({ post, onPostChange }: PostFormProps) {
   };
 
   return (
-    <div>
+    <Pane>
       <TextInputField
         label="Title"
         value={post.title}
         onChange={onTitleChange}
+        disabled={disabled}
       />
 
-      <TextareaField label="Text" value={post.text} onChange={onTextChange} />
+      <TextareaField
+        label="Text"
+        value={post.text}
+        onChange={onTextChange}
+        disabled={disabled}
+      />
 
-      <FormField label="Image">
-        <FilePicker onChange={onFileUpload} accept="image/*" />
+      <FormField label="Image" marginBottom="1em">
+        <FilePicker
+          onChange={onFileUpload}
+          accept="image/*"
+          disabled={disabled}
+        />
       </FormField>
-    </div>
+    </Pane>
   );
 }
 
