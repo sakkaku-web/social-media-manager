@@ -9,12 +9,27 @@ const jsonParseInterceptor = (res: AxiosResponse) => {
   return res;
 };
 
+const unsuccessfulInterceptor = (res: AxiosResponse) => {
+  if (res.status < 200 || res.status >= 300) {
+    throw new HttpError(res.status, res.data);
+  }
+
+  return res;
+};
+
 export const createClient = (config: AxiosRequestConfig) => {
   const client = new Axios(config);
   client.interceptors.response.use(jsonParseInterceptor);
+  client.interceptors.response.use(unsuccessfulInterceptor);
   return client;
 };
 
 export interface Client {
   getUser(): Promise<User>;
+}
+
+export class HttpError extends Error {
+  constructor(public status: number, public data: Record<string, any>) {
+    super(`Failed with status ${status}`);
+  }
 }

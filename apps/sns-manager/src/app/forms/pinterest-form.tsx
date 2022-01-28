@@ -1,5 +1,12 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Card, Heading, SelectField, TextInputField } from 'evergreen-ui';
+import {
+  Alert,
+  Card,
+  Heading,
+  Link,
+  SelectField,
+  TextInputField,
+} from 'evergreen-ui';
 import {
   useEffect,
   useState,
@@ -11,6 +18,7 @@ import {
 import { Board, PinterestClient } from '../clients/pinterest';
 import { isValid, requiredMessage } from './validation';
 import { SocialProviderContext } from '../social-provider-context';
+import { HttpError } from '../clients/client';
 
 export interface PinterestProps {
   defaultPost: SNSPost;
@@ -24,6 +32,7 @@ function PinterestForm(
 
   const [boards, setBoards] = useState([] as Board[]);
   const [selectedBoard, setSelectedBoard] = useState('');
+  const [status, setStatus] = useState({ error: false, message: '' });
 
   const client = new PinterestClient();
 
@@ -37,11 +46,25 @@ function PinterestForm(
   }, []);
 
   useImperativeHandle(ref, () => ({
-    submit: async () => {
-      await client.postMedia({
-        ...defaultPost,
-        board: selectedBoard,
-      });
+    submit: () => {
+      client
+        .postMedia({
+          ...defaultPost,
+          board: selectedBoard,
+        })
+        .then((id) =>
+          setStatus({
+            error: false,
+            message: `https://www.pinterest.at/pin/${id}`,
+          })
+        )
+        .catch(({ data }: HttpError) => {
+          setStatus({
+            error: true,
+            message: `${data.message} - code: ${data.code}`,
+          });
+          setError(SocialProvider.PINTEREST, true);
+        });
     },
   }));
 
@@ -54,7 +77,6 @@ function PinterestForm(
   }, [defaultPost]);
 
   const onSelectedBoardChange = (id: string) => {
-    console.log(id);
     setSelectedBoard(id);
   };
 
@@ -89,6 +111,15 @@ function PinterestForm(
         value={defaultPost.media?.filename || ''}
         disabled={true}
       />
+
+      {status.message &&
+        ((!status.error && (
+          <Alert
+            role="status"
+            intent="success"
+            title={<Link href={status.message}>Posted successfully</Link>}
+          />
+        )) || <Alert role="status" intent="danger" title={status.message} />)}
     </Card>
   );
 }
