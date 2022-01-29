@@ -1,5 +1,5 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Button, Pane } from 'evergreen-ui';
+import { Button, Link, Pane } from 'evergreen-ui';
 import { useRef, useState } from 'react';
 import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';
@@ -13,6 +13,7 @@ import {
 } from './social-provider-context';
 import { ProviderForm } from './forms/form';
 import TwitterForm from './forms/twitter-form';
+import CookieConsent from 'react-cookie-consent';
 
 export function App() {
   const [loggedIn, setLoggedIn] = useState({} as ProviderBool);
@@ -96,6 +97,11 @@ export function App() {
             Submit
           </Button>
         </Pane>
+
+        <CookieConsent>
+          This website uses cookies to enhance the user experience. More info{' '}
+          <Link padding="0" href="/policy">here</Link>
+        </CookieConsent>
       </SocialProviderContext.Provider>
     </Pane>
   );

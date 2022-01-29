@@ -1,5 +1,4 @@
 import '@testing-library/cypress/add-commands';
-import { JSO } from 'jso';
 
 // ***********************************************
 // This example commands.js shows you how to
