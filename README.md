@@ -1,6 +1,10 @@
 # Social Media Manager
 
-Currently working providers:
+Manage your social media post on a single website.
+
+## Development
+
+Current working providers:
 
 - twitter (currently uses OAuth 1.0a because media upload is needed)
 - pinterest
