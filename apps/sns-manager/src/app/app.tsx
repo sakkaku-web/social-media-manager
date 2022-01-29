@@ -102,14 +102,17 @@ export function App() {
           </Button>
         </div>
 
-        <CookieConsent>
-          <Text color="white">
-            This website uses cookies to enhance the user experience. More info{' '}
-          </Text>
-          <Link padding="0" href="/policy">
-            here
-          </Link>
-        </CookieConsent>
+        <Text>
+          <CookieConsent>
+            <Text color="white">
+              This website uses cookies to enhance the user experience. More
+              info{' '}
+            </Text>
+            <Link padding="0" href="/policy">
+              here
+            </Link>
+          </CookieConsent>
+        </Text>
       </SocialProviderContext.Provider>
     </Pane>
   );
