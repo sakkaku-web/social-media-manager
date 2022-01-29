@@ -19,3 +19,7 @@ Endpoints:
     - twitter -> https://api.twitter.com
       - if contains `/1.1/media/` -> https://upload.twitter.com
   - When running the server, make sure the env variables in `.env.sample` is set.
+
+## Credits
+
+- Used cat logo on some places, is made by quatre main under this [license](https://creativecommons.org/licenses/by/2.0/): https://placekitten.com/attribution.html
