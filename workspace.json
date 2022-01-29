@@ -8,14 +8,20 @@
       "targets": {
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["libs/core/**/*.ts"]
+            "lintFilePatterns": [
+              "libs/core/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/core"],
+          "outputs": [
+            "coverage/libs/core"
+          ],
           "options": {
             "jestConfig": "libs/core/jest.config.js",
             "passWithNoTests": true
@@ -30,12 +36,17 @@
       "targets": {
         "build": {
           "executor": "@nrwl/node:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/sns-api",
             "main": "apps/sns-api/src/main.ts",
             "tsConfig": "apps/sns-api/tsconfig.app.json",
-            "assets": ["apps/sns-api/src/assets", "apps/sns-api/src/views"]
+            "assets": [
+              "apps/sns-api/src/assets",
+              "apps/sns-api/src/views"
+            ]
           },
           "configurations": {
             "production": {
@@ -72,14 +83,20 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/sns-api/**/*.ts"]
+            "lintFilePatterns": [
+              "apps/sns-api/**/*.ts"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/sns-api"],
+          "outputs": [
+            "coverage/apps/sns-api"
+          ],
           "options": {
             "jestConfig": "apps/sns-api/jest.config.js",
             "passWithNoTests": true
@@ -94,7 +111,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/sns-manager",
             "index": "apps/sns-manager/src/index.html",
@@ -106,7 +125,9 @@
               "apps/sns-manager/src/favicon.ico",
               "apps/sns-manager/src/assets"
             ],
-            "styles": ["apps/sns-manager/src/styles.scss"],
+            "styles": [
+              "apps/sns-manager/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -150,14 +171,20 @@
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/sns-manager/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/sns-manager/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/sns-manager"],
+          "outputs": [
+            "coverage/apps/sns-manager"
+          ],
           "options": {
             "jestConfig": "apps/sns-manager/jest.config.js",
             "passWithNoTests": true
@@ -173,20 +200,18 @@
         "e2e": {
           "executor": "@nrwl/cypress:cypress",
           "options": {
-            "cypressConfig": "apps/sns-manager-e2e/cypress.json",
-            "devServerTarget": "sns-manager:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "sns-manager:serve:production"
-            }
+            "cypressConfig": "apps/sns-manager-e2e/cypress.json"
           }
         },
         "lint": {
           "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
+          "outputs": [
+            "{options.outputFile}"
+          ],
           "options": {
-            "lintFilePatterns": ["apps/sns-manager-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/sns-manager-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }

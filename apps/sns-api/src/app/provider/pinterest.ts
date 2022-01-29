@@ -15,7 +15,7 @@ export class PinterestAuthService implements SNSAuthService {
   async getLoginUrl(redirect: string): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
-    const url = new URL('https://www.pinterest.at/oauth/');
+    const url = new URL('https://www.pinterest.com/oauth/');
     url.searchParams.append('client_id', clientId);
     url.searchParams.append('redirect_uri', redirect);
     url.searchParams.append('response_type', 'code');
