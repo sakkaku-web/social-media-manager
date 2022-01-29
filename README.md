@@ -14,3 +14,4 @@ Endpoints:
     - pinterest -> https://api.pinterest.com/v5
     - twitter -> https://api.twitter.com
       - if contains `/1.1/media/` -> https://upload.twitter.com
+  - When running the server, make sure the env variables in `.env.sample` is set.
