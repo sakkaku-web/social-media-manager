@@ -16,8 +16,8 @@ export function SnsLogins(props: SnsLoginsProps) {
       gap="1em"
       display="flex"
       paddingY="0.5em"
-      paddingX="1em"
       background="tint2"
+      className="px-4 md:px-8"
     >
       <SnsLoginButton
         api={new TwitterClient()}

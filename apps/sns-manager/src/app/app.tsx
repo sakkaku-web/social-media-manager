@@ -65,29 +65,33 @@ export function App() {
       >
         <SnsLogins />
 
-        <Pane padding="1em">
-          <PostForm
-            post={defaultPost}
-            onPostChange={setDefaultPost}
-            disabled={isSubmitting}
-          />
+        <div className="p-4 md:p-8">
+          <div className="w-100 md:w-1/2 xl:w-1/3">
+            <PostForm
+              post={defaultPost}
+              onPostChange={setDefaultPost}
+              disabled={isSubmitting}
+            />
+          </div>
           <ProviderSelect selected={providers} onChange={onProviderChange} />
 
-          {providers.includes(SocialProvider.TWITTER) && (
-            <TwitterForm
-              defaultPost={defaultPost}
-              ref={twitterRef}
-              disabled={isSubmitting}
-            />
-          )}
+          <div className="w-100 flex flex-col gap-x-4 md:flex-row">
+            {providers.includes(SocialProvider.TWITTER) && (
+              <TwitterForm
+                defaultPost={defaultPost}
+                ref={twitterRef}
+                disabled={isSubmitting}
+              />
+            )}
 
-          {providers.includes(SocialProvider.PINTEREST) && (
-            <PinterestForm
-              defaultPost={defaultPost}
-              ref={pinterestRef}
-              disabled={isSubmitting}
-            />
-          )}
+            {providers.includes(SocialProvider.PINTEREST) && (
+              <PinterestForm
+                defaultPost={defaultPost}
+                ref={pinterestRef}
+                disabled={isSubmitting}
+              />
+            )}
+          </div>
 
           <Button
             onClick={onSubmit}
@@ -96,11 +100,13 @@ export function App() {
           >
             Submit
           </Button>
-        </Pane>
+        </div>
 
         <CookieConsent>
           This website uses cookies to enhance the user experience. More info{' '}
-          <Link padding="0" href="/policy">here</Link>
+          <Link padding="0" href="/policy">
+            here
+          </Link>
         </CookieConsent>
       </SocialProviderContext.Provider>
     </Pane>
