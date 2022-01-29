@@ -1,9 +1,7 @@
 import { Axios } from 'axios';
-import * as FormData from 'form-data';
-import { jsonParseInterceptor, SNSClient } from './sns-client';
 import { SNSPost, User } from '@kumi-arts/core';
 
-export class ImgurClient implements SNSClient {
+export class ImgurClient {
   private client: Axios;
 
   constructor(token: string) {
@@ -13,8 +11,6 @@ export class ImgurClient implements SNSClient {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    this.client.interceptors.response.use(jsonParseInterceptor);
   }
 
   async uploadImage(file: Buffer, filename: string): Promise<string> {
@@ -23,7 +19,7 @@ export class ImgurClient implements SNSClient {
     body.append('name', filename);
 
     const { data } = await this.client.post('/3/image', body, {
-      headers: { ...body.getHeaders() },
+      headers: {},
     });
     return data.data.link;
   }

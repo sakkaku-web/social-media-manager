@@ -1,14 +1,14 @@
-import { SNSClient } from './sns-client';
 import { SNSPost, User } from '@kumi-arts/core';
-import * as Snoowrap from 'snoowrap';
+import { Axios } from 'axios';
 
-export class RedditClient implements SNSClient {
-  private client: Snoowrap;
+export class RedditClient {
+  private client: Axios;
 
   constructor(token: string) {
-    this.client = new Snoowrap({
-      userAgent: 'kumi-arts:0.0.0 (by /u/illu11)',
-      accessToken: token,
+    this.client = new Axios({
+      headers: {
+        'User-Agent': 'sns-manager:0.0.0 (by /u/illu11)',
+      },
     });
   }
 
@@ -17,12 +17,12 @@ export class RedditClient implements SNSClient {
   }
 
   async getUser(): Promise<User> {
-    const name = await this.client.getMe().name;
-    if (!name) {
+    const { data } = await this.client.get('');
+    if (!data.name) {
       throw new Error('Failed to get user');
     }
 
-    return { id: name, name };
+    return { id: data.name, name: data.name };
   }
 
   async uploadImage(data: Buffer, filename: string): Promise<string> {

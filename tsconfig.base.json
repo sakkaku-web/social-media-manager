@@ -15,7 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@kumi-arts/api-client": ["libs/api-client/src/index.ts"],
       "@kumi-arts/core": ["libs/core/src/index.ts"]
     }
   },

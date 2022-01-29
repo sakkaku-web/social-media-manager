@@ -1,28 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "api-client": {
-      "root": "libs/api-client",
-      "sourceRoot": "libs/api-client/src",
-      "projectType": "library",
-      "targets": {
-        "lint": {
-          "executor": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
-          "options": {
-            "lintFilePatterns": ["libs/api-client/**/*.ts"]
-          }
-        },
-        "test": {
-          "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/api-client"],
-          "options": {
-            "jestConfig": "libs/api-client/jest.config.js",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "core": {
       "root": "libs/core",
       "sourceRoot": "libs/core/src",
