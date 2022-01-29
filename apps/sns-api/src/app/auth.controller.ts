@@ -108,6 +108,7 @@ export class AuthController {
       });
 
       this.auth.saveToken(res, provider, token);
+      session[`${provider}_STATE`] = null;
     } catch (e) {
       console.log('Login failed', e.message);
     }
