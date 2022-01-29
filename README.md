@@ -2,12 +2,24 @@
 
 Manage your social media post on a single website.
 
+Supported Social Media:
+
+- [x] Twitter
+- [x] Pinterest
+- [] Instagram
+- [] Facebook
+- [] Reddit
+- [] Imgur
+- [] Pixiv?
+- [] Youtube?
+
+Supported Features:
+
+- [x] Post text/image
+- [] View notification
+- [] Schedule posts
+
 ## Development
-
-Current working providers:
-
-- twitter (currently uses OAuth 1.0a because media upload is needed)
-- pinterest
 
 Endpoints:
 
