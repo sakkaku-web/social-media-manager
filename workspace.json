@@ -164,6 +164,32 @@
           }
         }
       }
+    },
+    "sns-manager-e2e": {
+      "root": "apps/sns-manager-e2e",
+      "sourceRoot": "apps/sns-manager-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/sns-manager-e2e/cypress.json",
+            "devServerTarget": "sns-manager:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "sns-manager:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["apps/sns-manager-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
     }
   },
   "cli": {

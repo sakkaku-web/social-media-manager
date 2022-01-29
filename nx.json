@@ -35,6 +35,10 @@
     },
     "sns-manager": {
       "tags": []
+    },
+    "sns-manager-e2e": {
+      "tags": [],
+      "implicitDependencies": ["sns-manager"]
     }
   },
   "cli": {
