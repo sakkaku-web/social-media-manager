@@ -72,18 +72,18 @@ export function App() {
           />
           <ProviderSelect selected={providers} onChange={onProviderChange} />
 
-          {providers.includes(SocialProvider.PINTEREST) && (
-            <PinterestForm
-              defaultPost={defaultPost}
-              ref={pinterestRef}
-              disabled={isSubmitting}
-            />
-          )}
-
           {providers.includes(SocialProvider.TWITTER) && (
             <TwitterForm
               defaultPost={defaultPost}
               ref={twitterRef}
+              disabled={isSubmitting}
+            />
+          )}
+
+          {providers.includes(SocialProvider.PINTEREST) && (
+            <PinterestForm
+              defaultPost={defaultPost}
+              ref={pinterestRef}
               disabled={isSubmitting}
             />
           )}
