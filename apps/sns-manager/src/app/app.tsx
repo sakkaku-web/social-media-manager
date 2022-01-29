@@ -1,5 +1,5 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Button, Link, Pane } from 'evergreen-ui';
+import { Button, Link, Pane, Text } from 'evergreen-ui';
 import { useRef, useState } from 'react';
 import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';
@@ -103,7 +103,9 @@ export function App() {
         </div>
 
         <CookieConsent>
-          This website uses cookies to enhance the user experience. More info{' '}
+          <Text color="white">
+            This website uses cookies to enhance the user experience. More info{' '}
+          </Text>
           <Link padding="0" href="/policy">
             here
           </Link>

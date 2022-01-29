@@ -96,7 +96,7 @@ export function CookiePolicy() {
         </ListItem>
       </UnorderedList>
 
-      <Heading>More Information</Heading>
+      <Heading marginY="1em">More Information</Heading>
 
       <Paragraph>
         Hopefully that has clarified things for you and as was previously
