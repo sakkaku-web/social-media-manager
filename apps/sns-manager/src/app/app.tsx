@@ -14,6 +14,8 @@ import {
 import { ProviderForm } from './forms/form';
 import TwitterForm from './forms/twitter-form';
 import CookieConsent from 'react-cookie-consent';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 
 export function App() {
   const [loggedIn, setLoggedIn] = useState({} as ProviderBool);
@@ -54,66 +56,88 @@ export function App() {
   };
 
   return (
-    <Pane>
-      <SocialProviderContext.Provider
-        value={{
-          loggedIn,
-          status,
-          setLoggedIn: (p, v) => setLoggedIn((s) => ({ ...s, [p]: v })),
-          setStatus: (p, v) => setStatus((s) => ({ ...s, [p]: v })),
-        }}
-      >
-        <SnsLogins />
+    <Pane display="flex" flexDirection="column" height="100%">
+      <Pane>
+        <SocialProviderContext.Provider
+          value={{
+            loggedIn,
+            status,
+            setLoggedIn: (p, v) => setLoggedIn((s) => ({ ...s, [p]: v })),
+            setStatus: (p, v) => setStatus((s) => ({ ...s, [p]: v })),
+          }}
+        >
+          <SnsLogins />
 
-        <div className="p-4 md:p-8">
-          <div className="w-100 md:w-1/2 xl:w-1/3">
-            <PostForm
-              post={defaultPost}
-              onPostChange={setDefaultPost}
-              disabled={isSubmitting}
-            />
-          </div>
-          <ProviderSelect selected={providers} onChange={onProviderChange} />
-
-          <div className="w-100 flex flex-col gap-x-4 md:flex-row">
-            {providers.includes(SocialProvider.TWITTER) && (
-              <TwitterForm
-                defaultPost={defaultPost}
-                ref={twitterRef}
+          <div className="p-4 md:p-8">
+            <div className="w-100 md:w-1/2 xl:w-1/3">
+              <PostForm
+                post={defaultPost}
+                onPostChange={setDefaultPost}
                 disabled={isSubmitting}
               />
-            )}
+            </div>
+            <ProviderSelect selected={providers} onChange={onProviderChange} />
 
-            {providers.includes(SocialProvider.PINTEREST) && (
-              <PinterestForm
-                defaultPost={defaultPost}
-                ref={pinterestRef}
-                disabled={isSubmitting}
-              />
-            )}
+            <div className="w-100 flex flex-col gap-x-4 md:flex-row">
+              {providers.includes(SocialProvider.TWITTER) && (
+                <TwitterForm
+                  defaultPost={defaultPost}
+                  ref={twitterRef}
+                  disabled={isSubmitting}
+                />
+              )}
+
+              {providers.includes(SocialProvider.PINTEREST) && (
+                <PinterestForm
+                  defaultPost={defaultPost}
+                  ref={pinterestRef}
+                  disabled={isSubmitting}
+                />
+              )}
+            </div>
+
+            <Button
+              onClick={onSubmit}
+              appearance="primary"
+              disabled={hasErrors || isSubmitting}
+            >
+              Submit
+            </Button>
           </div>
+        </SocialProviderContext.Provider>
+      </Pane>
 
-          <Button
-            onClick={onSubmit}
-            appearance="primary"
-            disabled={hasErrors || isSubmitting}
-          >
-            Submit
-          </Button>
-        </div>
-
-        <Text>
-          <CookieConsent>
-            <Text color="white">
-              This website uses cookies to enhance the user experience. More
-              info{' '}
-            </Text>
-            <Link padding="0" href="/policy">
-              here
+      {/* <Pane display="flex" flexGrow="1" alignItems="end">
+        <Pane
+          className="px-4 md:px-8"
+          background="tint2"
+          borderTop
+          flexGrow="1"
+          justifyContent="space-between"
+        >
+          <Pane>
+            <Link
+              size={300}
+              padding="0"
+              href="https://github.com/sakkaku-web/social-media-manager"
+            >
+              <FontAwesomeIcon icon={faGithub} />
             </Link>
-          </CookieConsent>
-        </Text>
-      </SocialProviderContext.Provider>
+          </Pane>
+          <Pane></Pane>
+        </Pane>
+      </Pane> */}
+
+      <Text>
+        <CookieConsent>
+          <Text color="white">
+            This website uses cookies to enhance the user experience. More info{' '}
+          </Text>
+          <Link padding="0" href="/policy">
+            here
+          </Link>
+        </CookieConsent>
+      </Text>
     </Pane>
   );
 }
