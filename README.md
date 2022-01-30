@@ -6,18 +6,18 @@ Supported Social Media:
 
 - [x] Twitter
 - [x] Pinterest
-- [] Instagram
-- [] Facebook
-- [] Reddit
-- [] Imgur
-- [] Pixiv?
-- [] Youtube?
+- [ ] Instagram
+- [ ] Facebook
+- [ ] Reddit
+- [ ] Imgur
+- [ ] Pixiv?
+- [ ] Youtube?
 
 Supported Features:
 
 - [x] Post text/image
-- [] View notification
-- [] Schedule posts
+- [ ] View notification
+- [ ] Schedule posts
 
 ## Development
 
