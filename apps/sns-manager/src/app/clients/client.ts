@@ -1,5 +1,6 @@
-import { User } from '@kumi-arts/core';
+import { SocialProvider, User } from '@kumi-arts/core';
 import { Axios, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { toaster } from 'evergreen-ui';
 
 const jsonParseInterceptor = (res: AxiosResponse) => {
   if (typeof res.data === 'string' && res.data.startsWith('{')) {
@@ -17,7 +18,23 @@ const unsuccessfulInterceptor = (res: AxiosResponse) => {
   return res;
 };
 
-export const createClient = (config: AxiosRequestConfig) => {
+const notifyRequestThrottle = (provider: SocialProvider) => {
+  return (res: AxiosResponse) => {
+    if (res.status === 429) {
+      toaster.danger(`Too many requests for ${provider}`, {
+        id: `429-${provider}`,
+        description: `Try again after 1 minute.`,
+      });
+    }
+
+    return res;
+  };
+};
+
+export const createClient = (
+  provider: SocialProvider,
+  config: AxiosRequestConfig
+) => {
   const client = new Axios({
     ...config,
     headers: {
@@ -25,6 +42,7 @@ export const createClient = (config: AxiosRequestConfig) => {
     },
   });
   client.interceptors.response.use(jsonParseInterceptor);
+  client.interceptors.response.use(notifyRequestThrottle(provider));
   client.interceptors.response.use(unsuccessfulInterceptor);
   return client;
 };

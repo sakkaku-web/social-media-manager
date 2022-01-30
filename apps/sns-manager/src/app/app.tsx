@@ -1,5 +1,5 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Button, Link, Pane, Text } from 'evergreen-ui';
+import { Button, Link, Pane, Text, toaster } from 'evergreen-ui';
 import { useRef, useState } from 'react';
 import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';

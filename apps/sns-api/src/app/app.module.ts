@@ -11,6 +11,7 @@ import { TokenMiddleware } from './middleware/token-middleware';
 import { SocialProvider } from '@kumi-arts/core';
 import { PinterestMiddleware } from './middleware/pinterest-middleware';
 import { TwitterMiddleware } from './middleware/twitter-middleware';
+import { ThrottleMiddleware } from './middleware/throttle-middleware';
 
 @Module({
   imports: [
@@ -25,9 +26,12 @@ import { TwitterMiddleware } from './middleware/twitter-middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    const providerUrls = Object.values(SocialProvider);
     consumer
+      .apply(ThrottleMiddleware)
+      .forRoutes(...providerUrls)
       .apply(TokenMiddleware)
-      .forRoutes(...Object.values(SocialProvider))
+      .forRoutes(...providerUrls)
       .apply(PinterestMiddleware)
       .forRoutes(SocialProvider.PINTEREST)
       .apply(TwitterMiddleware)

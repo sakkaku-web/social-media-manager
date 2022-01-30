@@ -1,4 +1,4 @@
-import { SNSMedia, SNSPost, User } from '@kumi-arts/core';
+import { SNSMedia, SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { Axios } from 'axios';
 import { Client, createClient } from './client';
 
@@ -10,7 +10,7 @@ export class PinterestClient implements Client {
   private client: Axios;
 
   constructor() {
-    this.client = createClient({
+    this.client = createClient(SocialProvider.PINTEREST, {
       baseURL: '/api/pinterest',
     });
   }

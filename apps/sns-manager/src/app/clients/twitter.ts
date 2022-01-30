@@ -1,4 +1,4 @@
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { Axios } from 'axios';
 import { Client, createClient } from './client';
 
@@ -6,7 +6,7 @@ export class TwitterClient implements Client {
   private client: Axios;
 
   constructor() {
-    this.client = createClient({
+    this.client = createClient(SocialProvider.TWITTER, {
       baseURL: '/api/twitter',
     });
   }
