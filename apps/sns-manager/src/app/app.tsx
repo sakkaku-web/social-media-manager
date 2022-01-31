@@ -129,7 +129,9 @@ export function App() {
           </Pane>
           <Pane>
             <RouterLink to="/policy">
-              <Link size={300}>Cookie Policy</Link>
+              <Link size={300} href="#">
+                Cookie Policy
+              </Link>
             </RouterLink>
           </Pane>
         </Pane>
