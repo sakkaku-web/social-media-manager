@@ -35,6 +35,7 @@
     "evergreen-ui": "^6.7.1",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
+    "express-static-gzip": "^2.1.1",
     "hbs": "^4.2.0",
     "http-proxy-middleware": "^2.0.2",
     "lodash": "^4.17.21",

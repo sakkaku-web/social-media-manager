@@ -10,6 +10,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import { join } from 'path';
+import * as expressStaticGzip from 'express-static-gzip';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
@@ -22,6 +23,12 @@ async function bootstrap() {
   });
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
+  app.use(
+    expressStaticGzip(join(__dirname, environment.staticFiles), {
+      enableBrotli: true,
+    })
+  );
 
   app.setBaseViewsDir(join(__dirname, 'views'));
   app.setViewEngine('hbs');
