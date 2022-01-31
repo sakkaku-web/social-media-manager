@@ -14,7 +14,6 @@ import {
 import { ProviderForm } from './forms/form';
 import TwitterForm from './forms/twitter-form';
 import CookieConsent from 'react-cookie-consent';
-import { Link as RouterLink } from 'react-router-dom';
 import useDocumentTitle from './document-title';
 
 export function App() {
@@ -128,11 +127,9 @@ export function App() {
             </Link> */}
           </Pane>
           <Pane>
-            <RouterLink to="/policy">
-              <Link size={300} href="#">
-                Cookie Policy
-              </Link>
-            </RouterLink>
+            <Link size={300} href="/policy">
+              Cookie Policy
+            </Link>
           </Pane>
         </Pane>
       </Pane>

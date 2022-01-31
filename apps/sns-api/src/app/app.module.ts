@@ -17,9 +17,9 @@ import { ThrottleMiddleware } from './middleware/throttle-middleware';
   imports: [
     ConfigModule.forRoot(),
     HttpModule,
-    // ServeStaticModule.forRoot({
-    //   rootPath: join(__dirname, environment.staticFiles),
-    // }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, environment.staticFiles),
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
