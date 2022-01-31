@@ -13,8 +13,10 @@ export function CookiePolicy() {
       <Heading size="800">Cookie Policy for SNS Manager</Heading>
 
       <Paragraph>
-        This is the Cookie Policy for SNS Manager, accessible from
-        https://sns-manager.herokuapp.com/
+        This is the Cookie Policy for SNS Manager, accessible from{' '}
+        <Link padding="0" href="https://sns-manager.herokuapp.com/">
+          https://sns-manager.herokuapp.com/
+        </Link>
       </Paragraph>
 
       <Heading marginY="1em">What Are Cookies</Heading>
@@ -85,6 +87,20 @@ export function CookiePolicy() {
       <UnorderedList>
         <ListItem>
           <Paragraph>
+            This site uses Google Analytics which is one of the most widespread
+            and trusted analytics solution on the web for helping us to
+            understand how you use the site and ways that we can improve your
+            experience. These cookies may track things such as how long you
+            spend on the site and the pages that you visit so we can continue to
+            produce engaging content.
+          </Paragraph>
+          <Paragraph>
+            For more information on Google Analytics cookies, see the official
+            Google Analytics page.
+          </Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>
             The Google AdSense service we use to serve advertising uses a
             DoubleClick cookie to serve more relevant ads across the web and
             limit the number of times that a given ad is shown to you.
@@ -107,10 +123,7 @@ export function CookiePolicy() {
 
       <Paragraph>
         For more general information on cookies, please read{' '}
-        <Link
-          padding="0"
-          href="https://www.generateprivacypolicy.com/#cookies"
-        >
+        <Link padding="0" href="https://www.generateprivacypolicy.com/#cookies">
           "Cookies" article from the Privacy Policy Generator
         </Link>
         .

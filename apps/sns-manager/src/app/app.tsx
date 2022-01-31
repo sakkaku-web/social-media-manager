@@ -16,6 +16,7 @@ import TwitterForm from './forms/twitter-form';
 import CookieConsent from 'react-cookie-consent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { Navigate, Link as RouterLink } from 'react-router-dom';
 
 export function App() {
   const [loggedIn, setLoggedIn] = useState({} as ProviderBool);
@@ -107,26 +108,31 @@ export function App() {
         </SocialProviderContext.Provider>
       </Pane>
 
-      {/* <Pane display="flex" flexGrow="1" alignItems="end">
+      <Pane display="flex" flexGrow="1" alignItems="end">
         <Pane
           className="px-4 md:px-8"
           background="tint2"
           borderTop
           flexGrow="1"
+          display="flex"
           justifyContent="space-between"
         >
           <Pane>
-            <Link
+            {/* <Link
               size={300}
               padding="0"
               href="https://github.com/sakkaku-web/social-media-manager"
             >
               <FontAwesomeIcon icon={faGithub} />
-            </Link>
+            </Link> */}
           </Pane>
-          <Pane></Pane>
+          <Pane>
+            <RouterLink to="/policy">
+              <Link size={300}>Cookie Policy</Link>
+            </RouterLink>
+          </Pane>
         </Pane>
-      </Pane> */}
+      </Pane>
 
       <Text>
         <CookieConsent>
