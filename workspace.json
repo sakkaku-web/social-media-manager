@@ -123,7 +123,8 @@
             "tsConfig": "apps/sns-manager/tsconfig.app.json",
             "assets": [
               "apps/sns-manager/src/favicon.ico",
-              "apps/sns-manager/src/assets"
+              "apps/sns-manager/src/assets",
+              "apps/sns-manager/src/robots.txt"
             ],
             "styles": [
               "apps/sns-manager/src/styles.scss"

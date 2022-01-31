@@ -6,8 +6,11 @@ import {
   UnorderedList,
   ListItem,
 } from 'evergreen-ui';
+import useDocumentTitle from './document-title';
 
 export function CookiePolicy() {
+  useDocumentTitle('Social Media Manager - Cookie Policy');
+
   return (
     <Pane padding="1em">
       <Heading size="800">Cookie Policy for SNS Manager</Heading>

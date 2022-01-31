@@ -14,11 +14,12 @@ import {
 import { ProviderForm } from './forms/form';
 import TwitterForm from './forms/twitter-form';
 import CookieConsent from 'react-cookie-consent';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { Navigate, Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import useDocumentTitle from './document-title';
 
 export function App() {
+  useDocumentTitle('Social Media Manager');
+
   const [loggedIn, setLoggedIn] = useState({} as ProviderBool);
   const [status, setStatus] = useState({} as ProviderStatus);
 
@@ -137,10 +138,11 @@ export function App() {
       <Text>
         <CookieConsent>
           <Text color="white">
-            This website uses cookies to enhance the user experience. More info{' '}
+            This website uses cookies to enhance the user experience. More info
+            in the{' '}
           </Text>
           <Link padding="0" href="/policy">
-            here
+            cookie policy
           </Link>
         </CookieConsent>
       </Text>
