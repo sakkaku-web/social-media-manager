@@ -10,12 +10,21 @@ import {
 } from './sns-auth';
 
 export class RedditAuthService implements SNSAuthService {
-  constructor(private options: OAuthOptions) {}
+  constructor(private options: OAuthOptions) { }
 
   async getLoginUrl(redirect: string): Promise<OAuthLogin> {
     const { clientId } = this.options;
     const state = nanoid();
-    const url = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirect}&duration=temporary&scope=identity+submit`;
+
+    const urlParam = new URLSearchParams({
+      client_id: clientId,
+      response_type: 'code',
+      state,
+      redirect_uri: redirect,
+      duration: 'temporary',
+      scope: 'identity submit',
+    })
+    const url = `https://www.reddit.com/api/v1/authorize?${urlParam.toString()}`;
     return { url, state };
   }
 

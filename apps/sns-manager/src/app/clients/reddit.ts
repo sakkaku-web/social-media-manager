@@ -1,23 +1,26 @@
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { Axios } from 'axios';
+import { createClient } from './client';
+
+export interface RedditPost extends SNSPost {
+  subreddits: string[];
+}
 
 export class RedditClient {
   private client: Axios;
 
-  constructor(token: string) {
-    this.client = new Axios({
-      headers: {
-        'User-Agent': 'sns-manager:0.0.0 (by /u/illu11)',
-      },
+  constructor() {
+    this.client = createClient(SocialProvider.REDDIT, {
+      baseURL: '/api/reddit',
     });
   }
 
-  postMedia(media: SNSPost): Promise<string> {
+  async postMedia(media: SNSPost): Promise<string> {
     throw new Error('Method not implemented.');
   }
 
   async getUser(): Promise<User> {
-    const { data } = await this.client.get('');
+    const { data } = await this.client.get('/api/v1/me');
     if (!data.name) {
       throw new Error('Failed to get user');
     }

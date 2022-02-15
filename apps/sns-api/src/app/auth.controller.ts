@@ -6,6 +6,7 @@ import {
   RedditAuthService,
   SNSAuthService,
   TwitterAuthService,
+  PinterestAuthService,
 } from './auth/';
 import {
   Controller,
@@ -21,14 +22,13 @@ import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
 import { environment } from '../environments/environment';
 import { getOAuthOptions, getProvider } from './shared';
-import { PinterestAuthService } from './provider/pinterest';
 
 @Controller(Object.values(SocialProvider).map((p) => `auth/${p}`))
 export class AuthController {
   constructor(
     private readonly config: ConfigService,
     private readonly auth: AuthService
-  ) {}
+  ) { }
 
   private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
     const tokens = getOAuthOptions(provider, this.config);
@@ -62,16 +62,10 @@ export class AuthController {
     return `${environment.baseUrl}/auth/${provider}/callback`;
   }
 
-  @Get('token')
-  async tokens(@Req() req: Request) {
-    return this.auth.getToken(getProvider(req));
-  }
-
   @Get('login')
   async login(
     @Req() req: Request,
-    @Res() res: Response,
-    @Session() session: Record<string, string>
+    @Res({ passthrough: true }) res: Response,
   ) {
     const provider = getProvider(req);
     const scopes = this.getScopesForProvider(provider);
@@ -80,7 +74,7 @@ export class AuthController {
       this.getRedirectUrl(provider),
       scopes
     );
-    session[`${provider}_STATE`] = state;
+    res.cookie(`${provider}_STATE`, state, { maxAge: 60 * 1000 });
     return res.redirect(url);
   }
 
@@ -104,11 +98,11 @@ export class AuthController {
       ).handleCallback({
         ...query,
         redirect: this.getRedirectUrl(provider),
-        originalState: session[`${provider}_STATE`],
+        originalState: req.cookies[`${provider}_STATE`],
       });
 
       this.auth.saveToken(res, provider, token);
-      session[`${provider}_STATE`] = null;
+      res.clearCookie(`${provider}_STATE`);
     } catch (e) {
       console.log('Login failed', e.message);
     }

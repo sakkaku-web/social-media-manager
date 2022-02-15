@@ -12,6 +12,7 @@ import { SocialProvider } from '@kumi-arts/core';
 import { PinterestMiddleware } from './middleware/pinterest-middleware';
 import { TwitterMiddleware } from './middleware/twitter-middleware';
 import { ThrottleMiddleware } from './middleware/throttle-middleware';
+import { RedditMiddleware } from './middleware/reddit-middleware';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ export class AppModule implements NestModule {
       .apply(PinterestMiddleware)
       .forRoutes(SocialProvider.PINTEREST)
       .apply(TwitterMiddleware)
-      .forRoutes(SocialProvider.TWITTER);
+      .forRoutes(SocialProvider.TWITTER)
+      .apply(RedditMiddleware)
+      .forRoutes(SocialProvider.REDDIT);
   }
 }

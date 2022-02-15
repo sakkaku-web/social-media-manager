@@ -23,10 +23,6 @@ export interface SnsButtonProps {
 
 // TODO: move to props
 const data = {
-  [SocialProvider.REDDIT]: {
-    icon: faReddit,
-    profileUrl: ({ id }: User) => `https://reddit.com/u/${id}`,
-  },
   [SocialProvider.FACEBOOK]: {
     icon: faFacebook,
     profileUrl: ({ id }: User) =>

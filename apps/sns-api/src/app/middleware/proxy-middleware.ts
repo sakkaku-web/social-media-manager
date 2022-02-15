@@ -14,6 +14,8 @@ export abstract class ProxyMiddleware implements NestMiddleware {
         return path.substr(end);
       },
       onProxyReq: (proxyReq, req, res) => {
+        proxyReq.removeHeader('cookie');
+
         console.log(
           `[ProxyMiddleware]: ${req.originalUrl} -> ${req.url} - ${req.method}`
         );
