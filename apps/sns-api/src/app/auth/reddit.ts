@@ -22,7 +22,7 @@ export class RedditAuthService implements SNSAuthService {
       state,
       redirect_uri: redirect,
       duration: 'temporary',
-      scope: 'identity submit',
+      scope: 'identity submit read',
     })
     const url = `https://www.reddit.com/api/v1/authorize?${urlParam.toString()}`;
     return { url, state };

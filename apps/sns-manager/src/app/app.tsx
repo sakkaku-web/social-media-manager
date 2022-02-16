@@ -1,5 +1,5 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Button, Link, Pane, Text, toaster } from 'evergreen-ui';
+import { Button, Link, Pane, Text } from 'evergreen-ui';
 import { useRef, useState } from 'react';
 import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';
@@ -13,6 +13,7 @@ import {
 } from './social-provider-context';
 import { ProviderForm } from './forms/form';
 import TwitterForm from './forms/twitter-form';
+import RedditForm from './forms/reddit-form';
 import CookieConsent from 'react-cookie-consent';
 import useDocumentTitle from './document-title';
 
@@ -33,6 +34,7 @@ export function App() {
 
   const pinterestRef = useRef(null as ProviderForm | null);
   const twitterRef = useRef(null as ProviderForm | null);
+  const redditRef = useRef(null as ProviderForm | null);
 
   const isSubmitting = Object.values(status).some(
     (s) => s === Status.SUBMITTING
@@ -43,6 +45,7 @@ export function App() {
     if (!hasErrors) {
       pinterestRef.current?.submit();
       twitterRef.current?.submit();
+      redditRef.current?.submit();
     }
   };
 
@@ -92,6 +95,14 @@ export function App() {
                 <PinterestForm
                   defaultPost={defaultPost}
                   ref={pinterestRef}
+                  disabled={isSubmitting}
+                />
+              )}
+
+              {providers.includes(SocialProvider.REDDIT) && (
+                <RedditForm
+                  defaultPost={defaultPost}
+                  ref={redditRef}
                   disabled={isSubmitting}
                 />
               )}

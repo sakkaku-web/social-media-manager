@@ -28,7 +28,12 @@ export class RedditClient {
     return { id: data.name, name: data.name };
   }
 
-  async uploadImage(data: Buffer, filename: string): Promise<string> {
-    throw new Error('Method not implemented');
+  async querySubreddit(query: string): Promise<string[]> {
+    const urlParam = new URLSearchParams({ query });
+
+    const { data } = await this.client.get(`/api/subreddit_autocomplete_v2?${urlParam.toString()}`)
+
+    return data.data.children.map((child: Record<string, string>) => child.display_name_prefixed);
   }
+
 }
