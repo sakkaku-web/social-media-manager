@@ -12,16 +12,22 @@ import { ProviderForm } from './form';
 import BaseForm from './base-form';
 import { HttpError } from '../clients/client';
 import {
+  Autocomplete,
   Button,
+  ListItem,
   SelectField,
   SelectMenu,
   SelectMenuItem,
+  TextInput,
   TextInputField,
+  UnorderedList,
 } from 'evergreen-ui';
 import { eitherRequired, isValid } from './validation';
 import { SocialProviderContext, Status } from '../social-provider-context';
 import { RedditClient, RedditPost } from '../clients/reddit';
 import { debounce } from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 export interface RedditProps {
   defaultPost: SNSPost;
@@ -36,7 +42,10 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
 
   const { setStatus } = useContext(SocialProviderContext);
 
-  const [post, setPost] = useState(defaultPost as RedditPost);
+  const [post, setPost] = useState({
+    ...defaultPost,
+    subreddits: [],
+  } as RedditPost);
   const [lastSubmittedId, setLastSubmittedId] = useState('');
   const [subreddits, setSubreddits] = useState([] as SelectMenuItem[]);
 
@@ -69,8 +78,21 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
 
   const searchSubreddits = async (text: string) => {
     const subreddits = await client.querySubreddit(text);
-    console.log(subreddits);
     setSubreddits(subreddits.map((s) => ({ label: s, value: s })));
+  };
+
+  const toggleSubreddit = (subreddits: string[], value: string) => {
+    if (subreddits.includes(value)) {
+      return subreddits.filter((sub) => sub !== value);
+    }
+    return [...subreddits, value];
+  };
+
+  const updatePostSubreddit = (value: string) => {
+    setPost((s) => ({
+      ...s,
+      subreddits: toggleSubreddit(s.subreddits, value),
+    }));
   };
 
   const postLink = lastSubmittedId
@@ -86,26 +108,27 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
       <TextInputField label="Text" value={post.text} disabled={true} />
 
       <SelectMenu
-        isMultiSelect
         title="Select subreddits"
         options={subreddits}
         selected={post.subreddits}
-        onFilterChange={debounce(searchSubreddits, 1000)}
-        onSelect={(i) =>
-          setPost((s) => ({
-            ...s,
-            subreddits: [...s.subreddits, i.value as string],
-          }))
-        }
-        onDeselect={(i) =>
-          setPost((s) => ({
-            ...s,
-            subreddits: s.subreddits.filter((p) => p !== i.value),
-          }))
-        }
+        onFilterChange={debounce(searchSubreddits, 500)}
+        onSelect={(i) => updatePostSubreddit(i.value as string)}
       >
         <Button>Select subreddits</Button>
       </SelectMenu>
+
+      <UnorderedList>
+        {post.subreddits.map((p) => (
+          <ListItem key={p}>
+            {p}
+            <FontAwesomeIcon
+              icon={faTimesCircle}
+              style={{ cursor: 'pointer' }}
+              onClick={() => updatePostSubreddit(p)}
+            />
+          </ListItem>
+        ))}
+      </UnorderedList>
     </BaseForm>
   );
 }

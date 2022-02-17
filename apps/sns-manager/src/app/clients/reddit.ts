@@ -33,7 +33,8 @@ export class RedditClient {
 
     const { data } = await this.client.get(`/api/subreddit_autocomplete_v2?${urlParam.toString()}`)
 
-    return data.data.children.map((child: Record<string, string>) => child.display_name_prefixed);
+    return data.data.children.map((child: Record<string, Record<string, string>>) => child.data.display_name_prefixed)
+      .filter((x: string) => !!x);
   }
 
 }
