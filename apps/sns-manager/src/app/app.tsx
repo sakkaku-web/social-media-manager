@@ -138,6 +138,11 @@ export function App() {
             </Link> */}
           </Pane>
           <Pane>
+            <Link size={300} href="/privacy-policy">
+              Privacy Policy
+            </Link>
+          </Pane>
+          <Pane>
             <Link size={300} href="/cookie-policy">
               Cookie Policy
             </Link>
