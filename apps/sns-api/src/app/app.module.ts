@@ -13,6 +13,7 @@ import { PinterestMiddleware } from './middleware/pinterest-middleware';
 import { TwitterMiddleware } from './middleware/twitter-middleware';
 import { ThrottleMiddleware } from './middleware/throttle-middleware';
 import { RedditMiddleware } from './middleware/reddit-middleware';
+import { FacebookMiddleware } from './middleware/facebook-middleware';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ export class AppModule implements NestModule {
       .forRoutes(SocialProvider.PINTEREST)
       .apply(TwitterMiddleware)
       .forRoutes(SocialProvider.TWITTER)
+      .apply(FacebookMiddleware)
+      .forRoutes(SocialProvider.FACEBOOK)
       .apply(RedditMiddleware)
       .forRoutes(SocialProvider.REDDIT);
   }

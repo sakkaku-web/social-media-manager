@@ -23,11 +23,6 @@ export interface SnsButtonProps {
 
 // TODO: move to props
 const data = {
-  [SocialProvider.FACEBOOK]: {
-    icon: faFacebook,
-    profileUrl: ({ id }: User) =>
-      `https://www.facebook.com/profile.php?id=${id}`,
-  },
   [SocialProvider.INSTAGRAM]: {
     icon: faInstagram,
     profileUrl: ({ name }: User) => `https://instagram.com/${name}`,
@@ -72,7 +67,7 @@ export function SnsLoginButton({
     window.location.href = buildUrl();
   };
 
-  const text = user?.name ? user.name : `${provider} login`;
+  const text = user?.name || `${provider} login`;
   return (
     <Button
       onClick={redirectLogin}

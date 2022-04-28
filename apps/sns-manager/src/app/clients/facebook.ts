@@ -1,15 +1,13 @@
 import { Axios } from 'axios';
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
+import { Client, createClient } from './client';
 
-export class FacebookClient {
+export class FacebookClient implements Client {
   private client: Axios;
 
-  constructor(token: string) {
-    this.client = new Axios({
-      baseURL: 'https://graph.facebook.com/',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  constructor() {
+    this.client = createClient(SocialProvider.FACEBOOK, {
+      baseURL: '/api/facebook',
     });
   }
 
