@@ -54,14 +54,9 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
   const submitFn = async () => {
     try {
       const id = await client.postMedia({ ...post });
-      setLastSubmittedId(id);
+      // setLastSubmittedId(id);
     } catch (err) {
-      const { data } = err as HttpError;
-      throw new Error(
-        `${data.errors
-          .map((e: Record<string, string>) => e.message)
-          .join('\n')}`
-      );
+      console.log(err);
     }
   };
 
@@ -70,9 +65,9 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
   useEffect(() => setPost((s) => ({ ...s, ...defaultPost })), [defaultPost]);
   useEffect(() => {
     if (!isValid(validation)) {
-      setStatus(SocialProvider.TWITTER, Status.ERROR);
+      setStatus(SocialProvider.REDDIT, Status.ERROR);
     } else {
-      setStatus(SocialProvider.TWITTER, Status.VALID);
+      setStatus(SocialProvider.REDDIT, Status.VALID);
     }
   }, [post]);
 
@@ -105,6 +100,8 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
       submitFn={submitFn}
       ref={formRef}
     >
+      <TextInputField label="Title" value={post.title} disabled={true} />
+
       <TextInputField label="Text" value={post.text} disabled={true} />
 
       <SelectMenu

@@ -15,8 +15,23 @@ export class RedditClient {
     });
   }
 
-  async postMedia(media: SNSPost): Promise<string> {
-    throw new Error('Method not implemented.');
+  async postMedia(media: RedditPost): Promise<string> {
+    const { data } = await this.client.post(
+      `/api/submit`,
+      JSON.stringify({
+        title: media.title,
+        text: media.text,
+        sr: media.subreddits[0],
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log(data);
+
+    return '';
   }
 
   async getUser(): Promise<User> {
@@ -31,10 +46,12 @@ export class RedditClient {
   async querySubreddit(query: string): Promise<string[]> {
     const urlParam = new URLSearchParams({ query });
 
-    const { data } = await this.client.get(`/api/subreddit_autocomplete_v2?${urlParam.toString()}`)
+    const { data } = await this.client.get(
+      `/api/subreddit_autocomplete_v2?${urlParam.toString()}`
+    );
 
-    return data.data.children.map((child: Record<string, Record<string, string>>) => child.data.display_name_prefixed)
+    return data.data.children
+      .map((child: Record<string, Record<string, string>>) => child.data.name)
       .filter((x: string) => !!x);
   }
-
 }
