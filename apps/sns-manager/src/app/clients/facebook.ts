@@ -2,6 +2,10 @@ import { Axios } from 'axios';
 import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
 import { Client, createClient } from './client';
 
+export interface FacebookPost extends SNSPost {
+  instagramUser: any;
+}
+
 export class FacebookClient implements Client {
   private client: Axios;
 
@@ -35,5 +39,10 @@ export class FacebookClient implements Client {
 
   async uploadImage(data: Buffer, filename: string): Promise<string> {
     throw new Error('Method not implemented');
+  }
+
+  async getPages() {
+    const { data } = await this.client.get('/me/accounts');
+    console.log(data);
   }
 }

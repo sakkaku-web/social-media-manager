@@ -16,6 +16,7 @@ import TwitterForm from './forms/twitter-form';
 import RedditForm from './forms/reddit-form';
 import CookieConsent from 'react-cookie-consent';
 import useDocumentTitle from './document-title';
+import FacebookForm from './forms/facebook-form';
 
 export function App() {
   useDocumentTitle('Social Media Manager');
@@ -35,6 +36,7 @@ export function App() {
   const pinterestRef = useRef(null as ProviderForm | null);
   const twitterRef = useRef(null as ProviderForm | null);
   const redditRef = useRef(null as ProviderForm | null);
+  const facebookRef = useRef(null as ProviderForm | null);
 
   const isSubmitting = Object.values(status).some(
     (s) => s === Status.SUBMITTING
@@ -46,6 +48,7 @@ export function App() {
       pinterestRef.current?.submit();
       twitterRef.current?.submit();
       redditRef.current?.submit();
+      facebookRef.current?.submit();
     }
   };
 
@@ -103,6 +106,14 @@ export function App() {
                 <RedditForm
                   defaultPost={defaultPost}
                   ref={redditRef}
+                  disabled={isSubmitting}
+                />
+              )}
+
+              {providers.includes(SocialProvider.FACEBOOK) && (
+                <FacebookForm
+                  defaultPost={defaultPost}
+                  ref={facebookRef}
                   disabled={isSubmitting}
                 />
               )}
