@@ -138,7 +138,7 @@ export function App() {
             </Link> */}
           </Pane>
           <Pane>
-            <Link size={300} href="/policy">
+            <Link size={300} href="/cookie-policy">
               Cookie Policy
             </Link>
           </Pane>
@@ -151,7 +151,7 @@ export function App() {
             This website uses cookies to enhance the user experience. More info
             in the{' '}
           </Text>
-          <Link padding="0" href="/policy">
+          <Link padding="0" href="/cookie-policy">
             cookie policy
           </Link>
         </CookieConsent>

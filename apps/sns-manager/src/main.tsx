@@ -10,7 +10,7 @@ ReactDOM.render(
     <StrictMode>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/policy" element={<CookiePolicy />} />
+        <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </StrictMode>
