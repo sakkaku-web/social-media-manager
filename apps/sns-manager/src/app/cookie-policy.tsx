@@ -87,33 +87,7 @@ export function CookiePolicy() {
         might encounter through this site.
       </Paragraph>
 
-      <UnorderedList>
-        <ListItem>
-          <Paragraph>
-            This site uses Google Analytics which is one of the most widespread
-            and trusted analytics solution on the web for helping us to
-            understand how you use the site and ways that we can improve your
-            experience. These cookies may track things such as how long you
-            spend on the site and the pages that you visit so we can continue to
-            produce engaging content.
-          </Paragraph>
-          <Paragraph>
-            For more information on Google Analytics cookies, see the official
-            Google Analytics page.
-          </Paragraph>
-        </ListItem>
-        <ListItem>
-          <Paragraph>
-            The Google AdSense service we use to serve advertising uses a
-            DoubleClick cookie to serve more relevant ads across the web and
-            limit the number of times that a given ad is shown to you.
-          </Paragraph>
-          <Paragraph>
-            For more information on Google AdSense see the official Google
-            AdSense privacy FAQ.
-          </Paragraph>
-        </ListItem>
-      </UnorderedList>
+      <Paragraph>But we have removed that crap.</Paragraph>
 
       <Heading marginY="1em">More Information</Heading>
 
