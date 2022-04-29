@@ -6,12 +6,12 @@ Supported Social Media:
 
 - [x] Twitter
 - [x] Pinterest
-- [ ] Instagram
-- [ ] Facebook
 - [ ] Reddit
 - [ ] Imgur
 - [ ] Pixiv?
 - [ ] Youtube?
+- [ ] Instagram -> too difficult, needs to go through facebook where I probably have to verify my identifiy, not dealing with this crap
+- [ ] Facebook
 
 Supported Features:
 

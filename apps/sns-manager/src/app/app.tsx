@@ -110,13 +110,9 @@ export function App() {
                 />
               )}
 
-              {providers.includes(SocialProvider.FACEBOOK) && (
-                <FacebookForm
-                  defaultPost={defaultPost}
-                  ref={facebookRef}
-                  disabled={isSubmitting}
-                />
-              )}
+              {(providers.includes(SocialProvider.INSTAGRAM) ||
+                providers.includes(SocialProvider.FACEBOOK)) &&
+                `Instagram will probably never be supported. Go complain to facebook for making it soo difficult. They just want our data for everything`}
             </div>
 
             <Button
