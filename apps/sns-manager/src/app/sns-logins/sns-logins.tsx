@@ -4,6 +4,7 @@ import './sns-logins.module.scss';
 import { Pane } from 'evergreen-ui';
 import {
   faFacebook,
+  faInstagram,
   faPinterest,
   faReddit,
   faTwitter,
@@ -12,6 +13,7 @@ import { TwitterClient } from '../clients/twitter';
 import { PinterestClient } from '../clients/pinterest';
 import { RedditClient } from '../clients/reddit';
 import { FacebookClient } from '../clients/facebook';
+import { InstagramClient } from '../clients/instagram';
 
 /* eslint-disable-next-line */
 export interface SnsLoginsProps {}
@@ -46,6 +48,13 @@ export function SnsLogins(props: SnsLoginsProps) {
         icon={faReddit}
         profileUrl={(u) => `https://reddit.com/u/${u.id}`}
       /> */}
+
+      <SnsLoginButton
+        api={new InstagramClient()}
+        provider={SocialProvider.INSTAGRAM}
+        icon={faInstagram}
+        profileUrl={(u) => `https://instagram.com/${u.name}`}
+      />
 
       <SnsLoginButton
         api={new FacebookClient()}

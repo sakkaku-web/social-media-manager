@@ -8,6 +8,7 @@ import {
   SNSAuthService,
   validateCallbackState,
 } from './sns-auth';
+import * as FormData from 'form-data';
 
 export class InstagramAuthService implements SNSAuthService {
   constructor(private options: OAuthOptions) {}
@@ -23,17 +24,22 @@ export class InstagramAuthService implements SNSAuthService {
     callback: OAuthLoginCallback
   ): Promise<OAuthCallbackResponse> {
     validateCallbackState(callback);
+    console.log(callback);
 
     const { clientId, clientSecret } = this.options;
 
+    const body = new FormData();
+    body.append('client_id', clientId);
+    body.append('client_secret', clientSecret);
+    body.append('code', callback.code);
+    body.append('grant_type', 'authorization_code');
+    body.append('redirect_uri', callback.redirect);
+
     const { data, status } = await axios.post(
       `https://api.instagram.com/oauth/access_token`,
+      body,
       {
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: callback.code,
-        grant_type: 'authorization_code',
-        redirect_uri: callback.redirect,
+        headers: body.getHeaders(),
       }
     );
 

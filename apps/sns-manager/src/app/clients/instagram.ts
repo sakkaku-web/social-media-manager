@@ -1,15 +1,13 @@
 import { Axios } from 'axios';
-import { SNSPost, User } from '@kumi-arts/core';
+import { SNSPost, SocialProvider, User } from '@kumi-arts/core';
+import { Client, createClient } from './client';
 
-export class InstagramClient {
+export class InstagramClient implements Client {
   private client: Axios;
 
-  constructor(token: string) {
-    this.client = new Axios({
-      baseURL: 'https://api.instagram.com',
-      params: {
-        access_token: token,
-      },
+  constructor() {
+    this.client = createClient(SocialProvider.INSTAGRAM, {
+      baseURL: '/api/instagram',
     });
   }
   postMedia(media: SNSPost): Promise<string> {

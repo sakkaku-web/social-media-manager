@@ -28,7 +28,7 @@ export class AuthController {
   constructor(
     private readonly config: ConfigService,
     private readonly auth: AuthService
-  ) { }
+  ) {}
 
   private getAuthServiceForProvider(provider: SocialProvider): SNSAuthService {
     const tokens = getOAuthOptions(provider, this.config);
@@ -63,10 +63,7 @@ export class AuthController {
   }
 
   @Get('login')
-  async login(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const provider = getProvider(req);
     const scopes = this.getScopesForProvider(provider);
     const service = this.getAuthServiceForProvider(provider);
@@ -102,11 +99,11 @@ export class AuthController {
       });
 
       this.auth.saveToken(res, provider, token);
-      res.clearCookie(`${provider}_STATE`);
     } catch (e) {
       console.log('Login failed', e.message);
     }
 
+    res.clearCookie(`${provider}_STATE`);
     return res.redirect(environment.homepage);
   }
 }

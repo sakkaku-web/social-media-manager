@@ -1,10 +1,5 @@
 import './sns-login-button.module.scss';
-import {
-  faFacebook,
-  faInstagram,
-  faReddit,
-  IconDefinition,
-} from '@fortawesome/free-brands-svg-icons';
+import { IconDefinition } from '@fortawesome/free-brands-svg-icons';
 import { faImages } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useContext, useEffect, useState } from 'react';
@@ -23,10 +18,6 @@ export interface SnsButtonProps {
 
 // TODO: move to props
 const data = {
-  [SocialProvider.INSTAGRAM]: {
-    icon: faInstagram,
-    profileUrl: ({ name }: User) => `https://instagram.com/${name}`,
-  },
   [SocialProvider.IMGUR]: {
     icon: faImages,
     profileUrl: ({ name }: User) => `https://imgur.com/user/${name}/posts`,
