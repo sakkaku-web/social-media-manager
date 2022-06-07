@@ -6,7 +6,7 @@ Supported Social Media:
 
 - [x] Twitter
 - [x] Pinterest
-- [ ] Reddit
+- [x] Reddit (single subreddit)
 - [ ] Imgur
 - [ ] Pixiv?
 - [ ] Youtube?
