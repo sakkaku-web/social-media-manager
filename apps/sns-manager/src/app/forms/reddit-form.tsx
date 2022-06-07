@@ -54,7 +54,7 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
   const submitFn = async () => {
     try {
       const id = await client.postMedia({ ...post });
-      // setLastSubmittedId(id);
+      setLastSubmittedId(id);
     } catch (err) {
       console.log(err);
     }
@@ -90,9 +90,7 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
     }));
   };
 
-  const postLink = lastSubmittedId
-    ? `https://twitter.com/anyuser/status/${lastSubmittedId}`
-    : undefined;
+  const postLink = lastSubmittedId;
   return (
     <BaseForm
       provider={SocialProvider.REDDIT}

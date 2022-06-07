@@ -16,22 +16,21 @@ export class RedditClient {
   }
 
   async postMedia(media: RedditPost): Promise<string> {
-    const { data } = await this.client.post(
-      `/api/submit`,
-      JSON.stringify({
-        title: media.title,
-        text: media.text,
-        sr: media.subreddits[0],
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    console.log(data);
+    const body = new FormData();
+    body.append('title', media.title);
+    body.append('text', media.text);
+    body.append('sr', media.subreddits[0]);
+    body.append('kind', 'self');
 
-    return '';
+    const { data } = await this.client.post(`/api/submit?api_type=json`, body);
+    const error = data.json.errors;
+
+    if (error.length > 0) {
+      console.log(error);
+      throw new Error('Failed to submit');
+    }
+
+    return data.json?.data?.url;
   }
 
   async getUser(): Promise<User> {
