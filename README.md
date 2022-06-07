@@ -11,7 +11,7 @@ Supported Social Media:
 - [ ] Pixiv?
 - [ ] Youtube?
 - [ ] Instagram -> too difficult, needs to go through facebook where I probably have to verify my identifiy, not dealing with this crap
-- [ ] Facebook
+- [ ] Facebook -> same as instagram
 
 Supported Features:
 
