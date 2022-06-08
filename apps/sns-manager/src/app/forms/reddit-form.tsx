@@ -44,6 +44,7 @@ function RedditForm({ defaultPost }: RedditProps) {
       setLastSubmitted(urls);
     } catch (err) {
       console.log(err);
+      setLastSubmitted([]);
     } finally {
       setSubmitting(false);
     }
@@ -98,26 +99,32 @@ function RedditForm({ defaultPost }: RedditProps) {
             title="Select subreddits"
             options={subreddits}
             selected={selectedSubReddits}
-            onFilterChange={debounce(searchSubreddits, 200)}
+            onFilterChange={debounce(searchSubreddits, 500)}
             onSelect={(i) => updatePostSubreddit(i.value as string)}
           >
             <Button>Select subreddits</Button>
           </SelectMenu>
 
-          <UnorderedList>
+          <UnorderedList listStyle="none">
             {selectedSubReddits.map((p) => {
               const url = findMatchingUrl(p);
               return (
-                <ListItem key={p}>
-                  <span>{p}</span>
+                <ListItem
+                  key={p}
+                  display="flex"
+                  alignItems="center"
+                  gap="0.5em"
+                >
                   <FontAwesomeIcon
                     icon={faTimesCircle}
                     style={{ cursor: 'pointer' }}
                     onClick={() => updatePostSubreddit(p)}
                   />
 
+                  <span>{p}</span>
+
                   {url && (
-                    <Link href={url} target="_blank">
+                    <Link href={url} target="_blank" padding={0}>
                       Go to post
                     </Link>
                   )}
@@ -125,12 +132,6 @@ function RedditForm({ defaultPost }: RedditProps) {
               );
             })}
           </UnorderedList>
-        </Pane>
-
-        <Pane>
-          {lastSubmitted.map((url) => (
-            <Link href={url}></Link>
-          ))}
         </Pane>
       </Pane>
     </Pane>

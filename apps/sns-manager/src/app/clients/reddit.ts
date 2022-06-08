@@ -27,7 +27,7 @@ export class RedditClient {
 
     if (error.length > 0) {
       console.log(error);
-      throw new Error('Failed to submit');
+      throw new Error(error.map((e: string[]) => e.join(' - ')));
     }
 
     return data.json?.data?.url;
@@ -50,7 +50,10 @@ export class RedditClient {
     );
 
     return data.data.children
-      .map((child: Record<string, Record<string, string>>) => child.data.name)
+      .map(
+        (child: Record<string, Record<string, string>>) =>
+          child.data.display_name
+      )
       .filter((x: string) => !!x);
   }
 }
