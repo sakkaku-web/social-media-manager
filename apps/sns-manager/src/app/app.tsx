@@ -1,6 +1,6 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
 import { Alert, Link, Pane, Text } from 'evergreen-ui';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import PostForm from './post-form/post-form';
 import SnsLogins from './sns-logins/sns-logins';
 import {
@@ -9,7 +9,6 @@ import {
   SocialProviderContext,
   Status,
 } from './social-provider-context';
-import { ProviderForm } from './forms/form';
 import RedditForm from './forms/reddit-form';
 import CookieConsent from 'react-cookie-consent';
 import useDocumentTitle from './document-title';

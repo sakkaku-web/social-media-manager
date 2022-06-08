@@ -1,26 +1,5 @@
-import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import {
-  Alert,
-  Card,
-  Heading,
-  Link,
-  Pane,
-  SelectField,
-  Spinner,
-  TextInputField,
-} from 'evergreen-ui';
-import {
-  useEffect,
-  useState,
-  useContext,
-  forwardRef,
-  useImperativeHandle,
-  ForwardedRef,
-  useRef,
-} from 'react';
-import { Board, PinterestClient, PinterestPost } from '../clients/pinterest';
-import { SocialProviderContext, Status } from '../social-provider-context';
-import { HttpError } from '../clients/client';
+import { SNSPost } from '@kumi-arts/core';
+import { forwardRef, ForwardedRef } from 'react';
 
 export interface PinterestProps {
   defaultPost: SNSPost;

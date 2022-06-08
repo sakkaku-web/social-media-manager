@@ -1,22 +1,18 @@
-import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { useContext, useState } from 'react';
+import { SNSPost } from '@kumi-arts/core';
+import { useState } from 'react';
 import {
   Pane,
   Button,
   Heading,
   ListItem,
-  SelectField,
   SelectMenu,
   SelectMenuItem,
-  TextInput,
   TextInputField,
   UnorderedList,
   Spinner,
   Link,
 } from 'evergreen-ui';
-import { eitherRequired, isValid } from './validation';
-import { SocialProviderContext, Status } from '../social-provider-context';
-import { RedditClient, RedditPost } from '../clients/reddit';
+import { RedditClient } from '../clients/reddit';
 import { debounce } from 'lodash';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
