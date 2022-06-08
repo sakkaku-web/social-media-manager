@@ -1,19 +1,9 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
+import { useContext, useState } from 'react';
 import {
-  ForwardedRef,
-  forwardRef,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from 'react';
-import { ProviderForm } from './form';
-import BaseForm from './base-form';
-import { HttpError } from '../clients/client';
-import {
-  Autocomplete,
+  Pane,
   Button,
+  Heading,
   ListItem,
   SelectField,
   SelectMenu,
@@ -21,6 +11,8 @@ import {
   TextInput,
   TextInputField,
   UnorderedList,
+  Spinner,
+  Link,
 } from 'evergreen-ui';
 import { eitherRequired, isValid } from './validation';
 import { SocialProviderContext, Status } from '../social-provider-context';
@@ -31,45 +23,31 @@ import { faTimesCircle } from '@fortawesome/free-regular-svg-icons';
 
 export interface RedditProps {
   defaultPost: SNSPost;
-  disabled: boolean;
 }
 
-function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
-  const formRef = useRef<ProviderForm>();
-  useImperativeHandle(ref, () => ({
-    submit: () => formRef.current?.submit(),
-  }));
-
-  const { setStatus } = useContext(SocialProviderContext);
-
-  const [post, setPost] = useState({
-    ...defaultPost,
-    subreddits: [],
-  } as RedditPost);
-  const [lastSubmittedId, setLastSubmittedId] = useState('');
+function RedditForm({ defaultPost }: RedditProps) {
+  const [submitting, setSubmitting] = useState(false);
+  const [selectedSubReddits, setSelectedSubReddits] = useState([] as string[]);
+  const [lastSubmitted, setLastSubmitted] = useState([] as string[]);
   const [subreddits, setSubreddits] = useState([] as SelectMenuItem[]);
 
   const client = new RedditClient();
 
-  const submitFn = async () => {
+  const onSubmit = async () => {
     try {
-      const id = await client.postMedia({ ...post });
-      setLastSubmittedId(id);
+      setSubmitting(true);
+      const urls = await Promise.all(
+        selectedSubReddits.map((sub) =>
+          client.postMedia({ ...defaultPost, subreddit: sub })
+        )
+      );
+      setLastSubmitted(urls);
     } catch (err) {
       console.log(err);
+    } finally {
+      setSubmitting(false);
     }
   };
-
-  const validation = {};
-
-  useEffect(() => setPost((s) => ({ ...s, ...defaultPost })), [defaultPost]);
-  useEffect(() => {
-    if (!isValid(validation)) {
-      setStatus(SocialProvider.REDDIT, Status.ERROR);
-    } else {
-      setStatus(SocialProvider.REDDIT, Status.VALID);
-    }
-  }, [post]);
 
   const searchSubreddits = async (text: string) => {
     const subreddits = await client.querySubreddit(text);
@@ -84,48 +62,79 @@ function RedditForm({ defaultPost }: RedditProps, ref: ForwardedRef<unknown>) {
   };
 
   const updatePostSubreddit = (value: string) => {
-    setPost((s) => ({
-      ...s,
-      subreddits: toggleSubreddit(s.subreddits, value),
-    }));
+    setSelectedSubReddits(toggleSubreddit(selectedSubReddits, value));
   };
 
-  const postLink = lastSubmittedId;
+  const findMatchingUrl = (subreddit: string) => {
+    return lastSubmitted.find((url) => url.includes(`/r/${subreddit}/`));
+  };
+
   return (
-    <BaseForm
-      provider={SocialProvider.REDDIT}
-      link={postLink}
-      submitFn={submitFn}
-      ref={formRef}
-    >
-      <TextInputField label="Title" value={post.title} disabled={true} />
+    <Pane>
+      <Pane display="flex" alignItems="center" gap="1em" marginBottom="1em">
+        <Heading marginBottom={16}>Reddit</Heading>
+        {submitting && <Spinner size={24} />}
+      </Pane>
 
-      <TextInputField label="Text" value={post.text} disabled={true} />
+      <Pane display="flex" flexDirection="row" gap={32}>
+        <Pane>
+          <TextInputField
+            label="Title"
+            value={defaultPost.title}
+            disabled={true}
+          />
 
-      <SelectMenu
-        title="Select subreddits"
-        options={subreddits}
-        selected={post.subreddits}
-        onFilterChange={debounce(searchSubreddits, 500)}
-        onSelect={(i) => updatePostSubreddit(i.value as string)}
-      >
-        <Button>Select subreddits</Button>
-      </SelectMenu>
+          <TextInputField
+            label="Text"
+            value={defaultPost.text}
+            disabled={true}
+          />
 
-      <UnorderedList>
-        {post.subreddits.map((p) => (
-          <ListItem key={p}>
-            {p}
-            <FontAwesomeIcon
-              icon={faTimesCircle}
-              style={{ cursor: 'pointer' }}
-              onClick={() => updatePostSubreddit(p)}
-            />
-          </ListItem>
-        ))}
-      </UnorderedList>
-    </BaseForm>
+          <Button onClick={onSubmit}>Submit</Button>
+        </Pane>
+
+        <Pane display="flex" flexDirection="column" gap={32}>
+          <SelectMenu
+            title="Select subreddits"
+            options={subreddits}
+            selected={selectedSubReddits}
+            onFilterChange={debounce(searchSubreddits, 200)}
+            onSelect={(i) => updatePostSubreddit(i.value as string)}
+          >
+            <Button>Select subreddits</Button>
+          </SelectMenu>
+
+          <UnorderedList>
+            {selectedSubReddits.map((p) => {
+              const url = findMatchingUrl(p);
+              return (
+                <ListItem key={p}>
+                  <span>{p}</span>
+                  <FontAwesomeIcon
+                    icon={faTimesCircle}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => updatePostSubreddit(p)}
+                  />
+
+                  {url && (
+                    <Link href={url} target="_blank">
+                      Go to post
+                    </Link>
+                  )}
+                </ListItem>
+              );
+            })}
+          </UnorderedList>
+        </Pane>
+
+        <Pane>
+          {lastSubmitted.map((url) => (
+            <Link href={url}></Link>
+          ))}
+        </Pane>
+      </Pane>
+    </Pane>
   );
 }
 
-export default forwardRef(RedditForm);
+export default RedditForm;

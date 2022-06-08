@@ -3,7 +3,7 @@ import { Axios } from 'axios';
 import { createClient } from './client';
 
 export interface RedditPost extends SNSPost {
-  subreddits: string[];
+  subreddit: string;
 }
 
 export class RedditClient {
@@ -19,7 +19,7 @@ export class RedditClient {
     const body = new FormData();
     body.append('title', media.title);
     body.append('text', media.text);
-    body.append('sr', media.subreddits[0]);
+    body.append('sr', media.subreddit);
     body.append('kind', 'self');
 
     const { data } = await this.client.post(`/api/submit?api_type=json`, body);

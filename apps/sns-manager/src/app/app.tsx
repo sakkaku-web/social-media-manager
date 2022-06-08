@@ -1,9 +1,7 @@
 import { SNSPost, SocialProvider } from '@kumi-arts/core';
-import { Alert, Button, InlineAlert, Link, Pane, Text } from 'evergreen-ui';
+import { Alert, Link, Pane, Text } from 'evergreen-ui';
 import { useRef, useState } from 'react';
-import PinterestForm from './forms/pinterest-form';
 import PostForm from './post-form/post-form';
-import ProviderSelect from './post-form/provider-select/provider-select';
 import SnsLogins from './sns-logins/sns-logins';
 import {
   ProviderBool,
@@ -12,7 +10,6 @@ import {
   Status,
 } from './social-provider-context';
 import { ProviderForm } from './forms/form';
-import TwitterForm from './forms/twitter-form';
 import RedditForm from './forms/reddit-form';
 import CookieConsent from 'react-cookie-consent';
 import useDocumentTitle from './document-title';
@@ -30,9 +27,6 @@ export function App() {
       filename: '',
     },
   } as SNSPost);
-
-  const twitterRef = useRef(null as ProviderForm | null);
-  const redditRef = useRef(null as ProviderForm | null);
 
   const isSubmitting = Object.values(status).some(
     (s) => s === Status.SUBMITTING
@@ -72,13 +66,9 @@ export function App() {
               />
             </div>
 
-            <div className="w-100 flex flex-col gap-x-4 md:flex-row">
-              {loggedIn[SocialProvider.TWITTER] && (
-                <TwitterForm
-                  defaultPost={defaultPost}
-                  ref={twitterRef}
-                  disabled={isSubmitting}
-                />
+            <div className="w-100 flex flex-col gap-x-4">
+              {loggedIn[SocialProvider.REDDIT] && (
+                <RedditForm defaultPost={defaultPost} />
               )}
             </div>
           </div>
