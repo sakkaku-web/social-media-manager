@@ -59,7 +59,7 @@
     "@nrwl/jest": "12.10.1",
     "@nrwl/linter": "12.10.1",
     "@nrwl/nest": "12.10.1",
-    "@nrwl/next": "^12.10.1",
+    "@nrwl/next": "12.10.1",
     "@nrwl/node": "12.10.1",
     "@nrwl/react": "12.10.1",
     "@nrwl/tao": "12.10.1",
