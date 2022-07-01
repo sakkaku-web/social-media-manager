@@ -1,7 +1,7 @@
 export interface SNSPost {
   title: string;
   text: string;
-  media?: SNSMedia;
+  media?: File;
 }
 
 export interface SNSMedia {

@@ -28,6 +28,7 @@ export class RedditAuthService implements SNSAuthService {
       'modwiki',
       'mysubreddits',
       'privatemessages',
+      'structuredstyles',
       'read',
       'report',
       'save',

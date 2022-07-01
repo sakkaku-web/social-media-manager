@@ -16,7 +16,7 @@ export class ThrottleMiddleware implements NestMiddleware {
   private static requestLimits = {
     [SocialProvider.TWITTER]: { POST: 5, GET: 20 },
     [SocialProvider.PINTEREST]: { POST: 5, GET: 20 },
-    [SocialProvider.REDDIT]: { POST: 5, GET: 20 },
+    [SocialProvider.REDDIT]: { POST: 50, GET: 20 },
   };
 
   private static requestsPerUser: { [k: string]: UserRequest[] } = {};

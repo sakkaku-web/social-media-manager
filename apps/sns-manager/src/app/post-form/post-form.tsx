@@ -19,7 +19,7 @@ export function PostForm({ post, disabled, onPostChange }: PostFormProps) {
   const onFileUpload = (files: FileList) => {
     if (files.length > 0) {
       const file = Array.from(files)[0];
-      emitPostChange({ media: { filename: file.name, image: file } });
+      emitPostChange({ media: file });
     }
   };
 

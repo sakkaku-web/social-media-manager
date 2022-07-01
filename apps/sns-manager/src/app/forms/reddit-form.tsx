@@ -11,6 +11,9 @@ import {
   UnorderedList,
   Spinner,
   Link,
+  Text,
+  FormField,
+  FormFieldLabel,
 } from 'evergreen-ui';
 import { RedditClient } from '../clients/reddit';
 import { debounce } from 'lodash';
@@ -74,7 +77,7 @@ function RedditForm({ defaultPost }: RedditProps) {
       </Pane>
 
       <Pane display="flex" flexDirection="row" gap={32}>
-        <Pane>
+        <Pane display="flex" flexDirection="column">
           <TextInputField
             label="Title"
             value={defaultPost.title}
@@ -86,6 +89,10 @@ function RedditForm({ defaultPost }: RedditProps) {
             value={defaultPost.text}
             disabled={true}
           />
+
+          <FormField label="File">
+            <Text>{defaultPost.media?.name || ''}</Text>
+          </FormField>
 
           <Button onClick={onSubmit}>Submit</Button>
         </Pane>

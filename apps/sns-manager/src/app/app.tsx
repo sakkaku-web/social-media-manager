@@ -22,9 +22,6 @@ export function App() {
   const [defaultPost, setDefaultPost] = useState({
     text: '',
     title: '',
-    media: {
-      filename: '',
-    },
   } as SNSPost);
 
   const isSubmitting = Object.values(status).some(

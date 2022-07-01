@@ -16,21 +16,22 @@ export class PinterestClient implements Client {
   }
 
   async postMedia(post: PinterestPost): Promise<string> {
-    const body = {
-      title: post.title,
-      board_id: post.board,
-      description: post.text,
-      media_source: {
-        source_type: 'image_base64',
-        data: await this.fileToBase64(post.media?.image),
-        content_type: this.getType(post.media),
-      },
-    };
-    const { data } = await this.client.post('/pins', JSON.stringify(body), {
-      headers: { 'Content-Type': 'application/json' },
-    });
+    // const body = {
+    //   title: post.title,
+    //   board_id: post.board,
+    //   description: post.text,
+    //   media_source: {
+    //     source_type: 'image_base64',
+    //     data: await this.fileToBase64(post.media?.image),
+    //     content_type: this.getType(post.media),
+    //   },
+    // };
+    // const { data } = await this.client.post('/pins', JSON.stringify(body), {
+    //   headers: { 'Content-Type': 'application/json' },
+    // });
 
-    return data.id;
+    // return data.id;
+    return '';
   }
 
   private fileToBase64(file?: File) {

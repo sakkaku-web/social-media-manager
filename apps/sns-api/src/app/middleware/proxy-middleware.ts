@@ -1,8 +1,5 @@
 import { NestMiddleware } from '@nestjs/common';
-import {
-  createProxyMiddleware,
-  Options,
-} from 'http-proxy-middleware';
+import { createProxyMiddleware, Options } from 'http-proxy-middleware';
 
 export abstract class ProxyMiddleware implements NestMiddleware {
   protected createProxy(target: string, options: Options = {}) {
@@ -17,7 +14,9 @@ export abstract class ProxyMiddleware implements NestMiddleware {
         proxyReq.removeHeader('cookie');
 
         console.log(
-          `[ProxyMiddleware]: ${req.originalUrl} -> ${req.url} - ${req.method}`
+          `[ProxyMiddleware]: ${req.originalUrl} -> ${target + req.url} - ${
+            req.method
+          }`
         );
       },
       ...options,
