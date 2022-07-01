@@ -1,5 +1,7 @@
 # Social Media Manager
 
+** Website is discontinued. Will only be used to get the oauth token. Use scripts now instead in `./scripts` **
+
 Manage your social media post on a single website.
 
 Supported Social Media:
