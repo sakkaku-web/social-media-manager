@@ -40,4 +40,5 @@ Thumbs.db
 
 .env
 cypress.env.json
-fixtures/fuurin.png
+
+__pycache__/
