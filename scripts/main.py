@@ -22,6 +22,11 @@ if not os.path.exists(args.post):
 with open(args.post, 'r') as post_file:
     post = json.load(post_file)
 
+    if 'images' in post:
+        post_folder = os.path.dirname(os.path.abspath(args.post))
+        post['images'] = [p if p.startswith(
+            '/') else os.path.join(post_folder, p) for p in post['images']]
+
     # Reddit
     reddit = RedditClient(os.getenv('REDDIT_TOKEN'))
 
