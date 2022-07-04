@@ -164,14 +164,14 @@ class RedditClient:
 # ###
 # multi_image_post = {
 #     'title': 'Test submit multiple image post',
-#     'text': 'Should be a comment',
+#     'text': 'Should be a comment\n\nNew line',
 #     'images': ['images/pixel-ina.png', 'images/pixel-gura.png'],
 # }
 # client.submit_post(multi_image_post, test_sr)
 # ###
 # text_post = {
 #     'title': 'Test text post',
-#     'text': 'Should be the text of the post',
+#     'text': 'Should be the text of the post\n\n**New line**',
 #     'images': [],
 # }
 # client.submit_post(text_post, test_sr)
