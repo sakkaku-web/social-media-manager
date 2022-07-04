@@ -67,20 +67,20 @@ class RedditClient:
             res = req.post(full_url, data=upload_data, files={"file": image})
             res.raise_for_status()
 
-    def _post_images_to_subreddit(self, image_ids, sr_data: dict, title: str):
+    def _post_to_subreddit(self, image_ids, sr_data: dict, post: dict):
         sr = sr_data['sr']
         body = {
             'sr': sr,
-            'title': title,
+            'title': post['title'],
             'sendreplies': False,  # TODO: customize?
         }
 
         self._apply_flair_to_body(body, sr, sr_data['flair'])
 
         if len(image_ids) > 1:
-            return self._submit_gallery_post(body)
+            return self._submit_gallery_post(body, image_ids)
         else:
-            return self._submit_single_post(body)
+            return self._submit_single_post(body, image_ids, post)
 
     def _apply_flair_to_body(self, body: dict, sr: str, flair: str):
         if flair:
@@ -90,15 +90,6 @@ class RedditClient:
                 body['flair_text'] = flair_text
             else:
                 print(f"Didn't find flair '{flair}'. Skipping")
-
-    def _submit_single_post(self, body: dict, image_ids):
-        body['kind'] = 'image'
-        body['url'] = f'{self.asset_url}/rte_images/{image_ids[0]}',
-        res = req.post(self.baseURL + '/api/submit?api_type=json',
-                       body, headers=self.headers)
-
-        print('Submitted single image post. No direct URL available')
-        return None
 
     def _submit_gallery_post(self, body: dict, image_ids):
         body['kind'] = 'self'
@@ -110,6 +101,25 @@ class RedditClient:
         data = self._return_data_if_no_error(res)
         print(f'Submitted post: {data["url"]}')
         return data['id']
+
+    def _submit_single_post(self, body: dict, image_ids, post: dict):
+        if len(image_ids) > 0:
+            body['kind'] = 'image'
+            body['url'] = f'{self.asset_url}/rte_images/{image_ids[0]}',
+        else:
+            body['kind'] = 'self'
+            body['text'] = post['text']
+
+        res = req.post(self.baseURL + '/api/submit?api_type=json',
+                       body, headers=self.headers)
+        data = self._return_data_if_no_error(res)
+
+        if 'url' in data:
+            print(f'Submitted post: {data["url"]}')
+            return data['name']
+
+        print('Submitted single image post. No direct URL available')
+        return None
 
     def _add_comment(self, post_id: str, text: str):
         body = {
@@ -129,8 +139,7 @@ class RedditClient:
 
             print(f'----- Start submitting to {sr["sr"]} ------')
             image_ids = [self._upload_image(i) for i in post['images']]
-            post_id = self._post_images_to_subreddit(
-                image_ids, sr, post['title'])
+            post_id = self._post_to_subreddit(image_ids, sr, post)
 
             if post_id and len(image_ids) > 0:
                 self._add_comment(post_id, post['text'])
@@ -139,24 +148,31 @@ class RedditClient:
 
 
 # ----------------- Testing -----------------
-load_dotenv()
+# load_dotenv()
 
-client = RedditClient(os.getenv('REDDIT_TOKEN'))
+# client = RedditClient(os.getenv('REDDIT_TOKEN'))
 
-test_sr = [{'sr': 'kumi_yada', 'flair': 'test'}]
+# test_sr = [{'sr': 'kumi_yada', 'flair': 'test'}]
 
-###
+# ###
 # single_image_post = {
 #     'title': 'Test submit single image post',
 #     'text': 'Should be ignored',
 #     'images': ['images/pixel-ina.png'],
 # }
 # client.submit_post(single_image_post, test_sr)
-###
+# ###
 # multi_image_post = {
 #     'title': 'Test submit multiple image post',
 #     'text': 'Should be a comment',
 #     'images': ['images/pixel-ina.png', 'images/pixel-gura.png'],
 # }
 # client.submit_post(multi_image_post, test_sr)
-###
+# ###
+# text_post = {
+#     'title': 'Test text post',
+#     'text': 'Should be the text of the post',
+#     'images': [],
+# }
+# client.submit_post(text_post, test_sr)
+# ###
