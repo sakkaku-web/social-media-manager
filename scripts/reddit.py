@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 # Script can submit multiple images as single post to multiple subreddits
 # Set token in REDDIT_TOKEN
 #
+# title + text + images -> post with images (title + images) + comment (text)
+#
 # Customize variables below
 
 title = 'Korone + Chimecho'
@@ -15,7 +17,6 @@ images = [
     '/home/sakkaku/Downloads/fuurin.png',
 ]
 
-# TODO: fix flair
 subreddits = [
     # {'sr': 'AnimeART', 'flair': 'Original Content'},
     {'sr': 'AnimeSketch', 'flair': None},
@@ -33,6 +34,20 @@ headers = {
     'User-Agent': 'script:sns-manager:0.0.1 (by /u/illu11)',
 }
 asset_url = 'https://reddit-uploaded-media.s3-accelerate.amazonaws.com'
+
+
+def find_flair(sr: str, text: str):
+    if text:
+        res = req.get(f'{baseURL}/r/{sr}/api/link_flair', headers=headers)
+        res.raise_for_status()
+        data = res.json()
+
+        for flair in data:
+            flair_text = flair['text']
+            if text.lower() in flair_text.lower():
+                return flair['id'], flair_text
+
+    return None, None
 
 
 def upload_image(image_path: str):
@@ -60,34 +75,51 @@ def upload_image(image_path: str):
     return asset_id
 
 
-def post_images_to_subreddit(ids, sr: dict, title: str):
+def post_images_to_subreddit(ids, sr_data: dict, title: str):
     res = None
+    sr = sr_data['sr']
     body = {
-        'sr': sr['sr'],
+        'sr': sr,
         'title': title,
         'sendreplies': sendreplies,
-        'flair_id': sr['flair'],
     }
+
+    flair = sr_data['flair']
+    if flair:
+        flair_id, flair_text = find_flair(sr, flair)
+        if flair_id:
+            body['flair_id'] = flair_id
+            body['flair_text'] = flair_text
+        else:
+            print(
+                f"Didn't find flair '{flair}' for subreddit '{sr}'. Skipping")
+
     if len(ids) > 1:
-        body['kind'] = 'self'
         body['items']: [{'media_id': i, 'caption': '',
-                         'outbound_url': ''} for i in ids]
-        res = req.post(
-            baseURL + '/api/submit_gallery_post.json?api_type=json', json=body, headers=headers)
+                        'outbound_url': ''} for i in ids]
+        return submit_gallery_post(body)
     else:
         body['kind'] = 'image'
         body['url'] = f'{asset_url}/rte_images/{ids[0]}',
-        res = req.post(baseURL + '/api/submit?api_type=json',
-                       body, headers=headers)
+        return submit_single_post(body)
 
-    data = return_data_if_no_error(res)
 
-    if 'url' in data:
-        print(f'Submitted post in {sr}: {data["url"]}')
-        return data['id']
+def submit_single_post(body: dict):
+    res = req.post(baseURL + '/api/submit?api_type=json',
+                   body, headers=headers)
 
     print('Submitted single image post. No direct URL available')
     return None
+
+
+def submit_gallery_post(body: dict):
+    body['kind'] = 'self'
+    res = req.post(
+        baseURL + '/api/submit_gallery_post.json?api_type=json', json=body, headers=headers)
+
+    data = return_data_if_no_error(res)
+    print(f'Submitted post in {sr_data}: {data["url"]}')
+    return data['id']
 
 
 def add_comment(post_id: str, text: str):

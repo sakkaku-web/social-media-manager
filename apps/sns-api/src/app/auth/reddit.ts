@@ -16,7 +16,14 @@ export class RedditAuthService implements SNSAuthService {
     const { clientId } = this.options;
     const state = nanoid();
 
-    const scopes = ['identity', 'edit', 'structuredstyles', 'read', 'submit'];
+    const scopes = [
+      'identity',
+      'edit',
+      'structuredstyles',
+      'read',
+      'submit',
+      'flair',
+    ];
     const urlParam = new URLSearchParams({
       client_id: clientId,
       response_type: 'code',
