@@ -2,6 +2,14 @@
 
 **Website is discontinued. Will only be used to get the oauth token. Use scripts now instead in `./scripts`**
 
+## Scripts
+
+- Reddit:
+  - multi image post (text as comment)
+  - single image post (no text, not possible because of reddit api)
+  - text post
+
+------ OLD README after being discontinued ------
 
 Manage your social media post on a single website.
 
