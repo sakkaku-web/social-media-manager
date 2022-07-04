@@ -133,12 +133,25 @@ class RedditClient:
 
         return data['things'][0]['data']['id']
 
+    def _resolve_image_paths(self, image_paths):
+        file_paths = []
+        for path in image_paths:
+            if os.path.isfile(path):
+                file_paths.append(path)
+            else:
+                with os.scandir(path) as dirs:
+                    for entry in dirs:
+                        if entry.is_file():
+                            file_paths.append(entry.path)
+        return file_paths
+
     def submit_post(self, post, subreddits):
         for sr in subreddits:
-            # Has to be uploaded for each subreddit, otherwise error 500
-
             print(f'----- Start submitting to {sr["sr"]} ------')
-            image_ids = [self._upload_image(i) for i in post['images']]
+
+            # Has to be uploaded for each subreddit, otherwise error 500
+            image_paths = self._resolve_image_paths(post['images'])
+            image_ids = [self._upload_image(i) for i in image_paths]
             post_id = self._post_to_subreddit(image_ids, sr, post)
 
             if post_id and len(image_ids) > 0:
@@ -165,7 +178,7 @@ class RedditClient:
 # multi_image_post = {
 #     'title': 'Test submit multiple image post',
 #     'text': 'Should be a comment\n\nNew line',
-#     'images': ['images/pixel-ina.png', 'images/pixel-gura.png'],
+#     'images': ['images'],
 # }
 # client.submit_post(multi_image_post, test_sr)
 # ###

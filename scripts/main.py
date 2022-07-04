@@ -15,6 +15,10 @@ parser.add_argument('-sr', '--subreddits', nargs='+', default=[],
 
 args = parser.parse_args()
 
+if not os.path.exists(args.post):
+    print(f'File "{args.post}" does not exist')
+    exit()
+
 with open(args.post, 'r') as post_file:
     post = json.load(post_file)
 
