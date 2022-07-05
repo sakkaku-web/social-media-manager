@@ -42,3 +42,4 @@ Thumbs.db
 cypress.env.json
 
 __pycache__/
+scripts/lib/

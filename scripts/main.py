@@ -19,13 +19,31 @@ if not os.path.exists(args.post):
     print(f'File "{args.post}" does not exist')
     exit()
 
-with open(args.post, 'r') as post_file:
-    post = json.load(post_file)
 
+def resolve_image_paths(image_paths):
+    file_paths = []
+    for path in image_paths:
+        if os.path.isfile(path):
+            file_paths.append(path)
+        else:
+            with os.scandir(path) as dirs:
+                for entry in dirs:
+                    if entry.is_file():
+                        file_paths.append(entry.path)
+    return file_paths
+
+
+def format_image_paths():
     if 'images' in post:
         post_folder = os.path.dirname(os.path.abspath(args.post))
         post['images'] = [p if p.startswith(
             '/') else os.path.join(post_folder, p) for p in post['images']]
+        post['images'] = resolve_image_paths(post['images'])
+
+
+with open(args.post, 'r') as post_file:
+    post = json.load(post_file)
+    format_image_paths()
 
     # Reddit
     reddit = RedditClient(os.getenv('REDDIT_TOKEN'))
