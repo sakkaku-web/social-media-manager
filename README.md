@@ -10,6 +10,8 @@
   - text post
 - Pixiv: (find endpoints with `mitmproxy` and android emulator, best < Android 7.0)
   - post illustrations
+- Twitter:
+  - post tweets with images
 
 ------ OLD README after being discontinued ------
 
