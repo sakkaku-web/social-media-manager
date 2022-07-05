@@ -1,6 +1,6 @@
 # Social Media Manager
 
-**Website is discontinued. Will only be used to get the oauth token for now. Use scripts now instead in `./scripts`**
+**Website is discontinued. Will only be used to get the oauth token for now. Instead use scripts in `./scripts`**
 
 ## Scripts
 
