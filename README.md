@@ -18,7 +18,7 @@ https://www.reddit.com/prefs/apps/
 
 Set the following env variables `PIXIV_USER` and `PIXIV_PASSWORD` and run the `login()` method in the script to get a token for the client.
 
-Note: there is no official rest api documentation. But it's possible to find it using the pixiv mobile app using [mitmproxy](mitmproxy.org). It the easiest with an [android emulator](genymotion.com/) (< Android 7.0)
+Note: there is no official rest api documentation. But it's possible to find it using the pixiv mobile app and [mitmproxy](mitmproxy.org). It the easiest with an [android emulator](genymotion.com/) (< Android 7.0)
 
 - post illustrations
 
