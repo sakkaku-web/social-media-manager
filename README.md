@@ -8,6 +8,8 @@
   - multi image post (text as comment)
   - single image post (no text, not possible because of reddit api)
   - text post
+- Pixiv: (find endpoints with `mitmproxy` and android emulator, best < Android 7.0)
+  - post illustrations
 
 ------ OLD README after being discontinued ------
 
