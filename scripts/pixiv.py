@@ -5,10 +5,15 @@ import requests as req
 
 
 def login(user: str, password: str) -> str:
+    print('Logging in to pixiv...')
+
     g = GetPixivToken()
     res = g.login(headless=True, user=os.getenv(
         'PIXIV_USER'), pass_=os.getenv('PIXIV_PASSWORD'))
-    return res['access_token']
+    token = res['access_token']
+
+    print(f'Logged in: {token}')
+    return token
 
 
 class PixivClient:
@@ -35,17 +40,28 @@ class PixivClient:
                      for f in files]
         res = req.post(f'{self.base_url}/v1/upload/illust',
                        data=data, files=file_data, headers=self.headers)
-        res.raise_for_status()
-
         for f in files:
             f.close()
+
+        res.raise_for_status()
+        print(f'Successfully posted. Getting url...')
+
+        key = res.json()['convert_key']
+        res = req.post(f'{self.base_url}/v1/upload/status',
+                       data={'convert_key': key}, headers=self.headers)
+        print(res.text)
+        res.raise_for_status()
+
+        illust_id = res.json()['illust_id']
+        print(f'Final link: https://pixiv.net/artworks/{illust_id}')
 
         print(f'----- Finished uploading to pixiv -----')
 
 
 # ----------------- Testing -----------------
 # load_dotenv()
-# client = PixivClient(os.getenv('PIXIV_TOKEN'))
+# token = login(os.getenv('PIXIV_USER'), os.getenv('PIXIV_PASSWORD'))
+# client = PixivClient(token)
 
 # client.upload_illust('Test Upload', 'Please ignore', ['test1', 'test123'], [
 #                      'images/pixel-ina.png', 'images/pixel-gura.png'])
