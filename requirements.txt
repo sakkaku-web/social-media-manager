@@ -1,6 +1,6 @@
 selenium==4.1.2
 gppt==2.1.2
 tweepy==4.10.0
-flask-restful==0.3.9
+flask==2.1.2
 python-dotenv==0.20.0
 nanoid==2.0.0
