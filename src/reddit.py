@@ -11,12 +11,11 @@ auth = Blueprint('reddit_auth', __name__, url_prefix='/auth')
 
 reddit_api.register_blueprint(auth)
 
-REDIRECT_URI = 'http://localhost:5000/api/reddit/auth/callback'
 REDDIT_TOKEN_URL = 'https://www.reddit.com/api/v1/access_token'
 REDDIT_REVOKE_URL = 'https://www.reddit.com/api/v1/revoke_token'
 SESSION_STATE = 'REDDIT_STATE'
-def client(): return os.getenv('REDDIT_CLIENT')
-def secret(): return os.getenv('REDDIT_SECRET')
+def _client(): return os.getenv('REDDIT_CLIENT')
+def _secret(): return os.getenv('REDDIT_SECRET')
 
 
 headers = {
@@ -24,8 +23,13 @@ headers = {
 }
 
 
+def _redirect_url():
+    return url.urljoin(request.base_url, 'callback')
+
+
 @auth.get('/')
 def reddit_auth():
+    print(_base_url())
     state = generate()
     scopes = [
         'identity',
@@ -37,10 +41,10 @@ def reddit_auth():
     ]
 
     query = url.urlencode({
-        'client_id': client(),
+        'client_id': _client(),
         'response_type': 'code',
         'state': state,
-        'redirect_uri': REDIRECT_URI,
+        'redirect_uri': _redirect_url(),
         'duration': 'permanent',
         'scope': ' '.join(scopes),
     })
@@ -50,7 +54,7 @@ def reddit_auth():
 
 
 def _basic_auth():
-    return req.auth.HTTPBasicAuth(client(), secret())
+    return req.auth.HTTPBasicAuth(_client(), _secret())
 
 
 def _get_access_token(data: dict):
@@ -76,7 +80,7 @@ def reddit_auth_callback():
     token = _get_access_token({
         'grant_type': 'authorization_code',
         'code': query['code'],
-        'redirect_uri': REDIRECT_URI,
+        'redirect_uri': _redirect_url(),
     })
     return jsonify(token)
 
