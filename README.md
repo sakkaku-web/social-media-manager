@@ -6,7 +6,7 @@
 
 ### `reddit.py`
 
-Right now get the token from the website. Login via script will be coming in the future.
+Right now get the token from the website. It's now possible to get the token from the new website: https://sns-manager.herokuapp.com/api/reddit/auth
 
 https://www.reddit.com/prefs/apps/
 
