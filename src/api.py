@@ -9,6 +9,3 @@ app = Flask(__name__)
 app.secret_key = os.getenv('SESSION_SECRET')
 
 app.register_blueprint(reddit_api, url_prefix='/api/reddit')
-
-if __name__ == '__main__':
-    app.run(debug=True)
