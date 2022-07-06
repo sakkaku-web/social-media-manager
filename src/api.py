@@ -11,6 +11,7 @@ app.secret_key = os.getenv('SESSION_SECRET')
 
 REDIRECT_URI = 'http://localhost:5000/api/reddit/auth/callback'
 REDDIT_TOKEN_URL = 'https://www.reddit.com/api/v1/access_token'
+REDDIT_REVOKE_URL = 'https://www.reddit.com/api/v1/revoke_token'
 SESSION_STATE = 'REDDIT_STATE'
 def client(): return os.getenv('REDDIT_CLIENT')
 def secret(): return os.getenv('REDDIT_SECRET')
@@ -20,6 +21,7 @@ def secret(): return os.getenv('REDDIT_SECRET')
 class TokenResponse:
     access_token: str
     refresh_token: str
+    expires_in: int
 
 
 @app.get('/api/reddit/auth')
@@ -47,6 +49,19 @@ def reddit_auth():
     return redirect(f'https://www.reddit.com/api/v1/authorize?{query}')
 
 
+def _basic_auth():
+    return req.auth.HTTPBasicAuth(client(), secret())
+
+
+def _get_access_token(data: dict):
+    res = req.post(REDDIT_TOKEN_URL, data=data, auth=_basic_auth())
+    res.raise_for_status()
+
+    token_data = res.json()
+    return TokenResponse(token_data['access_token'],
+                         token_data['refresh_token'], token_data['expires_in'])
+
+
 @app.get('/api/reddit/auth/callback')
 def reddit_auth_callback():
     query = request.args
@@ -57,17 +72,29 @@ def reddit_auth_callback():
     if query['state'] != session[SESSION_STATE]:
         return jsonify({'message': 'Invalid state'}), 400
 
-    auth = req.auth.HTTPBasicAuth(client(), secret())
-    data = {
+    token = _get_access_token({
         'grant_type': 'authorization_code',
         'code': query['code'],
         'redirect_uri': REDIRECT_URI,
-    }
-    res = req.post(REDDIT_TOKEN_URL, data=data, auth=auth)
-    res.raise_for_status()
+    })
+    return jsonify(token)
 
-    token_data = res.json()
-    return jsonify(TokenResponse(token_data['access_token'], token_data['refresh_token']))
+
+@app.post('/api/reddit/auth/refresh')
+def reddit_refresh():
+    refresh_token = request.get_data()
+    token = _get_access_token({
+        'grant_type': 'refresh_token',
+        'refresh_token': refresh_token,
+    })
+    return jsonify(token)
+
+
+@app.post('/api/reddit/auth/revoke')
+def reddit_revoke():
+    token = request.get_data()
+    data = {'token': token}
+    req.post(REDDIT_REVOKE_URL, data=data, auth=_basic_auth())
 
 
 if __name__ == '__main__':
