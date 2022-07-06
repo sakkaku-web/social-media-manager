@@ -15,6 +15,7 @@ class RedditClient:
 
     def _find_flair(self, sr: str, text: str):
         if text:
+            print(f'Searching for flair: {text}')
             res = req.get(f'{self.baseURL}/r/{sr}/api/link_flair',
                           headers=self.headers)
             res.raise_for_status()
