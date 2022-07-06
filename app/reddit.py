@@ -29,7 +29,6 @@ def _redirect_url():
 
 @auth.get('/')
 def reddit_auth():
-    print(_base_url())
     state = generate()
     scopes = [
         'identity',
