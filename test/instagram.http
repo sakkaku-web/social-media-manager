@@ -1,8 +1,0 @@
-###
-GET https://graph.facebook.com/me/accounts?access_token=
-
-###
-GET https://graph.facebook.com/107083088660112?fields=instagram_business_account&access_token=
-
-###
-POST https://graph.facebook.com/5417493741600984/media?access_token=
