@@ -4,7 +4,7 @@ import requests as req
 import urllib.parse as url
 import os
 
-from model import TokenResponse
+from app.model import TokenResponse
 
 reddit_api = Blueprint('reddit', __name__)
 auth = Blueprint('reddit_auth', __name__, url_prefix='/auth')

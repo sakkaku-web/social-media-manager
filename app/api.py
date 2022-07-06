@@ -2,7 +2,7 @@ from flask import Flask
 
 import os
 
-from reddit import reddit_api
+from app.reddit import reddit_api
 
 
 app = Flask(__name__)
