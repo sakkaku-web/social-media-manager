@@ -1,4 +1,3 @@
-from gppt import GetPixivToken
 from dotenv import load_dotenv
 import os
 import requests as req
@@ -59,8 +58,8 @@ class PixivClient:
 
 
 # ----------------- Testing -----------------
-load_dotenv()
-token = login(os.getenv('PIXIV_USER'), os.getenv('PIXIV_PASSWORD'))
+# load_dotenv()
+# token = login(os.getenv('PIXIV_USER'), os.getenv('PIXIV_PASSWORD'))
 # client = PixivClient(token)
 
 # client.upload_illust('Test Upload', 'Please ignore', ['test1', 'test123'], [

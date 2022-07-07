@@ -11,3 +11,12 @@ class OAuthToken(BaseModel):
 class TwitterToken(BaseModel):
     access_token: str
     access_secret: str
+
+
+class Login(BaseModel):
+    username: str
+    password: str
+
+
+class RefreshToken(BaseModel):
+    refresh_token: str
