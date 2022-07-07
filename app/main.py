@@ -29,6 +29,9 @@ def page_not_found(e):
 
 @app.get('/')
 def index():
+    """ Homepage that redirect you to the openapi pages
+    This is unimportant to the API. But I don't know how to remove this.
+    """
     return _redirect()
 
 
