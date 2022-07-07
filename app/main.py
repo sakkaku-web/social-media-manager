@@ -15,6 +15,7 @@ api = APIBlueprint('api', __name__, url_prefix='/api')
 
 
 @app.errorhandler(404)
+@app.errorhandler(503)
 def page_not_found(e):
     return redirect('/openapi')
 
