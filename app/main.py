@@ -25,7 +25,7 @@ def page_not_found(e):
 
 @app.get('/')
 def index():
-    return _redirect()
+    return 'Hello World'
 
 
 def auto_register_api(bp: APIBlueprint):
