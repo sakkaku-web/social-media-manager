@@ -29,7 +29,7 @@ def page_not_found(e):
 
 @app.get('/')
 def index():
-    return 'Hello World'
+    return _redirect()
 
 
 # Doesn't deploy sometimes?
