@@ -1,15 +1,16 @@
-from flask import Blueprint, session, request, redirect, jsonify
+from flask import session, request, redirect, jsonify
+from flask_openapi3 import APIBlueprint, Tag
 from nanoid import generate
 import requests as req
 import urllib.parse as url
 import os
 
-from app.model import TokenResponse
+from app.model import Token
 
-reddit_api = Blueprint('reddit', __name__)
-auth = Blueprint('reddit_auth', __name__, url_prefix='/auth')
+tag = Tag(name='Reddit', description='Reddit API')
+api = APIBlueprint('reddit', __name__, url_prefix='/reddit', abp_tags=[tag])
+auth = APIBlueprint('auth', __name__, url_prefix='/auth', abp_tags=[tag])
 
-reddit_api.register_blueprint(auth)
 
 REDDIT_TOKEN_URL = 'https://www.reddit.com/api/v1/access_token'
 REDDIT_REVOKE_URL = 'https://www.reddit.com/api/v1/revoke_token'
@@ -27,7 +28,7 @@ def _redirect_url():
     return url.urljoin(request.base_url, 'callback')
 
 
-@auth.get('/')
+@auth.get('/', responses={'302': None})
 def reddit_auth():
     state = generate()
     scopes = [
@@ -62,11 +63,11 @@ def _get_access_token(data: dict):
     res.raise_for_status()
 
     token_data = res.json()
-    return TokenResponse(token_data['access_token'],
-                         token_data['refresh_token'], token_data['expires_in'])
+    return Token(token_data['access_token'],
+                 token_data['refresh_token'], token_data['expires_in'])
 
 
-@auth.get('/callback')
+@auth.get('/callback', responses={'200': Token})
 def reddit_auth_callback():
     query = request.args
 
@@ -84,7 +85,7 @@ def reddit_auth_callback():
     return jsonify(token)
 
 
-@auth.post('/refresh')
+@auth.post('/refresh', responses={'200': Token})
 def reddit_refresh():
     refresh_token = request.get_data()
     token = _get_access_token({
@@ -94,7 +95,7 @@ def reddit_refresh():
     return jsonify(token)
 
 
-@auth.post('/revoke')
+@auth.post('/revoke', responses={'200': None})
 def reddit_revoke():
     token = request.get_data()
     data = {'token': token}
@@ -102,4 +103,7 @@ def reddit_revoke():
                    auth=_basic_auth(), headers=headers)
     res.raise_for_status()
 
-    return 'Token revoked'
+    return None
+
+
+api.register_api(auth)

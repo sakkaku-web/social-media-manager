@@ -1,16 +1,21 @@
-from flask import Flask
+from flask_openapi3 import Info, OpenAPI, APIBlueprint
 
 import os
 
-from app.reddit import reddit_api
+import app.reddit as reddit
 
-
-app = Flask(__name__)
+info = Info(title='SNS-Manager API', version='0.0.1')
+app = OpenAPI(__name__, info=info)
 app.secret_key = os.getenv('SESSION_SECRET')
 
-app.register_blueprint(reddit_api, url_prefix='/api/reddit')
+api = APIBlueprint('api', __name__, url_prefix='/api')
 
 
 @app.get('/')
 def index():
     return 'Welcome to SNS-Manager API. We are working on an OpenAPI UI so you can explore the API!'
+
+
+api.register_api(reddit.api)
+app.register_api(api)
+# auto_register_api(app)
