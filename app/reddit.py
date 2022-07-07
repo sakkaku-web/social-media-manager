@@ -1,13 +1,13 @@
-from flask import session, request, redirect, jsonify
+from flask import session, request, redirect
 from flask_openapi3 import APIBlueprint, Tag
 from nanoid import generate
 import requests as req
 import urllib.parse as url
 import os
 
-from app.model import Token
+from app.model import OAuthToken
 
-tag = Tag(name='Reddit', description='Reddit API')
+tag = Tag(name='Reddit')
 api = APIBlueprint('reddit', __name__, url_prefix='/reddit', abp_tags=[tag])
 auth = APIBlueprint('auth', __name__, url_prefix='/auth', abp_tags=[tag])
 
@@ -30,6 +30,8 @@ def _redirect_url():
 
 @auth.get('/', responses={'302': None})
 def reddit_auth():
+    """ Redirects to reddit login
+    """
     state = generate()
     scopes = [
         'identity',
@@ -63,12 +65,14 @@ def _get_access_token(data: dict):
     res.raise_for_status()
 
     token_data = res.json()
-    return Token(token_data['access_token'],
-                 token_data['refresh_token'], token_data['expires_in'])
+    return OAuthToken(access_token=token_data['access_token'],
+                      refresh_token=token_data['refresh_token'], expires_in=token_data['expires_in'])
 
 
-@auth.get('/callback', responses={'200': Token})
+@auth.get('/callback', responses={'200': OAuthToken})
 def reddit_auth_callback():
+    """ Callback after login to get access token
+    """
     query = request.args
 
     if 'error' in query:
@@ -82,28 +86,32 @@ def reddit_auth_callback():
         'code': query['code'],
         'redirect_uri': _redirect_url(),
     })
-    return jsonify(token)
+    return token.dict()
 
 
-@auth.post('/refresh', responses={'200': Token})
+@auth.post('/refresh', responses={'200': OAuthToken})
 def reddit_refresh():
+    """ Get a new access token using the refresh token
+    """
     refresh_token = request.get_data()
     token = _get_access_token({
         'grant_type': 'refresh_token',
         'refresh_token': refresh_token,
     })
-    return jsonify(token)
+    return token.dict()
 
 
 @auth.post('/revoke', responses={'200': None})
 def reddit_revoke():
+    """ Revoke an access token or refresh token
+    """
     token = request.get_data()
     data = {'token': token}
     res = req.post(REDDIT_REVOKE_URL, data=data,
                    auth=_basic_auth(), headers=headers)
     res.raise_for_status()
 
-    return None
+    return ''
 
 
 api.register_api(auth)

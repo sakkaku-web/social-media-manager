@@ -3,6 +3,7 @@ from flask_openapi3 import Info, OpenAPI, APIBlueprint
 import os
 
 import app.reddit as reddit
+import app.twitter as twitter
 
 info = Info(title='SNS-Manager API', version='0.0.1')
 app = OpenAPI(__name__, info=info)
@@ -17,5 +18,5 @@ def index():
 
 
 api.register_api(reddit.api)
+api.register_api(twitter.api)
 app.register_api(api)
-# auto_register_api(app)
