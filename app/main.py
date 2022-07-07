@@ -19,7 +19,7 @@ def page_not_found(e):
     return redirect('/openapi')
 
 
-def auto_register_api(app: APIBlueprint):
+def auto_register_api(bp: APIBlueprint):
     here = os.path.dirname(__file__)
     api_dir = os.path.join(here, "api")
     for root, dirs, files in os.walk(api_dir):
@@ -33,7 +33,7 @@ def auto_register_api(app: APIBlueprint):
             api_route = ".".join(rule.split(os.sep)).strip(".")
             api = importlib.import_module('app.' + api_route)
             try:
-                app.register_api(api.api)
+                bp.register_api(api.api)
             except AttributeError:
                 print(f"Failed to register api: {api_route}")
 
