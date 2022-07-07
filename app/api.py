@@ -1,4 +1,5 @@
 from flask_openapi3 import Info, OpenAPI, APIBlueprint
+from flask import redirect
 
 import os
 
@@ -15,9 +16,9 @@ app.secret_key = os.getenv('SESSION_SECRET')
 api = APIBlueprint('api', __name__, url_prefix='/api')
 
 
-@app.get('/')
-def index():
-    return 'Welcome to SNS-Manager API. We are working on an OpenAPI UI so you can explore the API!'
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect('/openapi')
 
 
 api.register_api(reddit.api)

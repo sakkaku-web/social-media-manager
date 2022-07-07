@@ -22,7 +22,8 @@ def _build_token(res: dict) -> OAuthToken:
 
 @auth.post('/', responses={'200': OAuthToken})
 def pixiv_auth(body: Login):
-    """ Login to pixiv (might take a while to finish)
+    """ Login to pixiv
+    This might take a while to finish. It uses selenium to login as the user and could be error prone.
     """
     g = GetPixivToken()
     res = g.login(headless=True, user=body.username, pass_=body.password)
