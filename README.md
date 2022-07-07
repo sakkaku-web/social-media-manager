@@ -25,7 +25,7 @@ The tokens for the scripts can be obtained at https://sns-manager.herokuapp.com/
 - [x] Reddit: https://www.reddit.com/dev/api
 - [x] Twitter: https://developer.twitter.com/en/docs/twitter-api
 - [x] Pixiv: there is no official rest api documentation. But it's possible to find it using the pixiv mobile app
-      and [mitmproxy](mitmproxy.org). The easiest way is using an [android emulator](genymotion.com/) (< Android 7.0)
+      and [mitmproxy](https://mitmproxy.org). The easiest way is using an [android emulator](https://genymotion.com/) (< Android 7.0)
 - [ ] Pinterest: should be possible, but no personal need right now.
 - [ ] Imgur: should be possible, but no personal need right now.
 - [ ] Artstation: they have an API but it seems to be more protected than pixiv. Finding the endpoints is not enough
