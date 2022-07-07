@@ -1,5 +1,5 @@
 from flask_openapi3 import Info, OpenAPI, APIBlueprint
-from flask import redirect
+from flask import redirect, url_for
 
 import os
 import re
@@ -14,10 +14,18 @@ app.secret_key = os.getenv('SESSION_SECRET')
 api = APIBlueprint('api', __name__, url_prefix='/api')
 
 
+def _redirect():
+    return redirect(url_for("openapi.index"))
+
+
 @app.errorhandler(404)
-@app.errorhandler(503)
 def page_not_found(e):
-    return redirect('/openapi')
+    return _redirect()
+
+
+@app.get('/')
+def index():
+    return _redirect()
 
 
 def auto_register_api(bp: APIBlueprint):
