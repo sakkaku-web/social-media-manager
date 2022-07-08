@@ -6,11 +6,11 @@ import urllib.parse as url
 import os
 
 from app.model import OAuthToken, RefreshToken, ErrorMessage, Token
-from app.config import REDDIT_USER_AGENT
+from app.config import REDDIT_USER_AGENT, reddit_tag
 
 tag = Tag(name='Reddit: Auth')
 auth_api = APIBlueprint('reddit_auth', __name__,
-                    url_prefix='/auth', abp_tags=[tag])
+                        url_prefix='/auth', abp_tags=[reddit_tag])
 
 REDDIT_TOKEN_URL = 'https://www.reddit.com/api/v1/access_token'
 REDDIT_REVOKE_URL = 'https://www.reddit.com/api/v1/revoke_token'

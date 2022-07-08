@@ -5,9 +5,10 @@ import os
 
 from app.model import OAuthToken, Login, RefreshToken
 from app.auth import basic_security
+from app.config import pixiv_tag
 
-tag = Tag(name='Pixiv: Auth')
-auth_api = APIBlueprint('auth', __name__, url_prefix='/auth', abp_tags=[tag])
+auth_api = APIBlueprint(
+    'auth', __name__, url_prefix='/auth', abp_tags=[pixiv_tag])
 
 
 def _client(): return os.getenv('PIXIV_CLIENT')

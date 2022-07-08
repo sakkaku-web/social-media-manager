@@ -5,10 +5,10 @@ from app.model import PixivPost, SNSPostResponse
 from app.auth import jwt_security, jwt_token
 from app.api.pixiv_auth import auth_api
 from app.client.pixiv import PixivClient
+from app.config import pixiv_tag
 
-tag = Tag(name='Pixiv')
 api = APIBlueprint('pixiv', __name__, url_prefix='/pixiv',
-                   abp_tags=[tag], abp_security=jwt_security)
+                   abp_tags=[pixiv_tag], abp_security=jwt_security)
 
 api.register_api(auth_api)
 

@@ -5,10 +5,10 @@ from app.api.reddit_auth import auth_api
 from app.model import ErrorMessage, RedditPost, SNSPostResponse
 from app.client.reddit import RedditClient
 from app.auth import jwt_security, jwt_token
+from app.config import reddit_tag
 
-tag = Tag(name='Reddit')
 api = APIBlueprint('reddit', __name__, url_prefix='/reddit',
-                   abp_tags=[tag], abp_security=jwt_security)
+                   abp_tags=[reddit_tag], abp_security=jwt_security)
 
 api.register_api(auth_api)
 
