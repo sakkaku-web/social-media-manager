@@ -20,3 +20,11 @@ class Login(BaseModel):
 
 class RefreshToken(BaseModel):
     refresh_token: str
+
+
+class Token(BaseModel):
+    token: str
+
+
+class ErrorMessage(BaseModel):
+    message: str

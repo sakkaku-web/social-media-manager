@@ -3,8 +3,9 @@ from flask_openapi3 import APIBlueprint, Tag
 import requests as req
 import os
 import tweepy
+import urllib.parse as url
 
-from app.model import TwitterToken
+from app.model import TwitterToken, ErrorMessage
 
 tag = Tag(name='Twitter')
 api = APIBlueprint('twitter', __name__, url_prefix='/twitter', abp_tags=[tag])
@@ -33,17 +34,17 @@ def twitter_auth():
     return redirect(url)
 
 
-@auth.get('/callback', responses={'200': TwitterToken})
+@auth.get('/callback', responses={'200': TwitterToken, '400': ErrorMessage})
 def twitter_auth_callback():
     """ Callback after login to get access token
     """
     query = request.args
 
     if not 'oauth_verifier' in query:
-        return jsonify({'message': 'User denied access'})
+        return ErrorMessage(message='User denied access').dict(), 400
 
     if not session[SESSION_TWITTER_OAUTH_SECRET]:
-        return jsonify({'message': 'Missing oauth secret'})
+        return ErrorMessage(message='Missing oauth secret').dict(), 400
 
     auth_handler = tweepy.OAuth1UserHandler(
         _client(), _secret(), callback=_redirect_url())
