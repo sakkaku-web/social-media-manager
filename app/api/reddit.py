@@ -21,7 +21,9 @@ def reddit_post(form: RedditPost, token: str):
     client = RedditClient(token)
     post_id = client.submit_post(form)
 
-    # post_id contains a type prefix
-    actual_id = post_id.split('_')[-1]
-    url = f'https://reddit.com/r/{form.subreddit}/comments/{actual_id}'
+    url = None
+    if post_id:
+        # post_id contains a type prefix
+        actual_id = post_id.split('_')[-1]
+        url = f'https://reddit.com/r/{form.subreddit}/comments/{actual_id}'
     return SNSPostResponse(url=url).dict()

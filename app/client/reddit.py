@@ -50,11 +50,16 @@ class RedditClient:
         print(f'----- Submit finished -----')
         return post_id
 
+    def _get_mimetype(self, image: FileStorage) -> str:
+        return image.mimetype if image.mimetype else f'image/{image.filename.split(".")[-1]}'
+
     def _upload_image(self, image: FileStorage):
         data = {
             'filepath': image.filename,
-            'mimetype': image.mimetype,
+            'mimetype': self._get_mimetype(image),
         }
+
+        print(image.mimetype)
 
         res = req.post(self.baseURL + '/api/media/asset.json',
                        data=data, headers=self.headers)
