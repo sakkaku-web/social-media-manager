@@ -9,4 +9,4 @@ Thumbs.db
 __pycache__/
 scripts/lib/
 env/
-lib/
+chromedriver*
