@@ -3,18 +3,6 @@ import os
 import requests as req
 
 
-def login(user: str, password: str) -> str:
-    print('Logging in to pixiv...')
-
-    g = GetPixivToken()
-    res = g.login(headless=True, user=os.getenv(
-        'PIXIV_USER'), pass_=os.getenv('PIXIV_PASSWORD'))
-    token = res['access_token']
-
-    print(f'Logged in: {token}')
-    return token
-
-
 class PixivClient:
     base_url = 'https://app-api.pixiv.net'
 
