@@ -16,7 +16,7 @@ api.register_api(auth_api)
 @api.post('/post', responses={'200': SNSPostResponse})
 @jwt_token
 def pixiv_post(form: PixivPost, token: str):
-    """ Submit a pixiv illustration post
+    """ Upload pixiv illustration post
     """
     client = PixivClient(token)
     tags = form.tags.split(' ')
