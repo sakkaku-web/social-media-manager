@@ -9,15 +9,15 @@ New UI will be available here: https://sakkaku-web.github.io/social-media-manage
 
 ## Endpoint Sources
 
-- [x] Reddit: https://www.reddit.com/dev/api
-- [x] Twitter: https://developer.twitter.com/en/docs/twitter-api
-- [x] Pixiv: there is no official rest api documentation. But it's possible to find it using the pixiv mobile app
+- [x] **Reddit**: https://www.reddit.com/dev/api
+- [x] **Twitter**: https://developer.twitter.com/en/docs/twitter-api
+- [x] **Pixiv**: there is no official rest api documentation. But it's possible to find it using the pixiv mobile app
       and [mitmproxy](https://mitmproxy.org). The easiest way is using an [android emulator](https://genymotion.com/) (< Android 7.0)
-- [ ] Pinterest: should be possible, but no personal need right now.
-- [ ] Imgur: should be possible, but no personal need right now.
-- [ ] Artstation: they have an API but it seems to be more protected than pixiv. Finding the endpoints is not enough
-- [ ] Facebook: Just no, they just want our data for everything
-- [ ] Instagram: Need to go through facebook...
+- [ ] **Pinterest**: should be possible, but no personal need right now.
+- [ ] **Imgur**: should be possible, but no personal need right now.
+- [ ] **Artstation**: they have an API but it seems to be more protected than pixiv. Finding the endpoints is not enough
+- [ ] **Facebook**: Just no, they just want our data for everything
+- [ ] **Instagram**: Need to go through facebook...
 
 ## ------ OLD README after being discontinued ------
 
