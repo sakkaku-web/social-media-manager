@@ -5,6 +5,8 @@ on a single website.
 
 REST API can be found here: https://sns-manager.herokuapp.com/
 
+New UI will be available here: https://sakkaku-web.github.io/social-media-manager/
+
 ## Endpoint Sources
 
 - [x] Reddit: https://www.reddit.com/dev/api
