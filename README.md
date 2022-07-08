@@ -30,4 +30,5 @@ Backend
 Frontend: inside `./sns-manager`
 
 - Install dependencies: `npm i`
+- Create `.env` file using `.env.sample` and set the values
 - Start fronend: `npm run dev`
