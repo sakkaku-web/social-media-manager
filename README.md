@@ -1,24 +1,9 @@
 # Social Media Manager
 
-**Website is discontinued. New website will be used to get the oauth token. Functionality currenty only in `./scripts`**
+This project contains a REST API and eventually a frontend for it. The goal is to manage all your social media platforms
+on a single website.
 
-## Scripts
-
-The tokens for the scripts can be obtained at https://sns-manager.herokuapp.com/
-
-### `reddit.py`
-
-- multi image post (text as comment)
-- single image post (no text, not possible because of reddit api)
-- text post
-
-### `pixiv.py`
-
-- post illustrations
-
-### `twitter.py`
-
-- post tweets with images
+REST API can be found here: https://sns-manager.herokuapp.com/
 
 ## Endpoint Sources
 
