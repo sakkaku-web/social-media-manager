@@ -40,8 +40,8 @@ class RedditPost(BaseModel):
     text: str = None
     images: list[FileStorage] = []
     subreddit: str
-    flair: str = Field(
-        description="searches flair by text and adds it to the post")
+    flair: str = Field(None,
+                       description="searches flair by text and adds it to the post")
 
 
 class PixivPost(BaseModel):
