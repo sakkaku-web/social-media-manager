@@ -53,4 +53,4 @@ class PixivPost(BaseModel):
 
 class TwitterPost(BaseModel):
     text: str
-    images: list[FileStorage] = Field(min_items=0, max_items=4)
+    images: list[FileStorage] = Field([], min_items=0, max_items=4)

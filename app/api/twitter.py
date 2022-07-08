@@ -22,6 +22,8 @@ def _secret(): return os.getenv('TWITTER_SECRET')
 @api.post('/', responses={'200': SNSPostResponse})
 @basic_auth
 def twitter_post(form: TwitterPost, user: str, password: str):
+    """ Posting a twitter tweet
+    """
     client = TwitterClient(_client(), _secret(), user, password)
 
     id_str = client.tweet(form.text, form.images)
