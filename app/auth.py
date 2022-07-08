@@ -20,3 +20,17 @@ def jwt_token(f):
         return f(token=token.split(' ')[-1], *args, **kwargs)
 
     return decorated
+
+
+def basic_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        user = request.authorization.username
+        pw = request.authorization.password
+
+        if not user or not pw:
+            return ErrorMessage(message='Missing username or password').dict(), 401
+
+        return f(user=user, password=pw, *args, **kwargs)
+
+    return decorated

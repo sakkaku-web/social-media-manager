@@ -1,6 +1,8 @@
 import tweepy as tw
 import os
 from dotenv import load_dotenv
+from flask_openapi3 import FileStorage
+from io import BufferedReader
 
 
 class TwitterClient:
@@ -8,24 +10,18 @@ class TwitterClient:
         auth = tw.OAuth1UserHandler(client, secret, a_token, a_secret)
         self.api = tw.API(auth)
 
-    def tweet(self, text: str, hashtags: [str], images: [str]):
+    def tweet(self, text: str, images: [FileStorage]):
         print(f'----- Start tweeting -----')
-        ids = [self.api.media_upload(i).media_id for i in images]
 
-        tags = ' '.join([f'#{t}' for t in hashtags])
+        ids = []
+        for image in images:
+            image.name = image.filename
+            res = self.api.media_upload(filename=image.filename,
+                                        file=BufferedReader(image))
+            ids.append(res.media_id)
+
         status = self.api.update_status(
-            status=f'{text}\n\n {tags}', media_ids=ids)
-
-        print(
-            f'Successfully tweeted: https://twitter.com/anyuser/status/{status.id_str}')
+            status=text, media_ids=ids)
 
         print(f'----- Finish tweeting -----')
-
-
-# ----------------- Testing -----------------
-# load_dotenv()
-# client = TwitterClient(os.getenv('TWITTER_CLIENT'), os.getenv(
-#     'TWITTER_SECRET'), os.getenv('TWITTER_USER'), os.getenv('TWITTER_PASSWORD'))
-
-# client.tweet('Test Tweet', ['test', 'testing'], [
-#              'images/pixel-ina.png', 'images/pixel-gura.png'])
+        return status.id_str

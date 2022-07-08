@@ -49,3 +49,8 @@ class PixivPost(BaseModel):
     text: str = None
     images: list[FileStorage] = Field(min_items=1, max_items=200)
     tags: str = Field(description="tags separated by space")
+
+
+class TwitterPost(BaseModel):
+    text: str
+    images: list[FileStorage] = Field(min_items=0, max_items=4)
