@@ -4,7 +4,7 @@
   import "./global.css";
 </script>
 
-<main class="bg-black h-full">
+<main class="bg-black h-full flex flex-col items-center">
   <img src={logo} alt="Svelte Logo" />
   <h1>Hello Typescript!</h1>
 
