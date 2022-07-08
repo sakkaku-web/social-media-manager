@@ -16,6 +16,8 @@ api.register_api(auth_api)
 @api.post('/post', responses={'200': SNSPostResponse})
 @jwt_token
 def reddit_post(form: RedditPost, token: str):
+    """ Submit a reddit post
+    """
     client = RedditClient(token)
     post_id = client.submit_post(form)
 

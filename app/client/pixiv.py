@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import os
 import requests as req
+from flask_openapi3 import FileStorage
 
 
 class PixivClient:
@@ -11,7 +12,7 @@ class PixivClient:
             'Authorization': f'Bearer {token}',
         }
 
-    def upload_illust(self, title: str, desc: str, tags: [str], images: [str]):
+    def upload_illust(self, title: str, desc: str, tags: [str], images: [FileStorage]):
         print(f'----- Start uploading to pixiv -----')
         data = {
             'title': title,
@@ -22,13 +23,10 @@ class PixivClient:
             'is_sexual': 'false',
             'tags[]': tags,
         }
-        files = [open(p, 'rb') for p in images]
-        file_data = [('files[]', f)
-                     for f in files]
+        file_data = [('files[]', (i.filename, i.read(), i.mimetype))
+                     for i in images]
         res = req.post(f'{self.base_url}/v1/upload/illust',
                        data=data, files=file_data, headers=self.headers)
-        for f in files:
-            f.close()
 
         res.raise_for_status()
         print(f'Successfully posted. Getting url...')
@@ -36,13 +34,10 @@ class PixivClient:
         key = res.json()['convert_key']
         res = req.post(f'{self.base_url}/v1/upload/status',
                        data={'convert_key': key}, headers=self.headers)
-        print(res.text)
         res.raise_for_status()
 
-        illust_id = res.json()['illust_id']
-        print(f'Final link: https://pixiv.net/artworks/{illust_id}')
-
         print(f'----- Finished uploading to pixiv -----')
+        return res.json()['illust_id']
 
 
 # ----------------- Testing -----------------

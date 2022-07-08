@@ -31,17 +31,21 @@ class ErrorMessage(BaseModel):
     message: str
 
 
-class SNSPost(BaseModel):
-    title: str
-    text: str
-    images: list[FileStorage] = []
-
-
 class SNSPostResponse(BaseModel):
     url: str = None
 
 
-class RedditPost(SNSPost):
+class RedditPost(BaseModel):
+    title: str
     text: str = None
+    images: list[FileStorage] = []
     subreddit: str
-    flair: str = None
+    flair: str = Field(
+        description="searches flair by text and adds it to the post")
+
+
+class PixivPost(BaseModel):
+    title: str
+    text: str = None
+    images: list[FileStorage] = Field(min_items=1, max_items=200)
+    tags: str = Field(description="tags separated by space")
