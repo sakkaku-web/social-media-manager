@@ -19,5 +19,5 @@ def build_images(images: [str]):
             for i in resolve_image_paths(images)]
 
 
-# BASE_URL = 'https://sns-manager.herokuapp.com/api'
-BASE_URL = 'http://localhost:5000/api'
+BASE_URL = 'https://sns-manager.herokuapp.com/api'
+# BASE_URL = 'http://localhost:5000/api'
