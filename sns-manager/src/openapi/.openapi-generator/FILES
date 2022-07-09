@@ -1,0 +1,16 @@
+.openapi-generator-ignore
+apis/PixivApi.ts
+apis/RedditApi.ts
+apis/TwitterApi.ts
+apis/index.ts
+index.ts
+models/ErrorMessage.ts
+models/Login.ts
+models/OAuthToken.ts
+models/RefreshToken.ts
+models/SNSPostResponse.ts
+models/Token.ts
+models/TwitterToken.ts
+models/UnprocessableEntity.ts
+models/index.ts
+runtime.ts
