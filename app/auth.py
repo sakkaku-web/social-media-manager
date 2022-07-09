@@ -3,6 +3,7 @@ from flask import request, redirect, session
 from app.model import ErrorMessage
 from functools import wraps
 import urllib.parse as url
+import json
 
 security_schemes = {'basic': HTTPBase(), 'jwt': HTTPBearer()}
 
@@ -40,13 +41,13 @@ def basic_auth(f):
 SESSION_REDIRECT = 'RETURN_TO'
 
 
-def redirect_or_return(token_key: str, json: dict):
+def redirect_or_return(token_key: str, data: dict):
     redirect_url = session[SESSION_REDIRECT]
 
     if redirect_url:
         session[SESSION_REDIRECT] = None
         query = {}
-        query[token_key] = str(json)
+        query[token_key] = json.dumps(data)
         return redirect(f'{redirect_url}?{url.urlencode(query)}')
 
-    return json
+    return data
