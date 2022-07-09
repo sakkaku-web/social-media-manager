@@ -9,11 +9,6 @@ class OAuthToken(BaseModel):
     expires_in: str
 
 
-class TwitterToken(BaseModel):
-    access_token: str
-    access_secret: str
-
-
 class Login(BaseModel):
     username: str
     password: str
@@ -25,6 +20,11 @@ class RefreshToken(BaseModel):
 
 class Token(BaseModel):
     token: str
+
+
+class AuthQuery(BaseModel):
+    return_to: str = Field(
+        None, description="return to this URL after the callback")
 
 
 class ErrorMessage(BaseModel):

@@ -5,8 +5,9 @@ import requests as req
 import urllib.parse as url
 import os
 
-from app.model import OAuthToken, RefreshToken, ErrorMessage, Token
+from app.model import OAuthToken, RefreshToken, ErrorMessage, Token, AuthQuery
 from app.config import REDDIT_USER_AGENT, reddit_tag
+from app.auth import SESSION_REDIRECT, redirect_or_return
 
 tag = Tag(name='Reddit: Auth')
 auth_api = APIBlueprint('reddit_auth', __name__,
@@ -31,7 +32,7 @@ def _redirect_url():
 
 
 @auth_api.get('/', responses={'302': None})
-def reddit_auth():
+def reddit_auth(query: AuthQuery):
     """ Redirects to reddit login
     """
     state = generate()
@@ -44,7 +45,7 @@ def reddit_auth():
         'flair',
     ]
 
-    query = url.urlencode({
+    query_str = url.urlencode({
         'client_id': _client(),
         'response_type': 'code',
         'state': state,
@@ -54,7 +55,8 @@ def reddit_auth():
     })
 
     session[SESSION_STATE] = state
-    return redirect(f'https://www.reddit.com/api/v1/authorize?{query}')
+    session[SESSION_REDIRECT] = query.return_to
+    return redirect(f'https://www.reddit.com/api/v1/authorize?{query_str}')
 
 
 def _basic_auth():
@@ -88,7 +90,7 @@ def reddit_auth_callback():
         'code': query['code'],
         'redirect_uri': _redirect_url(),
     })
-    return token.dict()
+    return redirect_or_return('reddit', token.dict())
 
 
 @auth_api.post('/refresh', responses={'200': OAuthToken})

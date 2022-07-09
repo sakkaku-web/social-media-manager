@@ -1,7 +1,8 @@
 from flask_openapi3 import HTTPBase, HTTPBearer
-from flask import request
+from flask import request, redirect, session
 from app.model import ErrorMessage
 from functools import wraps
+import urllib.parse as url
 
 security_schemes = {'basic': HTTPBase(), 'jwt': HTTPBearer()}
 
@@ -34,3 +35,18 @@ def basic_auth(f):
         return f(user=user, password=pw, *args, **kwargs)
 
     return decorated
+
+
+SESSION_REDIRECT = 'RETURN_TO'
+
+
+def redirect_or_return(token_key: str, json: dict):
+    redirect_url = session[SESSION_REDIRECT]
+
+    if redirect_url:
+        session[SESSION_REDIRECT] = None
+        query = {}
+        query[token_key] = str(json)
+        return redirect(f'{redirect_url}?{url.urlencode(query)}')
+
+    return json
