@@ -1,10 +1,19 @@
 #!/bin/sh
 
-IMAGE_1="/home/sakkaku/Downloads/pixel-ina.png"
-IMAGE_2="/home/sakkaku/Downloads/pixel-gura.png"
+IMAGES=(
+)
+TITLE=""
+TEXT=""
 
-# python reddit.py --title Test --text "Test Content" --images $IMAGE_1 $IMAGE_2 -sr 'kumi_yada:test' #'AnimeART:Original' 'AnimeSketch' 'Hololive:Fan Content (OP)'
+# python reddit.py --title "$TITLE" --text "$TEXT" --images ${IMAGES[@]} -sr 
+# 'kumi_yada:test'
+# 'artcommissions:Artist'
+# 'HungryArtists'
 
-# python twitter.py --text Test -i $IMAGE_1 $IMAGE_2
+# 'AnimeART:Original'
+# 'AnimeSketch'
+# 'Hololive:Fan Content (OP)'
 
-# python pixiv.py --title Test -i $IMAGE_1 $IMAGE_2 --text "Test Text" --tags "test tag"
+# python twitter.py --text Test -i ${IMAGES[@]}
+
+# python pixiv.py --title Test --text "Test Text" --tags "test tag" -i ${IMAGES[@]} 
