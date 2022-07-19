@@ -19,5 +19,16 @@ def build_images(images: [str]):
             for i in resolve_image_paths(images)]
 
 
+def refresh_token(provider: str, refresh_token: str):
+    res = req.post(f'{BASE_URL}/{provider}/auth/refresh',
+                   json={'refresh_token': refresh_token})
+    print(res.text)
+    res.raise_for_status()
+
+    print(
+        f'Refreshed tokens for {provider}. Save the new tokens to your environment file')
+    return res.json()['access_token']
+
+
 BASE_URL = 'https://sns-manager.herokuapp.com/api'
 # BASE_URL = 'http://localhost:5000/api'

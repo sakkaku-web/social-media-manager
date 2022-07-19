@@ -3,7 +3,7 @@ import requests as req
 from dotenv import load_dotenv
 from argparse import ArgumentParser
 import os
-from shared import build_images, BASE_URL
+from shared import build_images, refresh_token, BASE_URL
 
 load_dotenv()
 
@@ -18,23 +18,19 @@ parser.add_argument('--refresh', default=False, action='store_true')
 
 args = parser.parse_args()
 
+token = os.getenv('PIXIV_TOKEN')
 if args.refresh:
     refresh_token = os.getenv('PIXIV_REFRESH')
-    res = req.post(f'{BASE_URL}/pixiv/auth/refresh', json={'refresh_token': refresh_token})
+    token = refresh_token('pixiv', refresh_token)
 
-    print(res.text)
-    res.raise_for_status()
+headers = {'Authorization': f'Bearer {token}'}
 
-else:
-    token = os.getenv('PIXIV_TOKEN')
-    headers = {'Authorization': f'Bearer {token}'}
-
-    data = {
-        'title': args.title,
-        'text': args.text,
-        'tags': args.tags,
-    }
-    files = build_images(args.images)
-    res = req.post(f'{BASE_URL}/pixiv/post',
-                   data=data, files=files, headers=headers)
-    print(f'{res.status_code}: {res.text}')
+data = {
+    'title': args.title,
+    'text': args.text,
+    'tags': args.tags,
+}
+files = build_images(args.images)
+res = req.post(f'{BASE_URL}/pixiv/post',
+               data=data, files=files, headers=headers)
+print(f'{res.status_code}: {res.text}')

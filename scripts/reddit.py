@@ -3,7 +3,7 @@ import os
 import json
 from dotenv import load_dotenv
 from argparse import ArgumentParser
-from shared import build_images, BASE_URL
+from shared import build_images, refresh_token, BASE_URL
 
 REDDIT_API = 'https://oauth.reddit.com'
 
@@ -24,16 +24,7 @@ args = parser.parse_args()
 token = os.getenv('REDDIT_TOKEN')
 if args.refresh:
     refresh_token = os.getenv('REDDIT_REFRESH')
-    res = req.post(f'{BASE_URL}/reddit/auth/refresh',
-                   json={'refresh_token': refresh_token})
-    print(res.text)
-    res.raise_for_status()
-
-    data = res.json()
-    print('Refreshed tokens for reddit. Save the new tokens to your environment file')
-
-    token = data['access_token']
-
+    token = refresh_token('reddit', refresh_token)
 
 reddit_header = {'Authorization': f'Bearer {token}'}
 
