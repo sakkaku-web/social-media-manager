@@ -1,5 +1,5 @@
 import os
-
+import requests as req
 
 def resolve_image_paths(image_paths):
     file_paths = []

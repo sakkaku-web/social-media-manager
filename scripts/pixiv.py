@@ -20,8 +20,8 @@ args = parser.parse_args()
 
 token = os.getenv('PIXIV_TOKEN')
 if args.refresh:
-    refresh_token = os.getenv('PIXIV_REFRESH')
-    token = refresh_token('pixiv', refresh_token)
+    refresh = os.getenv('PIXIV_REFRESH')
+    token = refresh_token('pixiv', refresh)
 
 headers = {'Authorization': f'Bearer {token}'}
 

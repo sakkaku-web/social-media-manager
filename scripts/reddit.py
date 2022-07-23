@@ -23,8 +23,8 @@ args = parser.parse_args()
 
 token = os.getenv('REDDIT_TOKEN')
 if args.refresh:
-    refresh_token = os.getenv('REDDIT_REFRESH')
-    token = refresh_token('reddit', refresh_token)
+    refresh = os.getenv('REDDIT_REFRESH')
+    token = refresh_token('reddit', refresh)
 
 reddit_header = {'Authorization': f'Bearer {token}'}
 

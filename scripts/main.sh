@@ -1,19 +1,16 @@
 #!/bin/sh
 
-IMAGES=(
-)
-TITLE=""
-TEXT=""
+IMAGES=(/home/sakkaku/Downloads/ina.png)
 
-# python reddit.py --title "$TITLE" --text "$TEXT" --images ${IMAGES[@]} -sr 
+python reddit.py submit --refresh --title "Ina on the beach" --images ${IMAGES[@]} -sr 'AnimeSketch'
+
+#python twitter.py --text "#inART #いなート" -i ${IMAGES[@]}
+#python pixiv.py --refresh --title "🐙🍦" --tags "アイス inART いなート" -i ${IMAGES[@]} 
+
 # 'kumi_yada:test'
 # 'artcommissions:Artist'
 # 'HungryArtists'
 
 # 'AnimeART:Original'
-# 'AnimeSketch'
-# 'Hololive:Fan Content (OP)'
+# 'Hololive:Fan Content (OP)' # need more karma
 
-# python twitter.py --text Test -i ${IMAGES[@]}
-
-# python pixiv.py --title Test --text "Test Text" --tags "test tag" -i ${IMAGES[@]} 
