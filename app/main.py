@@ -11,6 +11,7 @@ from app.auth import security_schemes
 import app.api.pixiv as pix
 import app.api.reddit as red
 import app.api.twitter as tw
+import app.api.pinterest as pin
 
 info = Info(title='SNS-Manager API', version='0.0.1')
 app = OpenAPI(__name__, info=info, security_schemes=security_schemes)
@@ -60,4 +61,5 @@ def index():
 api.register_api(pix.api)
 api.register_api(red.api)
 api.register_api(tw.api)
+api.register_api(pin.api)
 app.register_api(api)
