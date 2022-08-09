@@ -9,7 +9,6 @@ from app.model import OAuthToken, RefreshToken, ErrorMessage, Token, AuthQuery
 from app.config import REDDIT_USER_AGENT, reddit_tag
 from app.auth import SESSION_REDIRECT, redirect_or_return
 
-tag = Tag(name='Reddit: Auth')
 auth_api = APIBlueprint('reddit_auth', __name__,
                         url_prefix='/auth', abp_tags=[reddit_tag])
 

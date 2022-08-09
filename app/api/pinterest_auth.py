@@ -7,8 +7,8 @@ from nanoid import generate
 from pydantic import BaseModel
 import base64
 
-from app.model import OAuthToken, Login, RefreshToken, ErrorMessage, AuthQuery
-from app.auth import basic_security, SESSION_REDIRECT, redirect_or_return
+from app.model import OAuthToken, RefreshToken, ErrorMessage, AuthQuery
+from app.auth import SESSION_REDIRECT, redirect_or_return
 from app.config import pinterest_tag
 
 auth_api = APIBlueprint(
@@ -28,6 +28,20 @@ def _secret(): return os.getenv('PINTEREST_SECRET')
 
 def _redirect_url():
     return url.urljoin(request.base_url, 'callback')
+
+
+def _get_access_token(data: dict) -> OAuthToken:
+    basic = base64.b64encode(f'{_client()}:{_secret()}'.encode('utf-8'))
+
+    res = req.post('https://api.pinterest.com/v5/oauth/token', data=data,
+                   headers={'Authorization': f'Basic {str(basic, "utf-8")}'})
+    res.raise_for_status()
+
+    token = res.json()
+    print(token)
+    return OAuthToken(access_token=token['access_token'],
+                      refresh_token=token['refresh_token'] if 'refresh_token' in token else data['refresh_token'],
+                      expires_in=token['expires_in'])
 
 
 @auth_api.get('/', responses={'302': None})
@@ -55,19 +69,20 @@ def pinterest_auth_callback(query: PinterestCallback):
     if query.state != session[SESSION_STATE]:
         return ErrorMessage(message='Invalid state').dict(), 400
 
-    data = {
+    token = _get_access_token({
         'code': query.code,
         'redirect_uri': _redirect_url(),
         'grant_type': 'authorization_code',
-    }
-    basic = base64.b64encode(f'{_client()}:{_secret()}'.encode('utf-8'))
+    })
+    return redirect_or_return('pinterest', token.dict())
 
-    res = req.post('https://api.pinterest.com/v5/oauth/token', data=data,
-                   headers={'Authorization': f'Basic {str(basic, "utf-8")}'})
-    res.raise_for_status()
-    token = res.json()
-    oauth = OAuthToken(access_token=token['access_token'],
-                       refresh_token=token['refresh_token'],
-                       expires_in=token['expires_in'])
 
-    return redirect_or_return('pinterest', oauth.dict())
+@auth_api.post('/refresh', responses={'200': OAuthToken})
+def pinterest_refresh(body: RefreshToken):
+    """ Get a new access token using the refresh token
+    """
+    token = _get_access_token({
+        'grant_type': 'refresh_token',
+        'refresh_token': body.refresh_token,
+    })
+    return token.dict()
