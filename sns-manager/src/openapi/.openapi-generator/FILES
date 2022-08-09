@@ -1,4 +1,5 @@
 .openapi-generator-ignore
+apis/PinterestApi.ts
 apis/PixivApi.ts
 apis/RedditApi.ts
 apis/TwitterApi.ts
