@@ -1,6 +1,10 @@
-from dataclasses import dataclass
 from pydantic import BaseModel, Field
 from flask_openapi3 import FileStorage
+
+
+class User(BaseModel):
+    id: str
+    name: str
 
 
 class OAuthToken(BaseModel):

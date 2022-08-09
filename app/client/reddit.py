@@ -14,6 +14,11 @@ class RedditClient:
             'User-Agent': user_agent,
         }
 
+    def get(self, url):
+        res = req.get(self.baseURL + url, headers=self.headers)
+        res.raise_for_status()
+        return res.json()
+
     def _return_data_if_no_error(self, res):
         res.raise_for_status()
 

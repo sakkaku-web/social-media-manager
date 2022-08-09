@@ -1,6 +1,5 @@
 from flask import session, request, redirect
-from flask_openapi3 import APIBlueprint, Tag
-import requests as req
+from flask_openapi3 import APIBlueprint
 import os
 import tweepy
 from pydantic import BaseModel
@@ -54,8 +53,8 @@ def twitter_auth_callback(query: TwitterCallback):
     if not query.oauth_verifier:
         return ErrorMessage(message='User denied access').dict(), 400
 
-    if not session[SESSION_TWITTER_OAUTH_SECRET] or not session[SESSION_REDIRECT]:
-        return ErrorMessage(message='Missing oauth secret or redirect url').dict(), 400
+    if not session[SESSION_TWITTER_OAUTH_SECRET]:
+        return ErrorMessage(message='Missing oauth secret').dict(), 400
 
     auth_handler = tweepy.OAuth1UserHandler(
         _client(), _secret(), callback=_redirect_url())

@@ -1,8 +1,7 @@
-from flask import session, request, redirect, jsonify
-from flask_openapi3 import APIBlueprint, Tag
+from flask_openapi3 import APIBlueprint
 
 from app.api.reddit_auth import auth_api
-from app.model import ErrorMessage, RedditPost, SNSPostResponse
+from app.model import RedditPost, SNSPostResponse, User
 from app.client.reddit import RedditClient
 from app.auth import jwt_security, jwt_token
 from app.config import reddit_tag
@@ -27,3 +26,10 @@ def reddit_post(form: RedditPost, token: str):
         actual_id = post_id.split('_')[-1]
         url = f'https://reddit.com/r/{form.subreddit}/comments/{actual_id}'
     return SNSPostResponse(url=url).dict()
+
+
+@api.get('/user', responses={'200': User})
+@jwt_token
+def user(token: str):
+    data = RedditClient(token).get('/api/v1/me')
+    return User(id=data['id'], name=data['name']).dict()
