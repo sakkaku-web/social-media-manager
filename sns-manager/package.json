@@ -11,6 +11,7 @@
     "openapi": "openapi-generator-cli generate -i http://localhost:5000/openapi/openapi.json -g typescript-fetch -o src/openapi --skip-validate-spec"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^2.0.1",
     "autoprefixer": "^10.4.7",

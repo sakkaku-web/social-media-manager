@@ -21,6 +21,7 @@ import type {
   SNSPostResponse,
   Token,
   UnprocessableEntity,
+  User,
 } from '../models';
 import {
     ErrorMessageFromJSON,
@@ -35,6 +36,8 @@ import {
     TokenToJSON,
     UnprocessableEntityFromJSON,
     UnprocessableEntityToJSON,
+    UserFromJSON,
+    UserToJSON,
 } from '../models';
 
 export interface RedditAuthGetRequest {
@@ -261,6 +264,38 @@ export class RedditApi extends runtime.BaseAPI {
      */
     async redditRevokeRevokePost(requestParameters: RedditRevokeRevokePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.redditRevokeRevokePostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async userUserGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/reddit/user`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async userUserGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
+        const response = await this.userUserGetRaw(initOverrides);
+        return await response.value();
     }
 
 }

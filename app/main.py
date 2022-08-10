@@ -16,9 +16,11 @@ import app.api.pinterest as pin
 info = Info(title='SNS-Manager API', version='0.0.1')
 app = OpenAPI(__name__, info=info, security_schemes=security_schemes)
 app.secret_key = os.getenv('SESSION_SECRET')
+
 origin = 'https://sakkaku-web.github.io' if os.getenv(
     'FLASK_ENV') != 'development' else '*'
-CORS(app, origins=[origin])
+print('CORS origin: ' + origin)
+CORS(app, origins=[origin], supports_credentials=True)
 
 api = APIBlueprint('api', __name__, url_prefix='/api')
 

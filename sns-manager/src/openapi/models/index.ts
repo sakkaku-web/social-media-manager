@@ -8,3 +8,4 @@ export * from './SNSPostResponse';
 export * from './Token';
 export * from './TwitterToken';
 export * from './UnprocessableEntity';
+export * from './User';

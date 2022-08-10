@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { OAuthToken, OAuthTokenFromJSON, TwitterToken } from "../openapi";
+  import {
+    OAuthToken,
+    OAuthTokenFromJSON,
+    TwitterToken,
+    TwitterTokenFromJSON,
+  } from "../openapi";
 
   import { createEventDispatcher, onMount } from "svelte";
 
@@ -42,7 +47,11 @@
     const providerData = query.get(lowerProvider);
 
     if (providerData) {
-      const token = OAuthTokenFromJSON(JSON.parse(providerData));
+      const data = JSON.parse(providerData);
+      const token =
+        lowerProvider === "twitter"
+          ? TwitterTokenFromJSON(data)
+          : OAuthTokenFromJSON(data);
       addLoginToStorage(token);
       history.replaceState("", "", baseURL());
     }

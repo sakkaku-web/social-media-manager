@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/PinterestApi.ts
 apis/PixivApi.ts
 apis/RedditApi.ts
@@ -13,5 +12,6 @@ models/SNSPostResponse.ts
 models/Token.ts
 models/TwitterToken.ts
 models/UnprocessableEntity.ts
+models/User.ts
 models/index.ts
 runtime.ts

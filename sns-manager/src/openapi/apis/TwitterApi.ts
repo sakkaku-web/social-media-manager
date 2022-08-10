@@ -19,6 +19,7 @@ import type {
   SNSPostResponse,
   TwitterToken,
   UnprocessableEntity,
+  User,
 } from '../models';
 import {
     ErrorMessageFromJSON,
@@ -29,6 +30,8 @@ import {
     TwitterTokenToJSON,
     UnprocessableEntityFromJSON,
     UnprocessableEntityToJSON,
+    UserFromJSON,
+    UserToJSON,
 } from '../models';
 
 export interface TwitterAuthCallbackCallbackGetRequest {
@@ -178,6 +181,33 @@ export class TwitterApi extends runtime.BaseAPI {
      */
     async twitterPostPostPost(requestParameters: TwitterPostPostPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SNSPostResponse> {
         const response = await this.twitterPostPostPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async userUserGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/twitter/user`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async userUserGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
+        const response = await this.userUserGetRaw(initOverrides);
         return await response.value();
     }
 

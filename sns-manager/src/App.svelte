@@ -1,7 +1,10 @@
 <script lang="ts">
   import "./global.css";
   import LoginButton from "./lib/LoginButton.svelte";
-  import type { OAuthToken, TwitterToken } from "./openapi";
+  import PinterestInfo from "./lib/PinterestInfo.svelte";
+  import RedditInfo from "./lib/RedditInfo.svelte";
+  import TwitterInfo from "./lib/TwitterInfo.svelte";
+  import { OAuthToken, TwitterToken } from "./openapi";
 
   let twitterLogins: TwitterToken[] = [];
   let redditLogins: OAuthToken[] = [];
@@ -27,24 +30,24 @@
     />
   </div>
 
-  <h1>Twitter</h1>
+  <h1 class="font-bold">Twitter</h1>
   {#each twitterLogins as login}
-    {login.accessToken}
+    <TwitterInfo token={login} />
   {/each}
 
-  <h1>Reddit</h1>
+  <h1 class="font-bold">Reddit</h1>
   {#each redditLogins as login}
-    {login.accessToken}
+    <RedditInfo token={login} />
   {/each}
 
-  <h1>Pixiv</h1>
+  <h1 class="font-bold">Pixiv</h1>
   {#each pixivLogins as login}
     {login.accessToken}
   {/each}
 
-  <h1>Pinterest</h1>
+  <h1 class="font-bold">Pinterest</h1>
   {#each pinterestLogins as login}
-    {login.accessToken}
+    <PinterestInfo token={login} />
   {/each}
 </main>
 

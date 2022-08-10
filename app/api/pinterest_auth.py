@@ -38,7 +38,6 @@ def _get_access_token(data: dict) -> OAuthToken:
     res.raise_for_status()
 
     token = res.json()
-    print(token)
     return OAuthToken(access_token=token['access_token'],
                       refresh_token=token['refresh_token'] if 'refresh_token' in token else data['refresh_token'],
                       expires_in=token['expires_in'])

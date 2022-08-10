@@ -16,7 +16,7 @@ def jwt_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get('authorization')
-        if not token:
+        if not token and request.method != 'OPTION':
             return ErrorMessage(message='Missing JWT token').dict(), 401
 
         return f(token=token.split(' ')[-1], *args, **kwargs)
@@ -30,7 +30,7 @@ def basic_auth(f):
         user = request.authorization.username
         pw = request.authorization.password
 
-        if not user or not pw:
+        if (not user or not pw) and request.method != 'OPTION':
             return ErrorMessage(message='Missing username or password').dict(), 401
 
         return f(user=user, password=pw, *args, **kwargs)

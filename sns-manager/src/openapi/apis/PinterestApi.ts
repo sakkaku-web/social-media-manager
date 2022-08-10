@@ -17,15 +17,21 @@ import * as runtime from '../runtime';
 import type {
   ErrorMessage,
   OAuthToken,
+  RefreshToken,
   UnprocessableEntity,
+  User,
 } from '../models';
 import {
     ErrorMessageFromJSON,
     ErrorMessageToJSON,
     OAuthTokenFromJSON,
     OAuthTokenToJSON,
+    RefreshTokenFromJSON,
+    RefreshTokenToJSON,
     UnprocessableEntityFromJSON,
     UnprocessableEntityToJSON,
+    UserFromJSON,
+    UserToJSON,
 } from '../models';
 
 export interface PinterestAuthCallbackCallbackGetRequest {
@@ -35,6 +41,10 @@ export interface PinterestAuthCallbackCallbackGetRequest {
 
 export interface PinterestAuthGetRequest {
     returnTo?: string;
+}
+
+export interface PinterestRefreshRefreshPostRequest {
+    refreshToken: RefreshToken;
 }
 
 /**
@@ -111,6 +121,71 @@ export class PinterestApi extends runtime.BaseAPI {
      */
     async pinterestAuthGet(requestParameters: PinterestAuthGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.pinterestAuthGetRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Get a new access token using the refresh token
+     */
+    async pinterestRefreshRefreshPostRaw(requestParameters: PinterestRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OAuthToken>> {
+        if (requestParameters.refreshToken === null || requestParameters.refreshToken === undefined) {
+            throw new runtime.RequiredError('refreshToken','Required parameter requestParameters.refreshToken was null or undefined when calling pinterestRefreshRefreshPost.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/pinterest/auth/refresh`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RefreshTokenToJSON(requestParameters.refreshToken),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => OAuthTokenFromJSON(jsonValue));
+    }
+
+    /**
+     * Get a new access token using the refresh token
+     */
+    async pinterestRefreshRefreshPost(requestParameters: PinterestRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OAuthToken> {
+        const response = await this.pinterestRefreshRefreshPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async userUserGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<User>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/pinterest/user`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async userUserGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<User> {
+        const response = await this.userUserGetRaw(initOverrides);
+        return await response.value();
     }
 
 }
