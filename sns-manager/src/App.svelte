@@ -1,6 +1,7 @@
 <script lang="ts">
   import "./global.css";
   import LoginButton from "./lib/LoginButton.svelte";
+  import PixivLogin from "./lib/PixivLogin.svelte";
   import PinterestInfo from "./lib/PinterestInfo.svelte";
   import RedditInfo from "./lib/RedditInfo.svelte";
   import TwitterInfo from "./lib/TwitterInfo.svelte";
@@ -13,7 +14,7 @@
 </script>
 
 <main class="h-full flex flex-col items-center">
-  <div class="flex flex-row gap-4 font-bold">
+  <div class="flex flex-row gap-4">
     <LoginButton
       provider="Twitter"
       on:login={(e) => (twitterLogins = e.detail.tokens)}
@@ -28,6 +29,8 @@
       provider="Pinterest"
       on:login={(e) => (pinterestLogins = e.detail.tokens)}
     />
+
+    <PixivLogin on:login={(e) => (pixivLogins = e.detail.tokens)} />
   </div>
 
   <h1 class="font-bold">Twitter</h1>

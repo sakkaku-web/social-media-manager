@@ -1,25 +1,16 @@
 <script lang="ts">
-  import {
-    OAuthToken,
-    OAuthTokenFromJSON,
-    TwitterToken,
-    TwitterTokenFromJSON,
-  } from "../openapi";
+  import { OAuthTokenFromJSON, TwitterTokenFromJSON } from "../openapi";
 
   import { createEventDispatcher, onMount } from "svelte";
 
   import LoginIcon from "svelte-icons/io/IoMdLogIn.svelte";
   import env from "../environment";
+  import { addLoginToStorage, loadLoginsFromStorage } from "../storage";
 
   export let provider: string;
 
-  const TOKEN_PROVIDER_PREFIX = "sns-manager-tokens-";
-  const providerKey = TOKEN_PROVIDER_PREFIX + provider;
-
   const dispatch = createEventDispatcher();
   const lowerProvider = provider.toLowerCase();
-
-  type TokenType = TwitterToken | OAuthToken;
 
   const baseURL = () => window.location.origin + window.location.pathname;
   const buildURL = () => {
@@ -28,39 +19,26 @@
     }/api/${lowerProvider}/auth?return_to=${encodeURIComponent(baseURL())}`;
   };
 
-  const addLoginToStorage = (data: TokenType) => {
-    const logins: TokenType[] = loadLoginsFromStorage();
-    if (logins.findIndex((l) => l.accessToken === data.accessToken) === -1) {
-      logins.push(data);
-      sessionStorage.setItem(providerKey, JSON.stringify(logins));
-    } else {
-      console.warn("User is already logged in. Ignoring");
-    }
-  };
-
-  const loadLoginsFromStorage = (): TokenType[] => {
-    return JSON.parse(sessionStorage.getItem(providerKey) || "[]");
-  };
-
   onMount(() => {
     const query = new URLSearchParams(window.location.search);
     const providerData = query.get(lowerProvider);
 
     if (providerData) {
       const data = JSON.parse(providerData);
-      const token =
-        lowerProvider === "twitter"
-          ? TwitterTokenFromJSON(data)
-          : OAuthTokenFromJSON(data);
-      addLoginToStorage(token);
+      const isTwitter = provider.toLowerCase() === "twitter";
+      const token = isTwitter
+        ? TwitterTokenFromJSON(data)
+        : OAuthTokenFromJSON(data);
+
+      addLoginToStorage(token, provider);
       history.replaceState("", "", baseURL());
     }
 
-    dispatch("login", { tokens: loadLoginsFromStorage() });
+    dispatch("login", { tokens: loadLoginsFromStorage(provider) });
   });
 </script>
 
-<a href={buildURL()} class="flex flex-row items-center">
+<a href={buildURL()} class="flex flex-row items-center font-bold">
   <div class="w-4 h-4">
     <LoginIcon />
   </div>
