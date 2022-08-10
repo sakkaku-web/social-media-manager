@@ -5,11 +5,12 @@
   import PinterestInfo from "./lib/PinterestInfo.svelte";
   import RedditInfo from "./lib/RedditInfo.svelte";
   import TwitterInfo from "./lib/TwitterInfo.svelte";
-  import { OAuthToken, TwitterToken } from "./openapi";
+  import { OAuthToken, PixivToken, TwitterToken } from "./openapi";
+  import PixivInfo from "./lib/PixivInfo.svelte";
 
   let twitterLogins: TwitterToken[] = [];
   let redditLogins: OAuthToken[] = [];
-  let pixivLogins: OAuthToken[] = [];
+  let pixivLogins: PixivToken[] = [];
   let pinterestLogins: OAuthToken[] = [];
 </script>
 
@@ -34,41 +35,41 @@
   </div>
 
   <div class="flex flex-col items-center gap-8">
-    <div class="flex flex-col gap-2 items-center">
-      {#if twitterLogins.length}
+    {#if twitterLogins.length}
+      <div class="flex flex-col gap-2 items-center">
         <h1 class="font-bold">Twitter</h1>
-      {/if}
-      {#each twitterLogins as login}
-        <TwitterInfo token={login} />
-      {/each}
-    </div>
+        {#each twitterLogins as login}
+          <TwitterInfo token={login} />
+        {/each}
+      </div>
+    {/if}
 
-    <div class="flex flex-col gap-2 items-center">
-      {#if redditLogins.length}
+    {#if redditLogins.length}
+      <div class="flex flex-col gap-2 items-center">
         <h1 class="font-bold">Reddit</h1>
-      {/if}
-      {#each redditLogins as login}
-        <RedditInfo token={login} />
-      {/each}
-    </div>
+        {#each redditLogins as login}
+          <RedditInfo token={login} />
+        {/each}
+      </div>
+    {/if}
 
-    <div class="flex flex-col gap-2 items-center">
-      {#if pixivLogins.length}
+    {#if pixivLogins.length}
+      <div class="flex flex-col gap-2 items-center">
         <h1 class="font-bold">Pixiv</h1>
-      {/if}
-      {#each pixivLogins as login}
-        {login.accessToken}
-      {/each}
-    </div>
+        {#each pixivLogins as login}
+          <PixivInfo token={login} />
+        {/each}
+      </div>
+    {/if}
 
-    <div class="flex flex-col gap-2 items-center">
-      {#if pinterestLogins.length}
+    {#if pinterestLogins.length}
+      <div class="flex flex-col gap-2 items-center">
         <h1 class="font-bold">Pinterest</h1>
-      {/if}
-      {#each pinterestLogins as login}
-        <PinterestInfo token={login} />
-      {/each}
-    </div>
+        {#each pinterestLogins as login}
+          <PinterestInfo token={login} />
+        {/each}
+      </div>
+    {/if}
   </div>
 </main>
 

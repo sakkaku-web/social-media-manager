@@ -1,10 +1,10 @@
-import { OAuthToken, TwitterToken } from "../openapi";
+import { OAuthToken, PixivToken, TwitterToken } from "../openapi";
 
 const TOKEN_PROVIDER_PREFIX = "sns-manager-tokens-";
 
 const storage = localStorage;
 
-type TokenType = TwitterToken | OAuthToken;
+type TokenType = TwitterToken | PixivToken | OAuthToken;
 
 export const loadLoginsFromStorage = (provider: string): TokenType[] => {
   const providerKey = TOKEN_PROVIDER_PREFIX + provider;

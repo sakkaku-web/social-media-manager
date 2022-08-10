@@ -16,7 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   Login,
-  OAuthToken,
+  PixivToken,
   RefreshToken,
   SNSPostResponse,
   UnprocessableEntity,
@@ -24,8 +24,8 @@ import type {
 import {
     LoginFromJSON,
     LoginToJSON,
-    OAuthTokenFromJSON,
-    OAuthTokenToJSON,
+    PixivTokenFromJSON,
+    PixivTokenToJSON,
     RefreshTokenFromJSON,
     RefreshTokenToJSON,
     SNSPostResponseFromJSON,
@@ -58,7 +58,7 @@ export class PixivApi extends runtime.BaseAPI {
      * This might take a while to finish. It uses selenium to login as the user and could be error prone.
      * Login to pixiv
      */
-    async pixivAuthPostRaw(requestParameters: PixivAuthPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OAuthToken>> {
+    async pixivAuthPostRaw(requestParameters: PixivAuthPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PixivToken>> {
         if (requestParameters.login === null || requestParameters.login === undefined) {
             throw new runtime.RequiredError('login','Required parameter requestParameters.login was null or undefined when calling pixivAuthPost.');
         }
@@ -77,14 +77,14 @@ export class PixivApi extends runtime.BaseAPI {
             body: LoginToJSON(requestParameters.login),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => OAuthTokenFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PixivTokenFromJSON(jsonValue));
     }
 
     /**
      * This might take a while to finish. It uses selenium to login as the user and could be error prone.
      * Login to pixiv
      */
-    async pixivAuthPost(requestParameters: PixivAuthPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OAuthToken> {
+    async pixivAuthPost(requestParameters: PixivAuthPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PixivToken> {
         const response = await this.pixivAuthPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -173,7 +173,7 @@ export class PixivApi extends runtime.BaseAPI {
     /**
      * Get a new access token using the refresh token
      */
-    async pixivRefreshRefreshPostRaw(requestParameters: PixivRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OAuthToken>> {
+    async pixivRefreshRefreshPostRaw(requestParameters: PixivRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PixivToken>> {
         if (requestParameters.refreshToken === null || requestParameters.refreshToken === undefined) {
             throw new runtime.RequiredError('refreshToken','Required parameter requestParameters.refreshToken was null or undefined when calling pixivRefreshRefreshPost.');
         }
@@ -192,13 +192,13 @@ export class PixivApi extends runtime.BaseAPI {
             body: RefreshTokenToJSON(requestParameters.refreshToken),
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => OAuthTokenFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PixivTokenFromJSON(jsonValue));
     }
 
     /**
      * Get a new access token using the refresh token
      */
-    async pixivRefreshRefreshPost(requestParameters: PixivRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OAuthToken> {
+    async pixivRefreshRefreshPost(requestParameters: PixivRefreshRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PixivToken> {
         const response = await this.pixivRefreshRefreshPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
