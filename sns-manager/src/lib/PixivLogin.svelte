@@ -58,9 +58,10 @@
 <div
   class={`${
     showLoginForm ? "flex" : "hidden"
-  } fixed inset-0 items-center justify-center backdrop-blur-sm`}
+  } fixed inset-0 items-center justify-center backdrop-blur-sm flex-col`}
 >
   <div class="fixed inset-0 -z-10" on:click={() => (showLoginForm = false)} />
+  <h2 class="font-bold">Pixiv Login</h2>
   <form
     on:submit|preventDefault={() => loginPixiv()}
     class="flex flex-col gap-2 justify-center p-4 z-10"
@@ -71,6 +72,7 @@
       name="username"
       disabled={loading}
       placeholder="Username"
+      required
       bind:value={username}
     />
     <input
@@ -78,6 +80,7 @@
       name="password"
       placeholder="Passwor"
       disabled={loading}
+      required
       class="bg-white border py-1 px-2 disabled:bg-gray-200"
       bind:value={password}
     />
