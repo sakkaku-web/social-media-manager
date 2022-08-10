@@ -1,17 +1,14 @@
-import {
-  OAuthToken,
-  OAuthTokenFromJSON,
-  TwitterToken,
-  TwitterTokenFromJSON,
-} from "../openapi";
+import { OAuthToken, TwitterToken } from "../openapi";
 
 const TOKEN_PROVIDER_PREFIX = "sns-manager-tokens-";
+
+const storage = localStorage;
 
 type TokenType = TwitterToken | OAuthToken;
 
 export const loadLoginsFromStorage = (provider: string): TokenType[] => {
   const providerKey = TOKEN_PROVIDER_PREFIX + provider;
-  return JSON.parse(sessionStorage.getItem(providerKey) || "[]");
+  return JSON.parse(storage.getItem(providerKey) || "[]");
 };
 
 export const addLoginToStorage = (token: TokenType, provider: string) => {
@@ -30,7 +27,7 @@ export const addLoginToStorage = (token: TokenType, provider: string) => {
   const logins: TokenType[] = loadLoginsFromStorage(provider);
   if (logins.findIndex((l) => l.accessToken === token.accessToken) === -1) {
     logins.push(token);
-    sessionStorage.setItem(providerKey, JSON.stringify(logins));
+    storage.setItem(providerKey, JSON.stringify(logins));
   } else {
     console.warn("User is already logged in. Ignoring");
   }

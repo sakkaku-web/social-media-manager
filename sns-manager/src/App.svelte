@@ -13,8 +13,8 @@
   let pinterestLogins: OAuthToken[] = [];
 </script>
 
-<main class="h-full flex flex-col">
-  <div class="flex flex-row justify-center gap-4 border-b">
+<main class="h-full flex flex-col gap-8">
+  <div class="flex flex-row justify-center gap-4 border-b p-2">
     <LoginButton
       provider="Twitter"
       on:login={(e) => (twitterLogins = e.detail.tokens)}
@@ -33,34 +33,42 @@
     <PixivLogin on:login={(e) => (pixivLogins = e.detail.tokens)} />
   </div>
 
-  <div class="flex flex-col items-center">
-    {#if twitterLogins.length}
-      <h1 class="font-bold">Twitter</h1>
-    {/if}
-    {#each twitterLogins as login}
-      <TwitterInfo token={login} />
-    {/each}
+  <div class="flex flex-col items-center gap-8">
+    <div class="flex flex-col gap-2 items-center">
+      {#if twitterLogins.length}
+        <h1 class="font-bold">Twitter</h1>
+      {/if}
+      {#each twitterLogins as login}
+        <TwitterInfo token={login} />
+      {/each}
+    </div>
 
-    {#if redditLogins.length}
-      <h1 class="font-bold">Reddit</h1>
-    {/if}
-    {#each redditLogins as login}
-      <RedditInfo token={login} />
-    {/each}
+    <div class="flex flex-col gap-2 items-center">
+      {#if redditLogins.length}
+        <h1 class="font-bold">Reddit</h1>
+      {/if}
+      {#each redditLogins as login}
+        <RedditInfo token={login} />
+      {/each}
+    </div>
 
-    {#if pixivLogins.length}
-      <h1 class="font-bold">Pixiv</h1>
-    {/if}
-    {#each pixivLogins as login}
-      {login.accessToken}
-    {/each}
+    <div class="flex flex-col gap-2 items-center">
+      {#if pixivLogins.length}
+        <h1 class="font-bold">Pixiv</h1>
+      {/if}
+      {#each pixivLogins as login}
+        {login.accessToken}
+      {/each}
+    </div>
 
-    {#if pinterestLogins.length}
-      <h1 class="font-bold">Pinterest</h1>
-    {/if}
-    {#each pinterestLogins as login}
-      <PinterestInfo token={login} />
-    {/each}
+    <div class="flex flex-col gap-2 items-center">
+      {#if pinterestLogins.length}
+        <h1 class="font-bold">Pinterest</h1>
+      {/if}
+      {#each pinterestLogins as login}
+        <PinterestInfo token={login} />
+      {/each}
+    </div>
   </div>
 </main>
 
