@@ -12,6 +12,12 @@
   let redditLogins: OAuthToken[] = [];
   let pixivLogins: PixivToken[] = [];
   let pinterestLogins: OAuthToken[] = [];
+
+  console.log("%c THIS IS A WARNING ", "color: #bc3939; font-size: 16px");
+  console.log(
+    "%c Be careful when executing something in here. It's possible to get your account information",
+    "color: #bc3939; font-size: 14px"
+  );
 </script>
 
 <main class="h-full flex flex-col gap-8">
