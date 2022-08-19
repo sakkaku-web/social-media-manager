@@ -4,6 +4,8 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { addLoginToStorage, loadLoginsFromStorage } from "../storage";
   import LoginIcon from "svelte-icons/io/IoMdLogIn.svelte";
+  import Input from "./components/Input.svelte";
+  import Button from "./components/Button.svelte";
 
   const dispatch = createEventDispatcher();
   const provider = "pixiv";
@@ -66,27 +68,22 @@
     on:submit|preventDefault={() => loginPixiv()}
     class="flex flex-col gap-2 justify-center p-4 z-10"
   >
-    <input
-      type="text"
-      class="bg-white border py-1 px-2 disabled:bg-gray-200"
+    <Input
       name="username"
       disabled={loading}
       placeholder="Username"
       required
       bind:value={username}
     />
-    <input
-      type="password"
+    <Input
       name="password"
-      placeholder="Passwor"
       disabled={loading}
+      placeholder="Password"
       required
-      class="bg-white border py-1 px-2 disabled:bg-gray-200"
+      password
       bind:value={password}
     />
 
-    <button type="submit" disabled={loading} class="disabled:text-gray-500"
-      >Login</button
-    >
+    <Button type="submit" disabled={loading}>Login</Button>
   </form>
 </div>

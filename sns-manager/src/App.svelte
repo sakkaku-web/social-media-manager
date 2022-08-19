@@ -7,6 +7,7 @@
   import TwitterInfo from "./lib/TwitterInfo.svelte";
   import { OAuthToken, PixivToken, TwitterToken } from "./openapi";
   import PixivInfo from "./lib/PixivInfo.svelte";
+  import TokenContainer from "./lib/forms/TokenContainer.svelte";
 
   let twitterLogins: TwitterToken[] = [];
   let redditLogins: OAuthToken[] = [];
@@ -20,8 +21,8 @@
   );
 </script>
 
-<main class="h-full flex flex-col gap-8">
-  <div class="flex flex-row justify-center gap-4 border-b p-2">
+<div class="h-full flex flex-col">
+  <header class="flex flex-row justify-center gap-4 border-b p-2">
     <LoginButton
       provider="Twitter"
       on:login={(e) => (twitterLogins = e.detail.tokens)}
@@ -38,46 +39,44 @@
     />
 
     <PixivLogin on:login={(e) => (pixivLogins = e.detail.tokens)} />
-  </div>
+  </header>
 
-  <div class="flex flex-col items-center gap-8">
-    {#if twitterLogins.length}
-      <div class="flex flex-col gap-2 items-center">
-        <h1 class="font-bold">Twitter</h1>
-        {#each twitterLogins as login}
-          <TwitterInfo token={login} />
-        {/each}
-      </div>
-    {/if}
+  <main class="flex flex-row p-4">
+    <div class="flex flex-col gap-8">
+      {#if twitterLogins.length}
+        <TokenContainer title="Twitter">
+          {#each twitterLogins as login}
+            <TwitterInfo token={login} />
+          {/each}
+        </TokenContainer>
+      {/if}
 
-    {#if redditLogins.length}
-      <div class="flex flex-col gap-2 items-center">
-        <h1 class="font-bold">Reddit</h1>
-        {#each redditLogins as login}
-          <RedditInfo token={login} />
-        {/each}
-      </div>
-    {/if}
+      {#if redditLogins.length}
+        <TokenContainer title="Reddit">
+          {#each redditLogins as login}
+            <RedditInfo token={login} />
+          {/each}
+        </TokenContainer>
+      {/if}
 
-    {#if pixivLogins.length}
-      <div class="flex flex-col gap-2 items-center">
-        <h1 class="font-bold">Pixiv</h1>
-        {#each pixivLogins as login}
-          <PixivInfo token={login} />
-        {/each}
-      </div>
-    {/if}
+      {#if pixivLogins.length}
+        <TokenContainer title="Pixiv">
+          {#each pixivLogins as login}
+            <PixivInfo token={login} />
+          {/each}
+        </TokenContainer>
+      {/if}
 
-    {#if pinterestLogins.length}
-      <div class="flex flex-col gap-2 items-center">
-        <h1 class="font-bold">Pinterest</h1>
-        {#each pinterestLogins as login}
-          <PinterestInfo token={login} />
-        {/each}
-      </div>
-    {/if}
-  </div>
-</main>
+      {#if pinterestLogins.length}
+        <TokenContainer title="Pinterest">
+          {#each pinterestLogins as login}
+            <PinterestInfo token={login} />
+          {/each}
+        </TokenContainer>
+      {/if}
+    </div>
+  </main>
+</div>
 
 <style>
 </style>
