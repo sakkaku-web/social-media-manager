@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from "../components/Button.svelte";
+  import ExternalLink from "../components/ExternalLink.svelte";
 
   export let url: string = "";
   export let loading = false;
@@ -11,6 +12,6 @@
   <Button type="submit" disabled={loading}>Submit</Button>
 
   {#if url}
-    <a href={url} target="_blank">Open tweet</a>
+    <ExternalLink {url}>Open Tweet</ExternalLink>
   {/if}
 </form>

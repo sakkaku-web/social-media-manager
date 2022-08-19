@@ -12,6 +12,7 @@
   import SubmitForm from "./forms/SubmitForm.svelte";
   import Input from "./components/Input.svelte";
   import FileInput from "./components/FileInput.svelte";
+  import ExternalLink from "./components/ExternalLink.svelte";
 
   export let token: TwitterToken;
 
@@ -51,7 +52,9 @@
 
 {#if user}
   <div class="flex flex-col gap-4 p-4 bg-white border rounded-md">
-    <a href={`https://twitter.com/${user.id}`} target="_blank">{user.name}</a>
+    <ExternalLink url={`https://twitter.com/${user.id}`}
+      >{user.name}</ExternalLink
+    >
 
     <SubmitForm on:submit={() => submit()} url={submittedUrl} {loading}>
       <Input bind:value={form.text} placeholder="Text" disabled={loading} />
