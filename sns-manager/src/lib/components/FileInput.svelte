@@ -3,6 +3,7 @@
   export let label = "";
   export let accept = "";
   export let disabled = false;
+  export let required = false;
 
   const id = label.replaceAll(" ", "-");
 
@@ -17,5 +18,13 @@
   {#if label}
     <label for={id}>{label}</label>
   {/if}
-  <input {id} type="file" bind:files={fileList} multiple {accept} {disabled} />
+  <input
+    {id}
+    type="file"
+    bind:files={fileList}
+    multiple
+    {accept}
+    {disabled}
+    {required}
+  />
 </div>

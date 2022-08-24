@@ -13,6 +13,7 @@
   import Input from "./components/Input.svelte";
   import FileInput from "./components/FileInput.svelte";
   import ExternalLink from "./components/ExternalLink.svelte";
+  import Card from "./components/Card.svelte";
 
   export let token: TwitterToken;
 
@@ -42,14 +43,19 @@
 </script>
 
 {#if user}
-  <div class="flex flex-col gap-4 p-4 bg-white border rounded-md">
+  <Card>
     <ExternalLink url={`https://twitter.com/${user.id}`}
       >{user.name}</ExternalLink
     >
 
     <SubmitForm submitFn={submit} bind:loading>
-      <Input bind:value={form.text} placeholder="Text" disabled={loading} />
+      <Input
+        bind:value={form.text}
+        required
+        placeholder="Text *"
+        disabled={loading}
+      />
       <FileInput bind:files={form.images} accept="image/*" disabled={loading} />
     </SubmitForm>
-  </div>
+  </Card>
 {/if}

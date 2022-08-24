@@ -13,6 +13,7 @@
   import SubmitForm from "./forms/SubmitForm.svelte";
   import Input from "./components/Input.svelte";
   import FileInput from "./components/FileInput.svelte";
+  import Card from "./components/Card.svelte";
 
   export let token: OAuthToken;
 
@@ -43,21 +44,27 @@
 </script>
 
 {#if user}
-  <div class="flex flex-col gap-4 p-4 bg-white border rounded-md">
+  <Card>
     <ExternalLink url={`https://reddit.com/u/${user.name}`}
       >{user.name}</ExternalLink
     >
 
     <SubmitForm submitFn={submit} bind:loading>
-      <Input bind:value={form.title} placeholder="Title" disabled={loading} />
+      <Input
+        bind:value={form.title}
+        placeholder="Title *"
+        required
+        disabled={loading}
+      />
       <Input bind:value={form.text} placeholder="Text" disabled={loading} />
       <Input
         bind:value={form.subreddit}
-        placeholder="Subreddit"
+        placeholder="Subreddit *"
+        required
         disabled={loading}
       />
       <Input bind:value={form.flair} placeholder="Flair" disabled={loading} />
       <FileInput bind:files={form.images} accept="image/*" disabled={loading} />
     </SubmitForm>
-  </div>
+  </Card>
 {/if}
