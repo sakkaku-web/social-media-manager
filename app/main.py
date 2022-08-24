@@ -1,6 +1,7 @@
 from flask_openapi3 import Info, OpenAPI, APIBlueprint
 from flask import redirect, url_for
 from flask_cors import CORS
+from requests import HTTPError, Response
 
 import os
 import re
@@ -27,6 +28,12 @@ api = APIBlueprint('api', __name__, url_prefix='/api')
 
 def _redirect():
     return redirect(url_for("openapi.index"))
+
+
+@app.errorhandler(HTTPError)
+def http_error(error: HTTPError):
+    res = error.response
+    return res.reason, res.status_code
 
 
 @app.errorhandler(404)
