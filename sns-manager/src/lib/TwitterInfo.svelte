@@ -17,7 +17,6 @@
   export let token: TwitterToken;
 
   let loading = false;
-  let submittedUrl: string;
   let user: User;
   let form: TwitterPostPostPostRequest = {
     text: "",
@@ -37,16 +36,8 @@
   });
 
   const submit = async () => {
-    try {
-      loading = true;
-      submittedUrl = "";
-      const { url } = await api.twitterPostPostPost(form);
-      submittedUrl = url;
-    } catch (e) {
-      console.log(`Failed to submit twitter post for user ${user.name}`, e);
-    } finally {
-      loading = false;
-    }
+    const { url } = await api.twitterPostPostPost(form);
+    return url;
   };
 </script>
 
@@ -56,7 +47,7 @@
       >{user.name}</ExternalLink
     >
 
-    <SubmitForm on:submit={() => submit()} url={submittedUrl} {loading}>
+    <SubmitForm submitFn={submit} bind:loading>
       <Input bind:value={form.text} placeholder="Text" disabled={loading} />
       <FileInput bind:files={form.images} accept="image/*" disabled={loading} />
     </SubmitForm>
