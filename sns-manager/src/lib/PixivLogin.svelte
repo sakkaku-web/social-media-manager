@@ -84,6 +84,8 @@
       bind:value={password}
     />
 
+    <div class="text-xs text-gray-500">Login might be slow or fail often.</div>
+
     <Button type="submit" disabled={loading}>Login</Button>
   </form>
 </div>
