@@ -1,14 +1,14 @@
 <script lang="ts">
   import "./global.css";
+  import type { Token } from "./lib/auth";
   import LoginButton from "./lib/LoginButton.svelte";
   import PixivLogin from "./lib/PixivLogin.svelte";
-  import { OAuthToken, PixivToken, TwitterToken } from "./openapi";
-  import ReferencePage from "./pages/reference-page/ReferencePage.svelte";
+  import ReferencePage from "./pages/ReferencePage.svelte";
 
-  let twitterLogins: TwitterToken[] = [];
-  let redditLogins: OAuthToken[] = [];
-  let pixivLogins: PixivToken[] = [];
-  let pinterestLogins: OAuthToken[] = [];
+  let twitterLogins: Token[] = [];
+  let redditLogins: Token[] = [];
+  let pixivLogins: Token[] = [];
+  let pinterestLogins: Token[] = [];
 
   console.log("%c THIS IS A WARNING ", "color: #bc3939; font-size: 16px");
   console.log(

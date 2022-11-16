@@ -1,7 +1,7 @@
 from flask_openapi3 import APIBlueprint
 
 from app.api.reddit_auth import auth_api
-from app.model import RedditPost, SNSPostResponse, User, RedditUpvote, RedditUpvoteResponse
+from app.model import RedditPost, SNSPostResponse, User
 from app.client.reddit import RedditClient
 from app.auth import jwt_security, jwt_token
 from app.config import reddit_tag
@@ -35,20 +35,3 @@ def reddit_post(form: RedditPost, token: str):
 def user(token: str):
     data = RedditClient(token).get('/api/v1/me')
     return User(id=data['id'], name=data['name']).dict()
-
-
-@api.get('/upvoted', responses={'200': RedditUpvoteResponse})
-@jwt_token
-def upvoted(token: str):
-    user_data = user(token=token)
-    data = RedditClient(token).get(
-        f'/user/{user_data["name"]}/upvoted?sort=new&type=link')
-    result = []
-
-    for item in data['data']['children']:
-        x = item['data']
-
-        result.append(RedditUpvote(
-            title=x['title'], link=x['permalink'], image=x['url']))
-
-    return RedditUpvoteResponse(result=result).dict()

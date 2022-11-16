@@ -4,8 +4,6 @@ export * from './ErrorMessage';
 export * from './Login';
 export * from './OAuthToken';
 export * from './PixivToken';
-export * from './RedditUpvote';
-export * from './RedditUpvoteResponse';
 export * from './RefreshToken';
 export * from './SNSPostResponse';
 export * from './Token';
