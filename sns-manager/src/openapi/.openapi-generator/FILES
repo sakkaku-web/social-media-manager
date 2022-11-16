@@ -8,6 +8,8 @@ models/ErrorMessage.ts
 models/Login.ts
 models/OAuthToken.ts
 models/PixivToken.ts
+models/RedditUpvote.ts
+models/RedditUpvoteResponse.ts
 models/RefreshToken.ts
 models/SNSPostResponse.ts
 models/Token.ts

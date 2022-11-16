@@ -17,12 +17,12 @@
 
   export let token: TwitterToken;
 
-  let loading = false;
+  // let loading = false;
   let user: User;
-  let form: TwitterPostPostPostRequest = {
-    text: "",
-    images: [],
-  };
+  // let form: TwitterPostPostPostRequest = {
+  //   text: "",
+  //   images: [],
+  // };
 
   const api = new TwitterApi(
     new Configuration({
@@ -36,19 +36,21 @@
     user = await api.userUserGet();
   });
 
-  const submit = async () => {
-    const { url } = await api.twitterPostPostPost(form);
-    return url;
-  };
+  // const submit = async () => {
+  //   const { url } = await api.twitterPostPostPost(form);
+  //   return url;
+  // };
 </script>
 
 {#if user}
   <Card>
     <ExternalLink url={`https://twitter.com/${user.id}`}
-      >{user.name}</ExternalLink
+      >Twitter - {user.name}</ExternalLink
     >
 
-    <SubmitForm submitFn={submit} bind:loading>
+    <slot {api} />
+
+    <!-- <SubmitForm submitFn={submit} bind:loading>
       <Input
         bind:value={form.text}
         required
@@ -56,6 +58,6 @@
         disabled={loading}
       />
       <FileInput bind:files={form.images} accept="image/*" disabled={loading} />
-    </SubmitForm>
+    </SubmitForm> -->
   </Card>
 {/if}

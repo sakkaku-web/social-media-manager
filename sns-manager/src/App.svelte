@@ -2,12 +2,8 @@
   import "./global.css";
   import LoginButton from "./lib/LoginButton.svelte";
   import PixivLogin from "./lib/PixivLogin.svelte";
-  import PinterestInfo from "./lib/PinterestInfo.svelte";
-  import RedditInfo from "./lib/RedditInfo.svelte";
-  import TwitterInfo from "./lib/TwitterInfo.svelte";
   import { OAuthToken, PixivToken, TwitterToken } from "./openapi";
-  import PixivInfo from "./lib/PixivInfo.svelte";
-  import TokenContainer from "./lib/forms/TokenContainer.svelte";
+  import ReferencePage from "./pages/reference-page/ReferencePage.svelte";
 
   let twitterLogins: TwitterToken[] = [];
   let redditLogins: OAuthToken[] = [];
@@ -41,40 +37,8 @@
     <PixivLogin on:login={(e) => (pixivLogins = e.detail.tokens)} />
   </header>
 
-  <main class="flex flex-row p-4">
-    <div class="flex flex-col gap-8">
-      {#if twitterLogins.length}
-        <TokenContainer title="Twitter">
-          {#each twitterLogins as login}
-            <TwitterInfo token={login} />
-          {/each}
-        </TokenContainer>
-      {/if}
-
-      {#if redditLogins.length}
-        <TokenContainer title="Reddit">
-          {#each redditLogins as login}
-            <RedditInfo token={login} />
-          {/each}
-        </TokenContainer>
-      {/if}
-
-      {#if pixivLogins.length}
-        <TokenContainer title="Pixiv">
-          {#each pixivLogins as login}
-            <PixivInfo token={login} />
-          {/each}
-        </TokenContainer>
-      {/if}
-
-      {#if pinterestLogins.length}
-        <TokenContainer title="Pinterest">
-          {#each pinterestLogins as login}
-            <PinterestInfo token={login} />
-          {/each}
-        </TokenContainer>
-      {/if}
-    </div>
+  <main class="p-4">
+    <ReferencePage {redditLogins} />
   </main>
 </div>
 

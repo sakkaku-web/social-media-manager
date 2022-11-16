@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   ErrorMessage,
   OAuthToken,
+  RedditUpvoteResponse,
   RefreshToken,
   SNSPostResponse,
   Token,
@@ -28,6 +29,8 @@ import {
     ErrorMessageToJSON,
     OAuthTokenFromJSON,
     OAuthTokenToJSON,
+    RedditUpvoteResponseFromJSON,
+    RedditUpvoteResponseToJSON,
     RefreshTokenFromJSON,
     RefreshTokenToJSON,
     SNSPostResponseFromJSON,
@@ -264,6 +267,38 @@ export class RedditApi extends runtime.BaseAPI {
      */
     async redditRevokeRevokePost(requestParameters: RedditRevokeRevokePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.redditRevokeRevokePostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async upvotedUpvotedGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RedditUpvoteResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/reddit/upvoted`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RedditUpvoteResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async upvotedUpvotedGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RedditUpvoteResponse> {
+        const response = await this.upvotedUpvotedGetRaw(initOverrides);
+        return await response.value();
     }
 
     /**

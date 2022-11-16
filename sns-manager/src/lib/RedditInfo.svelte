@@ -18,12 +18,12 @@
   export let token: OAuthToken;
 
   let user: User;
-  let loading = false;
-  let form: RedditPostPostPostRequest = {
-    title: "",
-    subreddit: "",
-    images: [],
-  };
+  // let loading = false;
+  // let form: RedditPostPostPostRequest = {
+  //   title: "",
+  //   subreddit: "",
+  //   images: [],
+  // };
 
   const api = new RedditApi(
     new Configuration({
@@ -33,23 +33,32 @@
   );
 
   onMount(async () => {
-    user = await api.userUserGet();
+    const response = await api.userUserGetRaw();
+    if (response.raw.status === 401) {
+      const newToken = await api.redditRefreshRefreshPost({
+        refreshToken: { refreshToken: token.refreshToken },
+      });
+    } else if (response.raw.status === 200) {
+      user = await response.value();
+    }
   });
 
-  const submit = async () => {
-    const defaultUrl = `https://www.reddit.com/user/${user.name}/submitted/`;
-    const { url } = await api.redditPostPostPost(form);
-    return url || defaultUrl;
-  };
+  // const submit = async () => {
+  //   const defaultUrl = `https://www.reddit.com/user/${user.name}/submitted/`;
+  //   const { url } = await api.redditPostPostPost(form);
+  //   return url || defaultUrl;
+  // };
 </script>
 
 {#if user}
   <Card>
     <ExternalLink url={`https://reddit.com/u/${user.name}`}
-      >{user.name}</ExternalLink
+      >Reddit - {user.name}</ExternalLink
     >
 
-    <SubmitForm submitFn={submit} bind:loading>
+    <slot {api} />
+
+    <!-- <SubmitForm submitFn={submit} bind:loading>
       <Input
         bind:value={form.title}
         placeholder="Title *"
@@ -65,6 +74,6 @@
       />
       <Input bind:value={form.flair} placeholder="Flair" disabled={loading} />
       <FileInput bind:files={form.images} accept="image/*" disabled={loading} />
-    </SubmitForm>
+    </SubmitForm> -->
   </Card>
 {/if}

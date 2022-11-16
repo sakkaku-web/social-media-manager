@@ -4,7 +4,7 @@ const TOKEN_PROVIDER_PREFIX = "sns-manager-tokens-";
 
 const storage = localStorage;
 
-type TokenType = TwitterToken | PixivToken | OAuthToken;
+export type TokenType = TwitterToken | PixivToken | OAuthToken;
 
 export const loadLoginsFromStorage = (provider: string): TokenType[] => {
   const providerKey = TOKEN_PROVIDER_PREFIX + provider;
