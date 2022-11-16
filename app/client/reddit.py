@@ -90,7 +90,7 @@ class RedditClient:
         body = {
             'sr': post.subreddit,
             'title': post.title,
-            'sendreplies': False,  # TODO: customize?
+            'sendreplies': True,  # TODO: customize?
         }
 
         self._apply_flair_to_body(body, post)

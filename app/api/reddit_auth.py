@@ -42,6 +42,7 @@ def reddit_auth(query: AuthQuery):
         'read',
         'submit',
         'flair',
+        'history',
     ]
 
     query_str = url.urlencode({

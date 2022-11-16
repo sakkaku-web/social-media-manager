@@ -1,5 +1,16 @@
 from pydantic import BaseModel, Field
 from flask_openapi3 import FileStorage
+from typing import List
+
+
+class RedditUpvote(BaseModel):
+    title: str
+    link: str
+    image: str
+
+
+class RedditUpvoteResponse(BaseModel):
+    result: List[RedditUpvote]
 
 
 class User(BaseModel):
