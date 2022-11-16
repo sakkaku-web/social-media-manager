@@ -1,11 +1,28 @@
 # Social Media Manager
 
+**This website is not deployed anywhere anymore. Because Heroku is not free anymore :(**
+
 This project contains a REST API and eventually a frontend for it. The goal is to manage all your social media platforms
 on a single website.
 
 REST API can be found here: https://sns-manager.herokuapp.com/
 
 New UI will be available here: https://sakkaku-web.github.io/social-media-manager/
+
+## Features
+
+### Post on multiple social medias
+
+Currently only works via scripts in `./scripts`.
+Logging through the REST API and save tokens in `.env` according to `.env.sample`
+
+Post with python scripts or create a script like `main.sh`
+
+### Reference Board
+
+![Reference Board](./img/reference-board.png)
+
+- Reddit: shows all upvoted posts
 
 ## Endpoint Sources
 
