@@ -14,7 +14,7 @@ New UI will be available here: https://sakkaku-web.github.io/social-media-manage
 ### Post on multiple social medias
 
 Currently only works via scripts in `./scripts`.
-Logging through the REST API and save tokens in `.env` according to `.env.sample`
+Log in through the REST API and save tokens in `.env` according to `.env.sample`
 
 Post with python scripts or create a script like `main.sh`
 
