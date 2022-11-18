@@ -3,12 +3,12 @@
   import RedditInfo from "../lib/reddit/RedditInfo.svelte";
   import type { Token } from "src/lib/auth";
 
-  export let redditLogins: Token[] = [];
+  export let tokens: Token[] = [];
 </script>
 
 <div class="flex flex-col">
-  {#each redditLogins as login}
-    <RedditInfo token={login} let:api let:username>
+  {#each tokens as login}
+    <RedditInfo token={login} on:refresh let:api let:username>
       <RedditReference {api} {username} />
     </RedditInfo>
   {/each}

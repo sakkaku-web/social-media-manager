@@ -1,8 +1,8 @@
 <script lang="ts">
   import env from "../environment";
   import { Configuration, PixivApi } from "../openapi";
-  import { createEventDispatcher, onMount } from "svelte";
-  import { addLoginToStorage, loadLoginsFromStorage } from "../storage";
+  import { createEventDispatcher } from "svelte";
+  import { addLoginToken } from "../storage";
   import LoginIcon from "svelte-icons/io/IoMdLogIn.svelte";
   import Input from "./components/Input.svelte";
   import Button from "./components/Button.svelte";
@@ -27,8 +27,8 @@
       const token = await api.pixivAuthPost({
         login: { username, password },
       });
-      addLoginToStorage(token, provider);
-      updateLogins();
+      addLoginToken(token, provider);
+      dispatch("login");
 
       showLoginForm = false;
       username = "";
@@ -39,12 +39,6 @@
       loading = false;
     }
   };
-
-  const updateLogins = () => {
-    dispatch("login", { tokens: loadLoginsFromStorage(provider) });
-  };
-
-  onMount(() => updateLogins());
 </script>
 
 <button

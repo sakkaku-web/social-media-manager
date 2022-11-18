@@ -1,40 +1,31 @@
 <script lang="ts">
-  import { OAuthTokenFromJSON, TwitterTokenFromJSON } from "../openapi";
-
   import { createEventDispatcher, onMount } from "svelte";
 
   import LoginIcon from "svelte-icons/io/IoMdLogIn.svelte";
   import env from "../environment";
-  import { addLoginToStorage, loadLoginsFromStorage } from "../storage";
+  import { addLoginToken, Provider } from "../storage";
 
-  export let provider: string;
+  export let provider: Provider;
 
   const dispatch = createEventDispatcher();
-  const lowerProvider = provider.toLowerCase();
 
   const baseURL = () => window.location.origin + window.location.pathname;
   const buildURL = () => {
-    return `${
-      env.apiBase
-    }/api/${lowerProvider}/auth?return_to=${encodeURIComponent(baseURL())}`;
+    return `${env.apiBase}/api/${provider}/auth?return_to=${encodeURIComponent(
+      baseURL()
+    )}`;
   };
 
   onMount(() => {
     const query = new URLSearchParams(window.location.search);
-    const providerData = query.get(lowerProvider);
+    const providerData = query.get(provider);
 
     if (providerData) {
       const data = JSON.parse(providerData);
-      const isTwitter = provider.toLowerCase() === "twitter";
-      const token = isTwitter
-        ? TwitterTokenFromJSON(data)
-        : OAuthTokenFromJSON(data);
-
-      addLoginToStorage(token, provider);
+      addLoginToken(data, provider);
       history.replaceState("", "", baseURL());
+      dispatch("login");
     }
-
-    dispatch("login", { tokens: loadLoginsFromStorage(provider) });
   });
 </script>
 
