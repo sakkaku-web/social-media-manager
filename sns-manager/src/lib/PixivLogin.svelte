@@ -54,32 +54,36 @@
 <div
   class={`${
     showLoginForm ? "flex" : "hidden"
-  } fixed inset-0 items-center justify-center backdrop-blur-sm flex-col`}
+  } fixed justify-center items-center inset-0 backdrop-blur-sm `}
 >
   <div class="fixed inset-0 -z-10" on:click={() => (showLoginForm = false)} />
-  <h2 class="font-bold">Pixiv Login</h2>
-  <form
-    on:submit|preventDefault={() => loginPixiv()}
-    class="flex flex-col gap-2 justify-center p-4 z-10"
-  >
-    <Input
-      name="username"
-      disabled={loading}
-      placeholder="Username"
-      required
-      bind:value={username}
-    />
-    <Input
-      name="password"
-      disabled={loading}
-      placeholder="Password"
-      required
-      password
-      bind:value={password}
-    />
+  <div class="bg-white flex flex-col justify-center items-center p-4 gap-2">
+    <h2 class="font-bold">Pixiv Login</h2>
+    <form
+      on:submit|preventDefault={() => loginPixiv()}
+      class="flex flex-col gap-2 justify-center z-10"
+    >
+      <Input
+        name="username"
+        disabled={loading}
+        placeholder="Username"
+        required
+        bind:value={username}
+      />
+      <Input
+        name="password"
+        disabled={loading}
+        placeholder="Password"
+        required
+        password
+        bind:value={password}
+      />
 
-    <div class="text-xs text-gray-500">Login might be slow or fail often.</div>
+      <div class="text-xs text-gray-500">
+        Login might be slow or fail often.
+      </div>
 
-    <Button type="submit" disabled={loading}>Login</Button>
-  </form>
+      <Button type="submit" disabled={loading}>Login</Button>
+    </form>
+  </div>
 </div>

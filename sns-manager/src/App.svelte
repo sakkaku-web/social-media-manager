@@ -9,13 +9,13 @@
 
   let twitterLogins: Token[] = [];
   let redditTokens: Token[] = [];
-  let pixivLogins: Token[] = [];
+  let pixivTokens: Token[] = [];
   let pinterestLogins: Token[] = [];
 
   const loadTokens = () => {
     twitterLogins = loadLoginTokens("twitter");
     redditTokens = loadLoginTokens("reddit");
-    pixivLogins = loadLoginTokens("pixiv");
+    pixivTokens = loadLoginTokens("pixiv");
     pinterestLogins = loadLoginTokens("pinterest");
   };
 
@@ -37,7 +37,11 @@
   </header>
 
   <main class="p-4">
-    <ReferencePage tokens={redditTokens} on:refresh={() => loadTokens()} />
+    <ReferencePage
+      {redditTokens}
+      {pixivTokens}
+      on:refresh={() => loadTokens()}
+    />
   </main>
 </div>
 

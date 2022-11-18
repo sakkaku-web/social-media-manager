@@ -1,5 +1,5 @@
 import type { Token } from "src/lib/auth";
-import { OAuthToken, OAuthTokenFromJSON, PixivToken, TwitterToken, TwitterTokenFromJSON } from "../openapi";
+import { OAuthToken, OAuthTokenFromJSON, PixivToken, PixivTokenFromJSON, TwitterToken, TwitterTokenFromJSON } from "../openapi";
 
 const TOKEN_PROVIDER_PREFIX = "sns-manager-tokens-";
 
@@ -24,7 +24,7 @@ export const addLoginToken = (token: any, provider: Provider) => {
       logins.push(saveToken);
       updateTokens(logins, provider)
     } else {
-      console.log('Invalid token');
+      console.log('Invalid token', token);
     }
   } else {
     console.warn("User is already logged in. Ignoring");
@@ -33,9 +33,10 @@ export const addLoginToken = (token: any, provider: Provider) => {
 
 const oauthToToken = (oauth: any, provider: Provider): Token | null => {
   const isTwitter = provider === "twitter";
+  const isPixiv = provider === 'pixiv';
   const token = isTwitter
     ? TwitterTokenFromJSON(oauth)
-    : OAuthTokenFromJSON(oauth);
+    : isPixiv ? oauth : OAuthTokenFromJSON(oauth);
 
   if (
     !token ||
@@ -45,7 +46,7 @@ const oauthToToken = (oauth: any, provider: Provider): Token | null => {
     return null;
   }
 
-  return { token: token.accessToken, refreshToken: token['refreshToken'] };
+  return { token: token.accessToken, refreshToken: token['refreshToken'], userId: token['userId'], username: token['username'] };
 }
 
 export const updateLoginToken = (token: Token, newToken: any, provider: Provider): Token => {

@@ -39,6 +39,18 @@ class PixivClient:
         print(f'----- Finished uploading to pixiv -----')
         return res.json()['illust_id']
 
+    def ping(self):
+        res = req.get(f'{self.base_url}/v1/pixiv-info/android',
+                      headers=self.headers)
+        res.raise_for_status()
+        return 'pong'
+
+    def bookmarks(self, userId: str):
+        res = req.get(f'{self.base_url}/v1/user/bookmarks/illust?user_id={userId}&restrict=public',
+                      headers=self.headers)
+        res.raise_for_status()
+        return res.json()
+
 
 # ----------------- Testing -----------------
 # load_dotenv()
