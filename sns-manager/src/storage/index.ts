@@ -34,9 +34,10 @@ export const addLoginToken = (token: any, provider: Provider) => {
 const oauthToToken = (oauth: any, provider: Provider): Token | null => {
   const isTwitter = provider === "twitter";
   const isPixiv = provider === 'pixiv';
+  const hasAccessToken = !!oauth['accessToken'];
   const token = isTwitter
     ? TwitterTokenFromJSON(oauth)
-    : isPixiv ? oauth : OAuthTokenFromJSON(oauth);
+    : (isPixiv ? (hasAccessToken ? oauth : PixivTokenFromJSON(oauth)) : OAuthTokenFromJSON(oauth));
 
   if (
     !token ||

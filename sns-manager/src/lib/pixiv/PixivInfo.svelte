@@ -5,6 +5,7 @@
   import type { Token, User } from "../auth";
   import { removeLoginToken, updateLoginToken } from "../../storage";
   import { PixivClient } from "./pixiv";
+  import Button from "../components/Button.svelte";
 
   export let token: Token;
 
@@ -31,22 +32,32 @@
       const newToken = await api.refreshToken(token.refreshToken);
       if (newToken) {
         token = updateLoginToken(token, newToken, "pixiv");
+        if (token) {
+          dispatch("refresh");
+        } else {
+          console.log("Failed to read token");
+          removeToken();
+        }
       } else {
         console.log("Failed to get new token. Removing current token");
-        removeLoginToken(token, "pixiv");
+        removeToken();
       }
-
-      dispatch("refresh");
     }
+  };
+
+  const removeToken = () => {
+    removeLoginToken(token, "pixiv");
+    dispatch("refresh");
   };
 </script>
 
 {#if user}
   <div class="flex flex-col gap-2">
-    <div>
+    <div class="flex justify-between">
       <ExternalLink url={`https://www.pixiv.net/users/${user.id}`}
         >Pixiv - {user.name}</ExternalLink
       >
+      <Button on:click={() => removeToken()}>x</Button>
     </div>
 
     <slot {api} />
