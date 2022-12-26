@@ -6,9 +6,10 @@
 
   export let user: string;
   export let api: TwitterApi;
+  export let focused: boolean;
 
   const dispatch = createEventDispatcher();
-  const count = 80;
+  const count = 100; // Number of tweets to fetch, those without images will be filtered out
 
   enum Status {
     LOADING,
@@ -22,6 +23,7 @@
   let images: ReferenceImage[] = [];
 
   const removeUser = () => dispatch("remove");
+  const toggleFocus = () => (focused ? dispatch("unfocus") : dispatch("focus"));
 
   onMount(() => loadTweetsForUser(user));
 
@@ -55,11 +57,12 @@
   };
 </script>
 
-<div class="flex flex-col gap-2 basis-1/6">
+<div class="flex flex-col gap-2 grow">
   <div class="flex gap-4">
-    <span>{user}</span><button class="font-bold" on:click={() => removeUser()}
-      >x</button
-    >
+    <span>{user}</span>
+    <button class="font-bold" on:click={() => removeUser()}>x</button>
+
+    <button class="font-bold" on:click={() => toggleFocus()}>v</button>
   </div>
   <Gallery {images} />
 
