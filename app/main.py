@@ -65,9 +65,7 @@ def index():
 #                 bp.register_api(api.api)
 #             except AttributeError:
 #                 print(f"Failed to register api: {api_route}")
-
 # auto_register_api(api)
-
 api.register_api(pix.api)
 api.register_api(red.api)
 api.register_api(tw.api)
