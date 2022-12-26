@@ -8,7 +8,7 @@
   export let api: TwitterApi;
 
   const dispatch = createEventDispatcher();
-  const count = 40;
+  const count = 80;
 
   enum Status {
     LOADING,

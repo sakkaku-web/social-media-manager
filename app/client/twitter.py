@@ -33,5 +33,6 @@ class TwitterClient:
         print(f'----- Finish tweeting -----')
         return status.id_str
 
-    def list_tweets(self, username: str, max_id=0, count=40):
+    def list_tweets(self, username: str, last_id=None, count=40):
+        max_id = int(last_id) - 1 if last_id is not None else None
         return self.apiApp.user_timeline(screen_name=username, max_id=max_id, count=count, include_rts=False, exclude_replies=True, trim_user=True)

@@ -64,17 +64,18 @@ def list_tweets(path: ListTweetsPath, query: ListTweetsQuery):
     images = []
     attempts = 0
 
-    start_id = int(query.max_id) - 1 if query.max_id is not None else None
+    start_id = query.max_id
 
     while len(images) == 0 and attempts <= 5:
         attempts += 1
         data = _twitter_client().list_tweets(
             path.username, start_id, query.count)
         for d in data:
-            start_id = d.id
+
+            start_id = d.id_str
             entity = d.entities
-            if 'media' in entity:
-                for x in entity['media']:
+            if hasattr(d, 'extended_entities') and 'media' in d.extended_entities:
+                for x in d.extended_entities['media']:
                     if x['type'] == 'photo':
                         url = x['media_url_https'] or x['media_url']
                         images.append(TweetImage(
