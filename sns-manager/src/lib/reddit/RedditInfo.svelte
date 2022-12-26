@@ -5,7 +5,6 @@
   import type { Token } from "../auth";
   import { RedditClient } from "./reddit";
   import { removeLoginToken, updateLoginToken } from "../../storage";
-  import Button from "../components/Button.svelte";
 
   export let token: Token;
 
@@ -52,12 +51,12 @@
 </script>
 
 {#if username}
-  <div class="flex flex-col gap-2">
-    <div class="flex justify-between">
+  <div class="flex flex-col gap-2 h-full overflow-hidden">
+    <div class="flex justify-between items-center gap-2">
       <ExternalLink url={`https://reddit.com/u/${username}`}
         >Reddit - {username}</ExternalLink
       >
-      <Button on:click={() => removeToken()}>x</Button>
+      <button class="font-bold" on:click={() => removeToken()}>x</button>
     </div>
 
     <slot {api} {username} />

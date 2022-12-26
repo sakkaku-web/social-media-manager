@@ -3,16 +3,18 @@ import env from "../../environment";
 import type { User } from "../auth";
 import type { ReferenceImage } from "../models";
 
-const URL = 'https://oauth.reddit.com';
+const URL = "https://oauth.reddit.com";
 
 export class RedditClient {
-
   private headers: HeadersInit;
 
-  constructor(token: string, userAgent = 'web:social-media-manager:0.0.1 (by /u/illu11)') {
+  constructor(
+    token: string,
+    userAgent = "web:social-media-manager:0.0.1 (by /u/illu11)"
+  ) {
     this.headers = {
-      'Authorization': `Bearer ${token}`,
-      'User-Agent': userAgent,
+      Authorization: `Bearer ${token}`,
+      "User-Agent": userAgent,
     };
   }
 
@@ -25,13 +27,13 @@ export class RedditClient {
   }
 
   async refreshToken(refreshToken: string): Promise<TokenType | null> {
-    const res = await fetch(env.apiBase + '/api/reddit/auth/refresh', {
-      method: 'POST',
+    const res = await fetch(env.apiBase + "/api/reddit/auth/refresh", {
+      method: "POST",
       headers: {
         ...this.headers,
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ refresh_token: refreshToken })
+      body: JSON.stringify({ refresh_token: refreshToken }),
     });
     if (res.status !== 200) {
       return null;
@@ -40,11 +42,11 @@ export class RedditClient {
   }
 
   async getUser(): Promise<User> {
-    const data = await this.getJson('/api/v1/me');
+    const data = await this.getJson("/api/v1/me");
     if (!data) {
       return null;
     }
-    return { id: data['id'], name: data['name'] };
+    return { id: data["id"], name: data["name"] };
   }
 
   async getUpvoted(user: string): Promise<ReferenceImage[]> {
@@ -52,7 +54,13 @@ export class RedditClient {
     if (!data) {
       return [];
     }
-    const items = data['data']['children'] as object[];
-    return items.map(x => x['data']).map(x => ({ link: x['permalink'], image: x['url'] }));
+    const items = data["data"]["children"] as object[];
+    return items
+      .map((x) => x["data"])
+      .filter((x) => !x["selftext"])
+      .map((x) => ({
+        link: "https://reddit.com" + x["permalink"],
+        image: x["url"],
+      }));
   }
 }

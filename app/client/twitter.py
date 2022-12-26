@@ -4,9 +4,11 @@ from io import BufferedReader
 
 
 class TwitterClient:
-    def __init__(self, client: str, secret: str, a_token: str, a_secret: str):
+    def __init__(self, client: str, secret: str, a_token: str = '', a_secret: str = ''):
         auth = tw.OAuth1UserHandler(client, secret, a_token, a_secret)
+        app = tw.OAuth2AppHandler(client, secret)
         self.api = tw.API(auth)
+        self.apiApp = tw.API(app)
         self.api2 = tw.Client(access_token=a_token,
                               access_token_secret=a_secret,
                               consumer_key=client,
@@ -31,5 +33,5 @@ class TwitterClient:
         print(f'----- Finish tweeting -----')
         return status.id_str
 
-    def list_tweets(self):
-      self.api
+    def list_tweets(self, username: str, max_id = 0, count = 40):
+        return self.apiApp.user_timeline(screen_name=username, max_id=max_id, count=count, include_rts=False)

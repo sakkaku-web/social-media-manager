@@ -12,6 +12,8 @@ models/PixivToken.ts
 models/RefreshToken.ts
 models/SNSPostResponse.ts
 models/Token.ts
+models/TweetImage.ts
+models/TweetImagesResponse.ts
 models/TwitterToken.ts
 models/UnprocessableEntity.ts
 models/User.ts

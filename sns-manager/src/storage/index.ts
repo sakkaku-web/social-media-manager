@@ -66,6 +66,7 @@ const oauthToToken = (oauth: any, provider: Provider): Token | null => {
 
   return {
     token: token.accessToken,
+    secret: token["accessSecret"],
     refreshToken: token["refreshToken"],
     userId: token["userId"],
     username: token["username"],

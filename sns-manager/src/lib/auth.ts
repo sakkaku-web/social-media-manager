@@ -5,6 +5,9 @@ export interface Token {
   // For pixiv
   userId?: string;
   username?: string;
+
+  // For twitter
+  secret?: string;
 }
 
 export interface User {

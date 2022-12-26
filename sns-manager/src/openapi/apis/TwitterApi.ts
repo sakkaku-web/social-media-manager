@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   ErrorMessage,
   SNSPostResponse,
+  TweetImagesResponse,
   TwitterToken,
   UnprocessableEntity,
   User,
@@ -26,6 +27,8 @@ import {
     ErrorMessageToJSON,
     SNSPostResponseFromJSON,
     SNSPostResponseToJSON,
+    TweetImagesResponseFromJSON,
+    TweetImagesResponseToJSON,
     TwitterTokenFromJSON,
     TwitterTokenToJSON,
     UnprocessableEntityFromJSON,
@@ -33,6 +36,12 @@ import {
     UserFromJSON,
     UserToJSON,
 } from '../models';
+
+export interface ListTweetsTweetsUsernameGetRequest {
+    username: string;
+    maxId?: number;
+    count?: number;
+}
 
 export interface TwitterAuthCallbackCallbackGetRequest {
     oauthVerifier: string;
@@ -52,6 +61,45 @@ export interface TwitterPostPostPostRequest {
  * 
  */
 export class TwitterApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async listTweetsTweetsUsernameGetRaw(requestParameters: ListTweetsTweetsUsernameGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TweetImagesResponse>> {
+        if (requestParameters.username === null || requestParameters.username === undefined) {
+            throw new runtime.RequiredError('username','Required parameter requestParameters.username was null or undefined when calling listTweetsTweetsUsernameGet.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.maxId !== undefined) {
+            queryParameters['max_id'] = requestParameters.maxId;
+        }
+
+        if (requestParameters.count !== undefined) {
+            queryParameters['count'] = requestParameters.count;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && (this.configuration.username !== undefined || this.configuration.password !== undefined)) {
+            headerParameters["Authorization"] = "Basic " + btoa(this.configuration.username + ":" + this.configuration.password);
+        }
+        const response = await this.request({
+            path: `/api/twitter/tweets/{username}`.replace(`{${"username"}}`, encodeURIComponent(String(requestParameters.username))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TweetImagesResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async listTweetsTweetsUsernameGet(requestParameters: ListTweetsTweetsUsernameGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TweetImagesResponse> {
+        const response = await this.listTweetsTweetsUsernameGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Callback after login to get access token

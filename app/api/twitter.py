@@ -19,7 +19,7 @@ def _client(): return os.getenv('TWITTER_CLIENT')
 def _secret(): return os.getenv('TWITTER_SECRET')
 
 
-def _twitter_client(user: str, pw: str):
+def _twitter_client(user: str = '', pw: str = ''):
     return TwitterClient(_client(), _secret(), user, pw)
 
 
@@ -40,12 +40,44 @@ def user(user: str, password: str):
     return User(id=data['username'], name=data['name']).dict()
 
 
-# class ListTweetsPath(BaseModel):
-#     username: str
+class ListTweetsPath(BaseModel):
+    username: str
 
 
-# @api.get('/tweets/<str:username>', responses={'200': User})
-# @basic_auth
-# def list_tweets(path: ListTweetsPath, user: str, password: str):
-#     data = _twitter_client(user, password).list_tweets()
-#     return User(id=data['username'], name=data['name']).dict()
+class ListTweetsQuery(BaseModel):
+    max_id: int = None
+    count: int = 40
+
+
+class TweetImage(BaseModel):
+    tweet_id: int
+    media_url: str
+    link: str
+
+
+class TweetImagesResponse(BaseModel):
+    images: list[TweetImage]
+
+
+@api.get('/tweets/<username>', responses={'200': TweetImagesResponse})
+def list_tweets(path: ListTweetsPath, query: ListTweetsQuery):
+    images = []
+    attempts = 0
+
+    start_id = query.max_id
+
+    while len(images) == 0 and attempts <= 5:
+        attempts += 1
+        data = _twitter_client().list_tweets(
+            path.username, start_id, query.count)
+        for d in data:
+            start_id = d.id
+            entity = d.entities
+            if 'media' in entity:
+                for x in entity['media']:
+                    if x['type'] == 'photo':
+                        url = x['media_url_https'] or x['media_url']
+                        images.append(TweetImage(
+                            tweet_id=d.id, media_url=url, link=x['url']))
+
+    return TweetImagesResponse(images=images).dict()
