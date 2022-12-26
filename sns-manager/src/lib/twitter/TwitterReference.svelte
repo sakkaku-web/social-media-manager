@@ -11,6 +11,6 @@
   const dispatch = createEventDispatcher();
 </script>
 
-{#each users as user}
+{#each users as user (user)}
   <TwitterUserRef {api} {user} on:remove={() => dispatch("remove", { user })} />
 {/each}
