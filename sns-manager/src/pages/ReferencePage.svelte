@@ -4,9 +4,12 @@
   import type { Token } from "src/lib/auth";
   import PixivInfo from "../lib/pixiv/PixivInfo.svelte";
   import PixivReference from "../lib/pixiv/PixivReference.svelte";
+  import Twitter2Info from "../lib/twitter2/Twitter2Info.svelte";
+  import Twitter2Reference from "../lib/twitter2/Twitter2Reference.svelte";
 
   export let redditTokens: Token[] = [];
   export let pixivTokens: Token[] = [];
+  export let twitter2Tokens: Token[] = [];
 </script>
 
 <div class="flex flex-col">
@@ -20,5 +23,11 @@
     <PixivInfo token={login} on:refresh let:api>
       <PixivReference {api} userId={login.userId} />
     </PixivInfo>
+  {/each}
+
+  {#each twitter2Tokens as login}
+    <Twitter2Info token={login} on:refresh let:api>
+      <Twitter2Reference {api} />
+    </Twitter2Info>
   {/each}
 </div>

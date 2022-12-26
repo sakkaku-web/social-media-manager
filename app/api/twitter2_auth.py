@@ -64,7 +64,7 @@ def _get_access_token(data: dict):
 
     token_data = res.json()
     return OAuthToken(access_token=token_data['access_token'],
-                      refresh_token='', # missing from response?
+                      refresh_token='',
                       expires_in=token_data['expires_in'])
 
 
