@@ -2,11 +2,11 @@
 
 IMAGES=(/home/sakkaku/Downloads/doodle.png)
 
-python reddit.py submit --refresh --title "Doodle" --images ${IMAGES[@]} -sr 'AnimeSketch'
+python reddit.py submit --refresh --title "Merry Christmas" --images ${IMAGES[@]} -sr 'AnimeSketch'
 
 python twitter.py --text "#inART" -i ${IMAGES[@]}
 
-#python pixiv.py --refresh --title "🐙🍦" --tags "アイス inART いなート" -i ${IMAGES[@]}
+python pixiv.py --refresh --title "🐙🎄" --tags "inART いなート Santa Christmas" -i ${IMAGES[@]}
 
 # 'kumi_yada:test'
 # 'artcommissions:Artist'

@@ -2,6 +2,7 @@ apis/PinterestApi.ts
 apis/PixivApi.ts
 apis/RedditApi.ts
 apis/TwitterApi.ts
+apis/TwitterV2Api.ts
 apis/index.ts
 index.ts
 models/ErrorMessage.ts

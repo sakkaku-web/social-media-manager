@@ -30,3 +30,6 @@ class TwitterClient:
 
         print(f'----- Finish tweeting -----')
         return status.id_str
+
+    def list_tweets(self):
+      self.api

@@ -8,12 +8,14 @@
   import { loadLoginTokens } from "./storage";
 
   let twitterLogins: Token[] = [];
+  let twitter2Logins: Token[] = [];
   let redditTokens: Token[] = [];
   let pixivTokens: Token[] = [];
   let pinterestLogins: Token[] = [];
 
   const loadTokens = () => {
     twitterLogins = loadLoginTokens("twitter");
+    twitter2Logins = loadLoginTokens("twitter2");
     redditTokens = loadLoginTokens("reddit");
     pixivTokens = loadLoginTokens("pixiv");
     pinterestLogins = loadLoginTokens("pinterest");
@@ -30,7 +32,8 @@
 
 <div class="h-full flex flex-col">
   <header class="flex flex-row justify-center gap-4 border-b p-2">
-    <LoginButton provider="twitter" on:login={() => loadTokens()} />
+    <!-- <LoginButton provider="twitter" on:login={() => loadTokens()} /> -->
+    <LoginButton provider="twitter2" on:login={() => loadTokens()} />
     <LoginButton provider="reddit" on:login={() => loadTokens()} />
     <LoginButton provider="pinterest" on:login={() => loadTokens()} />
     <PixivLogin on:login={() => loadTokens()} />

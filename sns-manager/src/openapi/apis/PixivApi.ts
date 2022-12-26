@@ -34,6 +34,10 @@ import {
     UnprocessableEntityToJSON,
 } from '../models';
 
+export interface BookmarksBookmarksGetRequest {
+    userId: string;
+}
+
 export interface PixivAuthPostRequest {
     login: Login;
 }
@@ -53,6 +57,76 @@ export interface PixivRefreshRefreshPostRequest {
  * 
  */
 export class PixivApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async bookmarksBookmarksGetRaw(requestParameters: BookmarksBookmarksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.userId === null || requestParameters.userId === undefined) {
+            throw new runtime.RequiredError('userId','Required parameter requestParameters.userId was null or undefined when calling bookmarksBookmarksGet.');
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters.userId !== undefined) {
+            queryParameters['user_id'] = requestParameters.userId;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/pixiv/bookmarks`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async bookmarksBookmarksGet(requestParameters: BookmarksBookmarksGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.bookmarksBookmarksGetRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async pingPingGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/pixiv/ping`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async pingPingGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.pingPingGetRaw(initOverrides);
+    }
 
     /**
      * This might take a while to finish. It uses selenium to login as the user and could be error prone.

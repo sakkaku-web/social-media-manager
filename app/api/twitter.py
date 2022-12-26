@@ -1,5 +1,6 @@
 from flask_openapi3 import APIBlueprint
 import os
+from pydantic import BaseModel
 
 from app.config import twitter_tag
 from app.api.twitter_auth import auth_api
@@ -37,3 +38,14 @@ def twitter_post(form: TwitterPost, user: str, password: str):
 def user(user: str, password: str):
     data = _twitter_client(user, password).user()
     return User(id=data['username'], name=data['name']).dict()
+
+
+# class ListTweetsPath(BaseModel):
+#     username: str
+
+
+# @api.get('/tweets/<str:username>', responses={'200': User})
+# @basic_auth
+# def list_tweets(path: ListTweetsPath, user: str, password: str):
+#     data = _twitter_client(user, password).list_tweets()
+#     return User(id=data['username'], name=data['name']).dict()
