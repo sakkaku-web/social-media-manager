@@ -45,12 +45,12 @@ class ListTweetsPath(BaseModel):
 
 
 class ListTweetsQuery(BaseModel):
-    max_id: int = None
+    max_id: str = None
     count: int = 40
 
 
 class TweetImage(BaseModel):
-    tweet_id: int
+    tweet_id: str
     media_url: str
     link: str
 
@@ -64,7 +64,7 @@ def list_tweets(path: ListTweetsPath, query: ListTweetsQuery):
     images = []
     attempts = 0
 
-    start_id = query.max_id
+    start_id = int(query.max_id) - 1 if query.max_id is not None else None
 
     while len(images) == 0 and attempts <= 5:
         attempts += 1
@@ -78,6 +78,6 @@ def list_tweets(path: ListTweetsPath, query: ListTweetsQuery):
                     if x['type'] == 'photo':
                         url = x['media_url_https'] or x['media_url']
                         images.append(TweetImage(
-                            tweet_id=d.id, media_url=url, link=x['url']))
+                            tweet_id=d.id_str, media_url=url, link=x['url']))
 
     return TweetImagesResponse(images=images).dict()

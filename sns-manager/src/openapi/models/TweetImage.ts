@@ -33,10 +33,10 @@ export interface TweetImage {
     mediaUrl: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof TweetImage
      */
-    tweetId: number;
+    tweetId: string;
 }
 
 /**

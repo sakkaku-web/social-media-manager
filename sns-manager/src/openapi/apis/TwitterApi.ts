@@ -39,7 +39,7 @@ import {
 
 export interface ListTweetsTweetsUsernameGetRequest {
     username: string;
-    maxId?: number;
+    maxId?: string;
     count?: number;
 }
 
