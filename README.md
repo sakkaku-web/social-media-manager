@@ -22,7 +22,8 @@ Post with python scripts or create a script like `main.sh`
 
 ![Reference Board](./img/reference-board.png)
 
-- Reddit: shows all upvoted posts
+- Twitter: add users to show their posted images
+- Reddit: shows all upvoted posts (removed for now)
 
 ## Endpoint Sources
 
