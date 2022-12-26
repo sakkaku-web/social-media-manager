@@ -8,7 +8,7 @@
   export let api: TwitterApi;
 
   const dispatch = createEventDispatcher();
-  const count = 20;
+  const count = 40;
 
   enum Status {
     LOADING,
@@ -50,7 +50,7 @@
   };
 </script>
 
-<div class="flex flex-col items-stretch gap-2">
+<div class="flex flex-col gap-2 basis-1/6">
   <div class="flex gap-4">
     <span>{user}</span><button class="font-bold" on:click={() => removeUser()}
       >x</button
