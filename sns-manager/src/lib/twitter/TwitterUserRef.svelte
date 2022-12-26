@@ -65,6 +65,11 @@
   {/if}
 
   {#if status == Status.LOADING}
-    LOADING
+    <div
+      class="text-gray-500 text-sm p-8"
+      on:click={() => loadTweetsForUser(user)}
+    >
+      LOADING
+    </div>
   {/if}
 </div>
