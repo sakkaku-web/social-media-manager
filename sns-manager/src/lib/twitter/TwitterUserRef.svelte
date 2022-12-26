@@ -59,7 +59,7 @@
   <Gallery {images} />
   {#if status == Status.LOADED}
     <button
-      class="text-gray-500 text-sm"
+      class="text-gray-500 text-sm p-8"
       on:click={() => loadTweetsForUser(user)}>Load More...</button
     >
   {/if}
