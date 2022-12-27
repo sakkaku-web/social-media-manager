@@ -7,6 +7,6 @@ docker run -d --restart unless-stopped -p 8080:5000 --name sns-manager sns-manag
 
 
 # Build and copy frontend to local apache server
-# cd ./sns-manager
-# npm run build
-# sudo cp -r ./dist/* /srv/http/social-media-manager
+cd ./sns-manager
+npm run build
+sudo cp -r ./dist/* /srv/http/social-media-manager

@@ -45,6 +45,7 @@ class ListTweetsPath(BaseModel):
 
 
 class ListTweetsQuery(BaseModel):
+    since_id: str = None
     max_id: str = None
     count: int = 40
 
@@ -69,7 +70,7 @@ def list_tweets(path: ListTweetsPath, query: ListTweetsQuery):
     while len(images) == 0 and attempts <= 5:
         attempts += 1
         data = _twitter_client().list_tweets(
-            path.username, start_id, query.count)
+            path.username, start_id, query.since_id, query.count)
         for d in data:
 
             start_id = d.id_str

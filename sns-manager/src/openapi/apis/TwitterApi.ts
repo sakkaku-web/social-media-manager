@@ -39,6 +39,7 @@ import {
 
 export interface ListTweetsTweetsUsernameGetRequest {
     username: string;
+    sinceId?: string;
     maxId?: string;
     count?: number;
 }
@@ -70,6 +71,10 @@ export class TwitterApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters.sinceId !== undefined) {
+            queryParameters['since_id'] = requestParameters.sinceId;
+        }
 
         if (requestParameters.maxId !== undefined) {
             queryParameters['max_id'] = requestParameters.maxId;
