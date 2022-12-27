@@ -1,5 +1,5 @@
 # Remove old container to start a new one
-docker stop sns-manager && docker rm sns-manager
+# docker stop sns-manager && docker rm sns-manager
 
 # Build and run backend docker container
 docker build . --tag sns-manager

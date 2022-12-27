@@ -24,7 +24,7 @@
   let images: ReferenceImage[] = [];
 
   const cacheStorageKey = `sns-manager-twitter-ref-cache-${user}`;
-  const cacheSize = 50;
+  const cacheSize = 30;
 
   const removeUser = () => dispatch("remove");
   const toggleFocus = () => (focused ? dispatch("unfocus") : dispatch("focus"));
