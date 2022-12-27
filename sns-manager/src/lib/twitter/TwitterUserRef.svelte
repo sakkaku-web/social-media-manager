@@ -58,11 +58,15 @@
 </script>
 
 <div class="flex flex-col gap-2 grow">
-  <div class="flex gap-4">
-    <span>{user}</span>
-    <button class="font-bold" on:click={() => removeUser()}>x</button>
+  <div class="flex justify-between p-2">
+    <div class="flex gap-2">
+      <span>{user}</span>
+      <button class="font-bold" on:click={() => toggleFocus()}>v</button>
+    </div>
 
-    <button class="font-bold" on:click={() => toggleFocus()}>v</button>
+    {#if !focused}
+      <button class="font-bold" on:click={() => removeUser()}>x</button>
+    {/if}
   </div>
   <Gallery {images} />
 
