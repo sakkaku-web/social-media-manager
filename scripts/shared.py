@@ -31,4 +31,4 @@ def refresh_token(provider: str, refresh_token: str):
 
 
 #BASE_URL = 'https://sns-manager.herokuapp.com/api'
-BASE_URL = 'http://localhost:5000/api'
+BASE_URL = 'http://localhost:8080/api'
