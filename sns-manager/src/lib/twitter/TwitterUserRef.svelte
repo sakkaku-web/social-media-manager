@@ -24,7 +24,7 @@
 
   onMount(() => {
     loadFromCache();
-    loadTweetsForUser(user, undefined, firstId, false);
+    loadTweetsForUser(user, null, firstId, false);
   });
 
   const loadTweetsForUser = async (
@@ -37,8 +37,8 @@
     try {
       const x = await api.listTweetsTweetsUsernameGet({
         username: user,
-        maxId: max,
-        sinceId: since,
+        maxId: max ?? undefined,
+        sinceId: since ?? undefined,
         count,
       });
 
@@ -52,9 +52,22 @@
       }
 
       const last = x.images[x.images.length - 1];
-      lastId = last.tweetId;
-      if (!firstId) {
-        firstId = x.images[0].tweetId;
+
+      if (
+        !lastId ||
+        last.tweetId.length < lastId.length ||
+        last.tweetId.localeCompare(lastId) < 0
+      ) {
+        lastId = last.tweetId;
+      }
+
+      const newFirst = x.images[0].tweetId;
+      if (
+        !firstId ||
+        newFirst.length > firstId.length ||
+        newFirst.localeCompare(firstId) > 0
+      ) {
+        firstId = newFirst;
       }
 
       const loadedImages = x.images.map((i) => ({
@@ -62,10 +75,15 @@
         link: i.link,
       }));
 
-      images = [...images, ...loadedImages];
+      if (max == null) {
+        images = [...loadedImages, ...images];
+      } else {
+        images = [...images, ...loadedImages];
+      }
       status = Status.LOADED;
       updateCache();
     } catch (e) {
+      console.error(e);
       status = Status.ERROR;
     }
   };
@@ -88,6 +106,7 @@
 <Gallery
   {images}
   text={user}
+  textLink={`https://twitter.com/${user}/media`}
   {status}
   {focused}
   on:remove={() => removeUser()}

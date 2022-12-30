@@ -35,5 +35,5 @@ class TwitterClient:
 
     def list_tweets(self, username: str, last_id=None, first_id=None, count=40):
         max_id = int(last_id) - 1 if last_id is not None else None
-        since_id = int(first_id) - 1 if first_id is not None else None
+        since_id = int(first_id) + 1 if first_id is not None else None
         return self.apiApp.user_timeline(screen_name=username, max_id=max_id, since_id=since_id, count=count, include_rts=False, exclude_replies=True, trim_user=True)
