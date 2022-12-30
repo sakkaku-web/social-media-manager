@@ -9,6 +9,7 @@ models/ErrorMessage.ts
 models/Login.ts
 models/OAuthToken.ts
 models/PixivToken.ts
+models/ReferenceImage.ts
 models/RefreshToken.ts
 models/SNSPostResponse.ts
 models/Token.ts
@@ -16,6 +17,7 @@ models/TweetImage.ts
 models/TweetImagesResponse.ts
 models/TwitterToken.ts
 models/UnprocessableEntity.ts
+models/UpvotedResponse.ts
 models/User.ts
 models/index.ts
 runtime.ts

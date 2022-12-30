@@ -6,7 +6,7 @@ from app.client.reddit import RedditClient
 from app.auth import jwt_security, jwt_token
 from app.config import reddit_tag
 from typing import List
-from pydantic import parse_obj_as
+from pydantic import parse_obj_as, BaseModel
 
 api = APIBlueprint('reddit', __name__, url_prefix='/reddit',
                    abp_tags=[reddit_tag], abp_security=jwt_security)
@@ -35,3 +35,29 @@ def reddit_post(form: RedditPost, token: str):
 def user(token: str):
     data = RedditClient(token).get('/api/v1/me')
     return User(id=data['id'], name=data['name']).dict()
+
+
+class ReferenceImage(BaseModel):
+    link: str
+    image: str
+
+
+class UpvotedResponse(BaseModel):
+    images: list[ReferenceImage]
+
+
+class UpvotedPath(BaseModel):
+    username: str
+
+
+@api.get('/upvoted/<username>', responses={'200': UpvotedResponse})
+@jwt_token
+def upvoted(token: str, path: UpvotedPath):
+    data = RedditClient(token).get(
+        f'/user/{path.username}/upvoted?sort=new&type=link')
+    filtered = [x['data']
+                for x in data['data']['children'] if not x['data']['selftext']]
+
+    images = [ReferenceImage(
+        link=f'https://reddit.com{x["permalink"]}', image=x['url']) for x in filtered]
+    return UpvotedResponse(images=images).dict()

@@ -21,6 +21,7 @@ import type {
   SNSPostResponse,
   Token,
   UnprocessableEntity,
+  UpvotedResponse,
   User,
 } from '../models';
 import {
@@ -36,6 +37,8 @@ import {
     TokenToJSON,
     UnprocessableEntityFromJSON,
     UnprocessableEntityToJSON,
+    UpvotedResponseFromJSON,
+    UpvotedResponseToJSON,
     UserFromJSON,
     UserToJSON,
 } from '../models';
@@ -58,6 +61,10 @@ export interface RedditRefreshRefreshPostRequest {
 
 export interface RedditRevokeRevokePostRequest {
     token: Token;
+}
+
+export interface UpvotedUpvotedUsernameGetRequest {
+    username: string;
 }
 
 /**
@@ -264,6 +271,42 @@ export class RedditApi extends runtime.BaseAPI {
      */
     async redditRevokeRevokePost(requestParameters: RedditRevokeRevokePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.redditRevokeRevokePostRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async upvotedUpvotedUsernameGetRaw(requestParameters: UpvotedUpvotedUsernameGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpvotedResponse>> {
+        if (requestParameters.username === null || requestParameters.username === undefined) {
+            throw new runtime.RequiredError('username','Required parameter requestParameters.username was null or undefined when calling upvotedUpvotedUsernameGet.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("jwt", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/api/reddit/upvoted/{username}`.replace(`{${"username"}}`, encodeURIComponent(String(requestParameters.username))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UpvotedResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async upvotedUpvotedUsernameGet(requestParameters: UpvotedUpvotedUsernameGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpvotedResponse> {
+        const response = await this.upvotedUpvotedUsernameGetRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

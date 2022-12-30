@@ -1,17 +1,23 @@
+import { Configuration, RedditApi, ReferenceImage, User } from "../../openapi";
 import type { TokenType } from "src/storage";
 import env from "../../environment";
-import type { User } from "../auth";
-import type { ReferenceImage } from "../models";
 
 const URL = "https://oauth.reddit.com";
 
 export class RedditClient {
   private headers: HeadersInit;
+  private client: RedditApi;
 
   constructor(
     token: string,
     userAgent = "web:social-media-manager:0.0.1 (by /u/illu11)"
   ) {
+    this.client = new RedditApi(
+      new Configuration({
+        basePath: env.apiBase,
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    );
     this.headers = {
       Authorization: `Bearer ${token}`,
       "User-Agent": userAgent,
@@ -42,25 +48,30 @@ export class RedditClient {
   }
 
   async getUser(): Promise<User> {
-    const data = await this.getJson("/api/v1/me");
-    if (!data) {
-      return null;
-    }
-    return { id: data["id"], name: data["name"] };
+    return this.client.userUserGet();
+    // const data = await this.getJson("/api/v1/me");
+    // if (!data) {
+    //   return null;
+    // }
+    // return { id: data["id"], name: data["name"] };
   }
 
   async getUpvoted(user: string): Promise<ReferenceImage[]> {
-    const data = await this.getJson(`/user/${user}/upvoted?sort=new&type=link`);
-    if (!data) {
-      return [];
-    }
-    const items = data["data"]["children"] as object[];
-    return items
-      .map((x) => x["data"])
-      .filter((x) => !x["selftext"])
-      .map((x) => ({
-        link: "https://reddit.com" + x["permalink"],
-        image: x["url"],
-      }));
+    return this.client
+      .upvotedUpvotedUsernameGet({ username: user })
+      .then((x) => x.images);
+
+    // const data = await this.getJson(`/user/${user}/upvoted?sort=new&type=link`);
+    // if (!data) {
+    //   return [];
+    // }
+    // const items = data["data"]["children"] as object[];
+    // return items
+    //   .map((x) => x["data"])
+    //   .filter((x) => !x["selftext"])
+    //   .map((x) => ({
+    //     link: "https://reddit.com" + x["permalink"],
+    //     image: x["url"],
+    //   }));
   }
 }

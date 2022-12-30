@@ -13,7 +13,6 @@
 
   $: loadUserData(token);
 
-  const dispatch = createEventDispatcher();
 
   const loadUserData = async (token: Token) => {
     api = new RedditClient(token.token);
@@ -25,29 +24,7 @@
     }
   };
 
-  const tryRefreshToken = async (token: Token) => {
-    if (token.refreshToken) {
-      console.log("Refreshing reddit token");
-      const newToken = await api.refreshToken(token.refreshToken);
-      if (newToken) {
-        token = updateLoginToken(token, newToken, "reddit");
-        if (token) {
-          dispatch("refresh");
-        } else {
-          console.log("Failed to read token");
-          removeToken();
-        }
-      } else {
-        console.log("Failed to get new token. Removing current token");
-        removeToken();
-      }
-    }
-  };
 
-  const removeToken = () => {
-    removeLoginToken(token, "reddit");
-    dispatch("refresh");
-  };
 </script>
 
 {#if username}
