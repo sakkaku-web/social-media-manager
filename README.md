@@ -15,6 +15,8 @@ Log in through the REST API and save tokens in `.env` according to `.env.sample`
 
 Post with python scripts or create a script like `main.sh`
 
+Works for: Reddit, Twitter, Pixiv
+
 ### Reference Board
 
 ![Reference Board](./img/reference-board.png)
