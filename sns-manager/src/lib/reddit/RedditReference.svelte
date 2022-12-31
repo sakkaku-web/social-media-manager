@@ -5,14 +5,19 @@
   import Gallery from "../components/Gallery.svelte";
   import type { ReferenceImage } from "../models";
   import { RedditClient } from "./reddit";
+  import FocusContainer from "../components/FocusContainer.svelte";
 
   export let token: Token;
+  export let focused: string;
 
   let items: ReferenceImage[] = [];
   let username: string;
 
+  const focusPrefix = "reddit-";
   const dispatch = createEventDispatcher();
   const api = new RedditClient(token.token);
+
+  $: isFocused = focused == null ? null : focused === focusPrefix + username;
 
   onMount(async () => {
     await loadUserData(token);
@@ -21,6 +26,14 @@
       items = await api.getUpvoted(username);
     }
   });
+
+  const toggleFocus = () => {
+    if (focused) {
+      dispatch("unfocus");
+    } else {
+      dispatch("focus", { username: focusPrefix + username });
+    }
+  };
 
   const loadUserData = async (token: Token) => {
     const user = await api.getUser();
@@ -56,12 +69,14 @@
   };
 </script>
 
-<div class="basis-1/6 flex">
+<FocusContainer focused={isFocused}>
   {#if username}
     <Gallery
       images={items}
       text={"Reddit: " + username}
       textLink={`https://reddit.com/u/${username}/upvoted`}
+      focused={isFocused}
+      on:toggleFocus={() => toggleFocus()}
     />
   {/if}
-</div>
+</FocusContainer>

@@ -8,6 +8,7 @@
   import RedditReference from "./lib/reddit/RedditReference.svelte";
   import TwitterReference from "./lib/twitter/TwitterReference.svelte";
   import TwitterRefSetting from "./lib/twitter/TwitterRefSetting.svelte";
+  import TwitterUserRef from "./lib/twitter/TwitterUserRef.svelte";
   import { loadLoginTokens } from "./storage";
 
   let twitterTokens: Token[] = [];
@@ -18,6 +19,13 @@
   let sidebarOpen = false;
 
   let users: string[] = [];
+  let focused: string;
+
+  const onFocus = (user: string) => {
+    focused = user;
+  };
+
+  const onUnfocus = () => (focused = undefined);
 
   // TODO: move somewhere else
   const userListKey = "sns-manager-twitter-reference-users";
@@ -65,13 +73,23 @@
 
   <main class="p-4 flex">
     <div class="flex grow">
-      <TwitterReference
-        {users}
-        on:remove={(e) => removeTwitterUser(e.detail.user)}
-      />
+      {#each users as user (user)}
+        <TwitterUserRef
+          {user}
+          {focused}
+          on:remove={() => removeTwitterUser(user)}
+          on:focus={() => onFocus(user)}
+          on:unfocus={() => onUnfocus()}
+        />
+      {/each}
 
       {#each redditTokens as token}
-        <RedditReference {token} />
+        <RedditReference
+          {token}
+          {focused}
+          on:focus={(e) => onFocus(e.detail.username)}
+          on:unfocus={() => onUnfocus()}
+        />
       {/each}
     </div>
   </main>

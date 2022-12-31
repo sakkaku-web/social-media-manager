@@ -1,5 +1,4 @@
 <script lang="ts">
-  import env from "../../environment";
   import { createEventDispatcher } from "svelte";
   import { Configuration, TwitterApi } from "../../openapi";
   import TwitterUserRef from "./TwitterUserRef.svelte";

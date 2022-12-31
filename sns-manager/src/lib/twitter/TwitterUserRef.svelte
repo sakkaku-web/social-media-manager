@@ -1,13 +1,15 @@
 <script lang="ts">
-  import type { TwitterApi } from "src/openapi";
+  import { Configuration, TwitterApi } from "../../openapi";
   import { createEventDispatcher, onMount } from "svelte";
   import Gallery from "../components/Gallery.svelte";
   import { ReferenceImage, Status } from "../models";
+  import env from "../../environment";
+  import FocusContainer from "../components/FocusContainer.svelte";
 
   export let user: string;
-  export let api: TwitterApi;
-  export let focused: boolean;
+  export let focused: string;
 
+  const api = new TwitterApi(new Configuration({ basePath: env.apiBase }));
   const dispatch = createEventDispatcher();
   const count = 100; // Number of tweets to fetch, those without images will be filtered out
 
@@ -15,6 +17,8 @@
   let lastId: string;
   let firstId: string;
   let images: ReferenceImage[] = [];
+
+  $: isFocused = focused == null ? null : focused === user;
 
   const cacheStorageKey = `sns-manager-twitter-ref-cache-${user}`;
   const cacheSize = 30;
@@ -103,13 +107,15 @@
   };
 </script>
 
-<Gallery
-  {images}
-  text={user}
-  textLink={`https://twitter.com/${user}/media`}
-  {status}
-  {focused}
-  on:remove={() => removeUser()}
-  on:load={() => loadTweetsForUser(user)}
-  on:toggleFocus={() => toggleFocus()}
-/>
+<FocusContainer focused={isFocused}>
+  <Gallery
+    {images}
+    text={user}
+    textLink={`https://twitter.com/${user}/media`}
+    {status}
+    focused={isFocused}
+    on:remove={() => removeUser()}
+    on:load={() => loadTweetsForUser(user)}
+    on:toggleFocus={() => toggleFocus()}
+  />
+</FocusContainer>
