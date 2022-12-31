@@ -110,7 +110,7 @@
 <FocusContainer focused={isFocused}>
   <Gallery
     {images}
-    text={user}
+    text={'Twitter: ' + user}
     textLink={`https://twitter.com/${user}/media`}
     {status}
     focused={isFocused}
