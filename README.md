@@ -2,12 +2,9 @@
 
 **This website is not deployed anywhere anymore. Because Heroku is not free anymore :(**
 
-This project contains a REST API and eventually a frontend for it. The goal is to manage all your social media platforms
-on a single website.
+You can run it locally if you set all the required environment variables in `.env`.
 
-REST API can be found here: https://sns-manager.herokuapp.com/
-
-New UI will be available here: https://sakkaku-web.github.io/social-media-manager/
+The backend can be run as docker container and the frontend on a local web server like apache. An example how to run it is in the script `run-steps.sh`.
 
 ## Features
 
@@ -23,7 +20,7 @@ Post with python scripts or create a script like `main.sh`
 ![Reference Board](./img/reference-board.png)
 
 - Twitter: add users to show their posted images
-- Reddit: shows all upvoted posts (removed for now)
+- Reddit: shows all upvoted posts
 
 ## Endpoint Sources
 
