@@ -48,7 +48,7 @@ export class RedditClient {
   }
 
   async getUser(): Promise<User> {
-    return this.client.userUserGet();
+    return this.client.userUserGet().catch(e => null);
     // const data = await this.getJson("/api/v1/me");
     // if (!data) {
     //   return null;
