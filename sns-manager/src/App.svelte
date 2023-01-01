@@ -4,9 +4,7 @@
   import type { Token } from "./lib/auth";
   import LoginButton from "./lib/LoginButton.svelte";
   import PixivLogin from "./lib/PixivLogin.svelte";
-  import RedditInfo from "./lib/reddit/RedditInfo.svelte";
   import RedditReference from "./lib/reddit/RedditReference.svelte";
-  import TwitterReference from "./lib/twitter/TwitterReference.svelte";
   import TwitterRefSetting from "./lib/twitter/TwitterRefSetting.svelte";
   import TwitterUserRef from "./lib/twitter/TwitterUserRef.svelte";
   import { loadLoginTokens } from "./storage";
