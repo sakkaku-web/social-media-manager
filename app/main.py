@@ -14,6 +14,7 @@ import app.api.reddit as red
 import app.api.twitter as tw
 import app.api.pinterest as pin
 import app.api.twitter2 as tw2
+import app.api.other as other
 
 info = Info(title='SNS-Manager API', version='0.0.1')
 app = OpenAPI(__name__, info=info, security_schemes=security_schemes)
@@ -71,4 +72,5 @@ api.register_api(red.api)
 api.register_api(tw.api)
 api.register_api(tw2.api)
 api.register_api(pin.api)
+api.register_api(other.api)
 app.register_api(api)

@@ -4,10 +4,6 @@
   $: showContainer = focused || focused == null;
 </script>
 
-<div
-  class={`${focused ? "basis-full" : "basis-1/6"} ${
-    showContainer ? "flex" : "hidden"
-  }`}
->
+<div class={`basis-full ${showContainer ? "flex" : "hidden"}`}>
   <slot />
 </div>

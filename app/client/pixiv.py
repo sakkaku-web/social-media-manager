@@ -51,6 +51,13 @@ class PixivClient:
         res.raise_for_status()
         return res.json()
 
+    # search illustration by keyword
+    def search(self, keyword: str):
+        res = req.get(f'{self.base_url}/v1/search/illust?word={keyword}&sort=date_desc',
+                      headers=self.headers)
+        res.raise_for_status()
+        return res.json()
+
 
 # ----------------- Testing -----------------
 # load_dotenv()
