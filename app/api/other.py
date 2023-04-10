@@ -18,7 +18,7 @@ class AnimeCharacterResponse(BaseModel):
 
 
 class AnimeResponse(BaseModel):
-    anime_name: str
+    name: str
     characters: list[AnimeCharacterResponse]
 
 
@@ -29,4 +29,4 @@ def anime(path: AnimePath):
     res.raise_for_status()
     json = res.json()
 
-    return AnimeResponse(anime_name=json['anime_name'], characters=json['characters']).dict()
+    return AnimeResponse(name=json['anime_name'], characters=json['characters']).dict()
