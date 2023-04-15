@@ -23,7 +23,10 @@
   const cacheStorageKey = `sns-manager-twitter-ref-cache-${user}`;
   const cacheSize = 30;
 
-  const removeUser = () => dispatch("remove");
+  const removeUser = () => {
+    clearCache();
+    dispatch("remove");
+  };
   const toggleFocus = () => (focused ? dispatch("unfocus") : dispatch("focus"));
 
   onMount(() => {
@@ -105,12 +108,16 @@
       JSON.stringify({ images: images.slice(0, cacheSize), lastId, firstId })
     );
   };
+
+  const clearCache = () => {
+    localStorage.removeItem(cacheStorageKey);
+  };
 </script>
 
 <FocusContainer focused={isFocused}>
   <Gallery
     {images}
-    text={'Twitter: ' + user}
+    text={"Twitter: " + user}
     textLink={`https://twitter.com/${user}/media`}
     {status}
     focused={isFocused}
